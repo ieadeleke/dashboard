@@ -2,7 +2,7 @@ import ShipLine from '@/assets/icons/ic_ship_line.svg'
 import UsersIcon from '@/assets/icons/ic_users_line.svg'
 import CautionIcon from '@/assets/icons/ic_caution.svg'
 import HistoryIcon from '@/assets/icons/ic_history.svg'
-import { StatItem } from "@/components/layout/dashboard/components/StatItem";
+import { StatItem } from "@/components/dashboard/stats/StatItem";
 import Button from "@/components/buttons";
 
 const stats = [

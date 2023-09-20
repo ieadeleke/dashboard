@@ -1,8 +1,8 @@
 import DashboardLayout from "@/components/layout/dashboard";
-import { Activities } from "@/components/layout/dashboard/components/Activities";
-import { Fleets } from "@/components/layout/dashboard/components/fleet/Fleets";
-import { LifeTracking } from "@/components/layout/dashboard/components/LifeTracking";
-import { Stats } from "@/components/layout/dashboard/components/Stats";
+import { Activities } from "@/components/dashboard/Activities";
+import { Fleets } from "@/components/dashboard/fleet/Fleets";
+import { LifeTracking } from "@/components/dashboard/LifeTracking";
+import { Stats } from "@/components/dashboard/stats/Stats";
 
 export default function Home() {
   return (
