@@ -7,7 +7,7 @@ export const FleetItem = () => {
 
         <div className="flex flex-col gap-3">
             <div className="flex justify-between items-center">
-                <h1 className="font-bold text-text-color text-2xl">Boat Name</h1>
+                <h1 className="font-bold text-text-color text-xl md:text-2xl">Boat Name</h1>
                 <p className="text-gray-600">216 Passengers</p>
             </div>
 

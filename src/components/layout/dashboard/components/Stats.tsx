@@ -14,7 +14,7 @@ const stats = [
         icon: ShipLine
     },
     {
-        name: "Casualties",
+        name: "Incidents",
         count: "500",
         color: "#FF5C00",
         accentColor: '#FFFBED',
@@ -38,11 +38,11 @@ const stats = [
 
 
 export const Stats = () => {
-    return <div className="grid grid-cols-[minmax(auto,60%),minmax(auto,40%)] h-[320px] gap-2">
+    return <div className="grid grid-cols-1 gap-2 lg:grid-cols-[minmax(auto,55%),minmax(auto,45%)] xl:grid-cols-[minmax(auto,60%),minmax(auto,40%)] lg:h-[320px]">
         <div style={{
             backgroundImage: `url(https://res.cloudinary.com/dfzhxlgll/image/upload/v1695210553/Rectangle_13_sfp8ss.png)`
-        }} className="flex flex-col gap-6 w-full h-full bg-red-950 rounded-2xl px-8 py-12">
-            <h1 className="font-bold text-[54px] text-white leading-[64.8px]">Lorem ipsum dolor sit amet</h1>
+        }} className="flex flex-col gap-4 w-full h-full bg-red-950 rounded-2xl px-3 py-12 md:px-6 lg:gap-6 lg:px-8 lg:py-12">
+            <h1 className="font-bold text-2xl leading-[32px] text-white lg:leading-[64.8px] lg:text-[54px]">Lorem ipsum dolor sit amet</h1>
 
             <div className="flex gap-2">
                 <Button variant="contained" className="bg-white font-semibold text-primary px-6 py-2">Discover</Button>
@@ -50,7 +50,7 @@ export const Stats = () => {
             </div>
         </div>
 
-        <div className="w-full h-full grid grid-cols-2 grid-rows-2 gap-2 px-2">
+        <div className="w-full grid grid-cols-1 gap-2 px-2 lg:grid-cols-2 grid-rows-2 lg:h-full">
             {stats.map((item) => <StatItem key={item.name} icon={item.icon} name={item.name} color={item.color} count={item.count} colorAccent={item.accentColor} />)}
         </div>
     </div>

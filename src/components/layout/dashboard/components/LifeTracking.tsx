@@ -3,7 +3,7 @@ import { SearchIcon } from "lucide-react"
 
 export const LifeTracking = () => {
     return <div className="flex flex-col gap-4">
-        <div className="flex py-2 items-center">
+        <div className="flex flex-col py-2 gap-2 md:flex-row md:items-center">
             <p className="font-bold">Life Tracking</p>
             <div className="flex-1" />
             <Input containerProps={{

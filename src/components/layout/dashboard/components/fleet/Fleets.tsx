@@ -30,9 +30,9 @@ export const Fleets = () => {
             </div>
         </div>
 
-        <div className="bg-white rounded-xl h-[500px]">
+        <div className="bg-white rounded-xl lg:h-[500px]">
             <TabsContent value="active">
-                <div className="grid grid-cols-3 gap-4 p-2">
+                <div className="grid grid-cols-1 gap-4 p-2 md:grid-cols-2 lg:grid-cols-3">
                     <FleetItem />
                     <FleetItem />
                     <FleetItem />

@@ -13,9 +13,8 @@ import { Divider } from '@/components/Divider'
 
 export const MenuSideBar = () => {
     
-
     return (
-        <div className="w-full flex flex-col gap-8 items-center bg-white rounded-3xl px-2 py-3 lg:items-start">
+        <div className="w-full h-full flex flex-col gap-8 items-center bg-white rounded-3xl overflow-y-scroll no-scrollbar px-0 py-3 lg:px-2 lg:items-start">
             <Link className="mx-auto" href="/home" passHref>
 
                 <LogoIcon />
