@@ -2,7 +2,7 @@ import { IconButton } from "@/components/buttons/IconButton";
 import { TextField } from "@/components/input/InputText";
 import DashboardLayout from "@/components/layout/dashboard";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ArrowLeftRightIcon, ChevronDown, MoreHorizontalIcon, SearchIcon } from "lucide-react";
+import { ArrowLeftRightIcon, ChevronDown, SearchIcon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,15 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import { CheckBox } from "@/components/buttons/CheckBox";
+import { TripHistory } from "@/components/dashboard/trip-history/TripHistoryItem";
 
 const tabs = [
   {
@@ -100,57 +92,13 @@ export default function Home() {
             </div>
           </div>
 
-          <div>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[100px]">
-                    <div className="flex items-center">
-                      <CheckBox />
-                    </div>
-                  </TableHead>
-                  <TableHead>Fleet ID</TableHead>
-                  <TableHead>Seats</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Title</TableHead>
-                  <TableHead></TableHead>
-                </TableRow>
-              </TableHeader>
-
-              {Array(3).fill(0).map((item, index) => <TableBody key={index} className="bg-white">
-                <TableRow>
-                  <TableCell className="flex font-medium"><CheckBox /></TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-4">
-                      <div className="bg-gray-200 h-10 w-10" />
-                      <p>7406597</p>
-                    </div>
-                  </TableCell>
-                  <TableCell>10</TableCell>
-                  <TableCell className="flex">
-                    <div className="bg-red-500 p-2 rounded-md">
-                      <p className="text-sm">Pending</p>
-                    </div>
-                  </TableCell>
-                  <TableCell>Lorem</TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger>
-                        <IconButton className="text-primary border border-primary rounded-sm">
-                          <MoreHorizontalIcon />
-                        </IconButton>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuLabel>Action 1</DropdownMenuLabel>
-                        <DropdownMenuItem>Action 2</DropdownMenuItem>
-                        <DropdownMenuItem>Action 3</DropdownMenuItem>
-                        <DropdownMenuItem>Action 4</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              </TableBody>)}
-            </Table>
+          <div className="grid grid-cols-3 gap-4">
+            <TripHistory status="active" />
+            <TripHistory status="complete" />
+            <TripHistory status="canceled" />
+            <TripHistory status="active" />
+            <TripHistory status="canceled" />
+            <TripHistory status="complete" />
           </div>
         </div>
 
