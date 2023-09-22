@@ -1,20 +1,18 @@
 import { IconButton } from "@/components/buttons/IconButton";
 import { TextField } from "@/components/input/InputText";
 import DashboardLayout from "@/components/layout/dashboard";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ArrowDown, ChevronDown, SearchIcon } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ChevronDown, MoreHorizontalIcon, SearchIcon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -51,9 +49,9 @@ export default function Home() {
           <h1 className="text-2xl font-bold">All Fleets <span className="text-primary">(50)</span></h1>
 
           <div>
-            <TabsList className="bg-white overflow-x-scroll">
-              {tabs.map((item, index) => <div className={`${index + 1 < tabs.length ? 'border-r' : ''} px-4`}>
-                <TabsTrigger key={item.value} className="px-6 data-[state=active]:bg-primary text-gray-500 rounded-md data-[state=active]:text-white" value={item.value}>{item.name}</TabsTrigger>
+            <TabsList className="bg-white h-auto py-0 px-0">
+              {tabs.map((item, index) => <div className={``}>
+                <TabsTrigger key={item.value} className="mx-0 w-36 py-4 data-[state=active]:bg-[#F9F9FE] text-gray-500 rounded-none data-[state=active]:text-primary data-[state=active]:border-b-2 border-b-primary" value={item.value}>{item.name}</TabsTrigger>
               </div>)}
             </TabsList>
           </div>
@@ -98,7 +96,7 @@ export default function Home() {
                   <TableHead>Seats</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Title</TableHead>
-                  <TableHead>Title 1</TableHead>
+                  <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
 
@@ -114,21 +112,27 @@ export default function Home() {
                   <TableCell>10</TableCell>
                   <TableCell className="flex">
                     <div className="bg-red-500 p-2 rounded-md">
-                      <p>Pending</p>
+                      <p className="text-sm">Pending</p>
                     </div>
                   </TableCell>
                   <TableCell>Lorem</TableCell>
-                  <TableCell>Lorem</TableCell>
+                  <TableCell>
+                    <div className="flex">
+                      <IconButton className="text-primary border border-primary rounded-sm">
+                        <MoreHorizontalIcon />
+                      </IconButton>
+                    </div>
+                  </TableCell>
                 </TableRow>
               </TableBody>)}
             </Table>
           </div>
         </div>
-      
 
-      <div>
 
-      </div>
+        <div>
+
+        </div>
       </Tabs>
     </DashboardLayout>
   )
