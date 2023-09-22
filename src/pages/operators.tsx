@@ -90,21 +90,35 @@ export default function Home() {
 
               {Array(3).fill(0).map((item, index) => <TableBody key={index} className="bg-white">
                 <TableRow>
-                  <TableCell className="flex font-medium"><CheckBox /></TableCell>
+                  <TableCell className="font-medium">
+                    <div className="flex items-center">
+                      <CheckBox />
+                    </div>
+                  </TableCell>
                   <TableCell>
                     Wade Williamson
                   </TableCell>
                   <TableCell>Braxton.Herzog38@gmail.com</TableCell>
-                  <TableCell className="flex">
+                  <TableCell>
                     Lorem
                   </TableCell>
                   <TableCell>Lorem</TableCell>
                   <TableCell>
-                    <div className="flex">
-                      <IconButton className="text-primary border border-primary rounded-sm">
-                        <MoreHorizontalIcon />
-                      </IconButton>
-                    </div>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>
+                        <div className="flex">
+                          <IconButton className="text-primary border border-primary rounded-sm">
+                            <MoreHorizontalIcon />
+                          </IconButton>
+                        </div>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuLabel>Action 1</DropdownMenuLabel>
+                        <DropdownMenuItem>Action 2</DropdownMenuItem>
+                        <DropdownMenuItem>Action 3</DropdownMenuItem>
+                        <DropdownMenuItem>Action 4</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
               </TableBody>)}

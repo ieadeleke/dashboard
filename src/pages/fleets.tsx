@@ -88,7 +88,7 @@ export default function Home() {
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[100px]">
-                    <div className="flex">
+                    <div className="flex items-center">
                       <CheckBox />
                     </div>
                   </TableHead>
@@ -117,11 +117,19 @@ export default function Home() {
                   </TableCell>
                   <TableCell>Lorem</TableCell>
                   <TableCell>
-                    <div className="flex">
-                      <IconButton className="text-primary border border-primary rounded-sm">
-                        <MoreHorizontalIcon />
-                      </IconButton>
-                    </div>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>
+                        <IconButton className="text-primary border border-primary rounded-sm">
+                          <MoreHorizontalIcon />
+                        </IconButton>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuLabel>Action 1</DropdownMenuLabel>
+                        <DropdownMenuItem>Action 2</DropdownMenuItem>
+                        <DropdownMenuItem>Action 3</DropdownMenuItem>
+                        <DropdownMenuItem>Action 4</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
               </TableBody>)}
