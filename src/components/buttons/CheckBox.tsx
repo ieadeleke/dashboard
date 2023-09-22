@@ -8,7 +8,7 @@ type CheckBoxProps = {
 }
 
 export const CheckBox = (props: CheckBoxProps) => {
-    const [isChecked, setIsChecked] = useState(true)
+    const [isChecked, setIsChecked] = useState(false)
 
     const className = useMemo(() => isChecked ? `bg-primary text-white border-none` : `text-transparent`, [isChecked])
 
