@@ -10,7 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { TripHistory } from "@/components/dashboard/trip-history/TripHistoryItem";
+import { TripHistoryItem } from "@/components/dashboard/trip-history/TripHistoryItem";
 
 const tabs = [
   {
@@ -93,12 +93,12 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-3 gap-4">
-            <TripHistory status="active" />
-            <TripHistory status="complete" />
-            <TripHistory status="canceled" />
-            <TripHistory status="active" />
-            <TripHistory status="canceled" />
-            <TripHistory status="complete" />
+            <TripHistoryItem status="active" />
+            <TripHistoryItem status="complete" />
+            <TripHistoryItem status="canceled" />
+            <TripHistoryItem status="active" />
+            <TripHistoryItem status="canceled" />
+            <TripHistoryItem status="complete" />
           </div>
         </div>
 

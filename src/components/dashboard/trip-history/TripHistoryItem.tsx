@@ -7,7 +7,7 @@ type TripHistoryProps = {
     status: "active" | "complete" | "canceled"
 }
 
-export const TripHistory = (props: TripHistoryProps) => {
+export const TripHistoryItem = (props: TripHistoryProps) => {
     const { status } = props
 
     const statusStyles = useMemo(() => {
@@ -35,12 +35,12 @@ export const TripHistory = (props: TripHistoryProps) => {
         <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-8">
                 <div className="flex items-center gap-4">
-                    <DiscIcon className="text-text-normal" />
+                    <DiscIcon className="w-7 h-7 text-text-normal" />
                     <p>1397  Walnut Street, Jackson</p>
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <DiscIcon className="text-primary" />
+                    <DiscIcon className="w-7 h-7 text-primary" />
                     <p>345 Hardesty Street, 368972</p>
                 </div>
             </div>
