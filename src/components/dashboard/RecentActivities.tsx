@@ -2,7 +2,7 @@ import Button from "@/components/buttons"
 import { Divider } from "@/components/Divider"
 import { LucideMoreHorizontal } from "lucide-react"
 
-const ActivityItem = () => {
+export const ActivityItem = () => {
     return <div className="px-2 py-2 cursor-pointer hover:bg-gray-50">
         <div className="flex">
             <div className="flex-1 text-sm">

@@ -4,6 +4,7 @@ import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import { useCallback, useState } from "react";
 import SearchIcon from '@/assets/icons/ic_search.svg'
 import { TripHistoryItem } from "@/components/dashboard/trip-history/TripHistoryItem";
+import Link from "next/link";
 
 const containerStyle = {
   width: '100%',
@@ -64,10 +65,10 @@ export default function Tracking() {
             </div>
 
             <div className="grid grid-cols-1 left-0 top-0 z-10 gap-4 h-full md:grid-cols-2 lg:absolute lg:flex flex-col lg:overflow-y-scroll lg:no-scrollbar lg:p-4">
-              <TripHistoryItem status="active" />
-              <TripHistoryItem status="active" />
-              <TripHistoryItem status="active" />
-              <TripHistoryItem status="active" />
+              {Array(6).fill(0).map((_, index) => <Link href={`/tracking/activities/${index}`}>
+                <TripHistoryItem key={index} status="active" />
+              </Link>)
+              }
             </div>
           </div>
         ) : <></>}
