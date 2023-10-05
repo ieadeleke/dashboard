@@ -34,6 +34,17 @@ module.exports = {
           gradient: "var(--color-primary-gradient)",
           '20': "var(--color-primary-20)",
           foreground: "hsl(var(--primary-foreground))",
+          '50': '#f1f7fe',
+          '100': '#e1eefd',
+          '200': '#bddbfa',
+          '300': '#83bff6',
+          '400': '#409ff0',
+          '500': '#1882df',
+          '600': '#0b65be',
+          '700': '#0a519b',
+          '800': '#0d457f',
+          '900': '#103b6a',
+          '950': '#0b2546'
         },
         tetiary: {
           DEFAULT: 'var(--color-tetiary)'
