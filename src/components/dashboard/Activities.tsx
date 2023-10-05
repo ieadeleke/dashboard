@@ -1,7 +1,7 @@
 import { Divider } from "@/components/Divider"
 import { LucideMoreHorizontal } from "lucide-react"
+import { Chart } from "./activities/chart"
 import { RecentActivities } from "./RecentActivities"
-
 
 export const Activities = () => {
     return <div className="grid grid-cols-1 min-h-[380px] gap-2 md:grid-cols-[minmax(auto,60%),minmax(auto,40%)]">
@@ -29,7 +29,7 @@ export const Activities = () => {
             <Divider />
 
             <div>
-
+                <Chart />
             </div>
         </div>
         <RecentActivities />
