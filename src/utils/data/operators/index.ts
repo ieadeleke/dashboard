@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker/locale/af_ZA"
 
-type Operator = {
+export type Operator = {
     id: string,
     name: string,
     email: string,

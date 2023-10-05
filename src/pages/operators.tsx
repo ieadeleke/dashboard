@@ -19,16 +19,33 @@ import {
 } from "@/components/ui/table"
 import { CheckBox } from "@/components/buttons/CheckBox";
 import { AddOperatorsModal, AddOperatorsModalRef } from "@/components/operators/AddOperatorsModal";
-import { useRef } from "react";
-import { getOperatorsData } from "@/utils/data/operators";
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
+import { getOperatorsData, Operator } from "@/utils/data/operators";
 
 export default function Home() {
-  const data = getOperatorsData(50)
+  const [_data, setData] = useState<Operator[]>([])
   const addOperatorsRef = useRef<AddOperatorsModalRef>(null)
+  const [searchWord, setSearchWord] = useState('')
+
+  useEffect(() => {
+    setData(getOperatorsData(50))
+  }, [])
 
   function addOperator() {
     addOperatorsRef.current?.open()
   }
+
+  function onChangeText(event: ChangeEvent<HTMLInputElement>) {
+    setSearchWord(event.target.value)
+  }
+
+  const data = useMemo(() => {
+    const word = searchWord.toLowerCase()
+    if (word.trim().length == 0) {
+      return _data
+    }
+    return _data.filter((item) => item.name.toLowerCase().includes(word) || item.email.toLowerCase().includes(word) || item.owners_name.toLowerCase().includes(word))
+  }, [searchWord, JSON.stringify(_data)])
 
   return (
     <DashboardLayout>
@@ -41,7 +58,7 @@ export default function Home() {
 
           <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
             <TextField.Container className="flex-1 border border-gray-200">
-              <TextField.Input placeholder="Search" />
+              <TextField.Input onChange={onChangeText} placeholder="Search" />
 
               <IconButton className="text-gray-200">
                 <SearchIcon />
@@ -123,6 +140,7 @@ export default function Home() {
                     </DropdownMenu>
                   </TableCell>
                 </TableRow>
+           
               </TableBody>)}
             </Table>
           </div>
