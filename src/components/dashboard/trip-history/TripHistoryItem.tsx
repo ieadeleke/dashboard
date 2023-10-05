@@ -14,18 +14,18 @@ export const TripHistoryItem = (props: TripHistoryProps) => {
         switch (status) {
             case "complete":
                 return {
-                    container: 'bg-blue-100',
-                    label: 'text-blue-800'
+                    container: 'bg-pattens-blue-100',
+                    label: 'text-pattens-blue-950'
                 }
             case "canceled":
                 return {
-                    container: 'bg-red-100',
-                    label: 'text-red-800'
+                    container: 'bg-we-peep-200',
+                    label: 'text-we-peep-900'
                 }
             default:
                 return {
-                    container: 'bg-yellow-100',
-                    label: 'text-yellow-800'
+                    container: 'bg-barley-white-100',
+                    label: 'text-barley-white-900'
                 }
         }
     }, [status])
