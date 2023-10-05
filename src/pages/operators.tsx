@@ -18,11 +18,21 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { CheckBox } from "@/components/buttons/CheckBox";
+import { AddOperatorsModal, AddOperatorsModalRef } from "@/components/operators/AddOperatorsModal";
+import { useRef } from "react";
 
 export default function Home() {
+  const addOperatorsRef = useRef<AddOperatorsModalRef>(null)
+
+  function addOperator() {
+    addOperatorsRef.current?.open()
+  }
+
   return (
     <DashboardLayout>
       <div className="flex flex-col py-8">
+
+        <AddOperatorsModal ref={addOperatorsRef} />
 
         <div className="flex flex-col gap-6">
           <h1 className="text-2xl font-bold">Operators <span className="text-primary">(50)</span></h1>
@@ -36,21 +46,11 @@ export default function Home() {
               </IconButton>
             </TextField.Container>
 
-            <div className="border rounded-md py-2">
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <div className="flex items-center gap-3 text-sm text-text-normal font-semibold">
-                    <PlusIcon className="text-gray-300" />
-                    <p>Add Operators</p>
-                  </div>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuLabel>Action 1</DropdownMenuLabel>
-                  <DropdownMenuItem>Action 2</DropdownMenuItem>
-                  <DropdownMenuItem>Action 3</DropdownMenuItem>
-                  <DropdownMenuItem>Action 4</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+            <div onClick={addOperator} className="border cursor-pointer rounded-md py-2 px-2 pr-3">
+              <div className="flex items-center gap-2 text-sm text-text-normal font-semibold">
+                <PlusIcon className="text-gray-300" />
+                <p>Add Operators</p>
+              </div>
             </div>
 
             <div className="border rounded-md py-2">
