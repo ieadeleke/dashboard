@@ -20,8 +20,10 @@ import {
 import { CheckBox } from "@/components/buttons/CheckBox";
 import { AddOperatorsModal, AddOperatorsModalRef } from "@/components/operators/AddOperatorsModal";
 import { useRef } from "react";
+import { getOperatorsData } from "@/utils/data/operators";
 
 export default function Home() {
+  const data = getOperatorsData(50)
   const addOperatorsRef = useRef<AddOperatorsModalRef>(null)
 
   function addOperator() {
@@ -82,13 +84,13 @@ export default function Home() {
                   </TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Email</TableHead>
-                  <TableHead>Lorem</TableHead>
-                  <TableHead>Title</TableHead>
+                  <TableHead>Owner's Name</TableHead>
+                  <TableHead></TableHead>
                   <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
 
-              {Array(3).fill(0).map((item, index) => <TableBody key={index} className="bg-white">
+              {data.map((item) => <TableBody key={item.id} className="bg-white">
                 <TableRow>
                   <TableCell className="font-medium">
                     <div className="flex items-center">
@@ -96,11 +98,11 @@ export default function Home() {
                     </div>
                   </TableCell>
                   <TableCell>
-                    Wade Williamson
+                    {item.name}
                   </TableCell>
-                  <TableCell>Braxton.Herzog38@gmail.com</TableCell>
+                  <TableCell>{item.email}</TableCell>
                   <TableCell>
-                    Lorem
+                    {item.owners_name}
                   </TableCell>
                   <TableCell>Lorem</TableCell>
                   <TableCell>
