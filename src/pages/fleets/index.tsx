@@ -1,7 +1,7 @@
 import { IconButton } from "@/components/buttons/IconButton";
 import { TextField } from "@/components/input/InputText";
 import DashboardLayout from "@/components/layout/dashboard";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ChevronDown, MoreHorizontalIcon, PlusIcon, SearchIcon } from "lucide-react";
 import {
     DropdownMenu,
@@ -20,6 +20,16 @@ import {
 } from "@/components/ui/table"
 import { CheckBox } from "@/components/buttons/CheckBox";
 import Link from "next/link";
+import { Fleet, getFleetData } from "@/utils/data/fleets";
+import { useMemo } from "react";
+
+type TableDataListProps = {
+    data: Fleet
+}
+
+type TabBodyProps = {
+    data: Fleet[]
+}
 
 const tabs = [
     {
@@ -41,13 +51,144 @@ const tabs = [
 ]
 
 
+const TableDataList = (props: TableDataListProps) => {
+    const { data } = props
+
+    const statusLabel = useMemo(() => {
+        switch (data.status) {
+            case "active":
+                return "Active"
+            case "pending":
+                return "Pending"
+            default:
+                return "Suspended"
+        }
+    }, [data.status])
+
+    const statusStyles = useMemo(() => {
+        switch (data.status) {
+            case "active":
+                return {
+                    container: 'bg-pattens-blue-100',
+                    label: 'text-pattens-blue-950'
+                }
+            case "pending":
+                return {
+                    container: 'bg-barley-white-100',
+                    label: 'text-barley-white-900'
+                }
+            default:
+                return {
+                    container: 'bg-we-peep-200',
+                    label: 'text-we-peep-900'
+                }
+        }
+    }, [data.status])
+
+    return <TableBody className="bg-white">
+        <TableRow>
+            <TableCell className="flex font-medium"><CheckBox /></TableCell>
+            <TableCell>
+                <div className="flex items-center gap-4">
+                    <img src={data.image} className="bg-gray-200 h-10 w-10 object-cover object-center" />
+                    <p>{data.id}</p>
+                </div>
+            </TableCell>
+            <TableCell>{data.seats}</TableCell>
+            <TableCell className="flex">
+                <div className={`${statusStyles.container} p-2 rounded-md`}>
+                    <p className={`${statusStyles.label} text-sm`}>{statusLabel}</p>
+                </div>
+            </TableCell>
+            <TableCell>Lorem</TableCell>
+            <TableCell>
+                <DropdownMenu>
+                    <DropdownMenuTrigger>
+                        <IconButton className="text-primary border border-primary rounded-sm">
+                            <MoreHorizontalIcon />
+                        </IconButton>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <DropdownMenuLabel>Action 1</DropdownMenuLabel>
+                        <DropdownMenuItem>Action 2</DropdownMenuItem>
+                        <DropdownMenuItem>Action 3</DropdownMenuItem>
+                        <DropdownMenuItem>Action 4</DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </TableCell>
+        </TableRow>
+    </TableBody>
+}
+
+const TabBody = (props: TabBodyProps) => {
+    const { data } = props
+
+    return <div>
+        <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
+            <TextField.Container className="flex-1 border border-gray-200">
+                <TextField.Input className="h-10" placeholder="Search" />
+
+                <IconButton className="text-gray-200">
+                    <SearchIcon />
+                </IconButton>
+            </TextField.Container>
+
+            <Link href="/fleets/add-fleet" className=" flex items-center gap-1 text-text-normal font-semibold border rounded-md py-2 px-2">
+                <PlusIcon className="text-gray-500 w-4 h-4" />
+                <p className="text-sm">Add New Fleet</p>
+            </Link>
+
+
+            <div className="border rounded-md">
+                <DropdownMenu>
+                    <DropdownMenuTrigger>
+                        <div className="flex items-center gap-3 text-text-normal font-semibold">
+                            <p className="text-sm">Filter</p>
+                            <ChevronDown className="text-gray-500" />
+                        </div>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <DropdownMenuLabel>Action 1</DropdownMenuLabel>
+                        <DropdownMenuItem>Action 2</DropdownMenuItem>
+                        <DropdownMenuItem>Action 3</DropdownMenuItem>
+                        <DropdownMenuItem>Action 4</DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
+        </div>
+
+        <div>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="w-[100px]">
+                            <div className="flex items-center">
+                                <CheckBox />
+                            </div>
+                        </TableHead>
+                        <TableHead>Fleet ID</TableHead>
+                        <TableHead>Seats</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Title</TableHead>
+                        <TableHead></TableHead>
+                    </TableRow>
+                </TableHeader>
+
+                {data.map((item, index) => <TableDataList key={index} data={item} />)}
+            </Table>
+        </div>
+    </div>
+}
+
 export default function Home() {
+    const data = getFleetData(100)
+
     return (
         <DashboardLayout>
             <Tabs defaultValue="active" className="flex flex-col py-8">
 
                 <div className="flex flex-col gap-6">
-                    <h1 className="text-2xl font-bold">All Fleets <span className="text-primary">(50)</span></h1>
+                    <h1 className="text-2xl font-bold">All Fleets <span className="text-primary">({data.length})</span></h1>
 
                     <div>
                         <TabsList className="bg-white h-auto py-0 px-0">
@@ -57,97 +198,24 @@ export default function Home() {
                         </TabsList>
                     </div>
 
-                    <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
-                        <TextField.Container className="flex-1 border border-gray-200">
-                            <TextField.Input className="h-10" placeholder="Search" />
 
-                            <IconButton className="text-gray-200">
-                                <SearchIcon />
-                            </IconButton>
-                        </TextField.Container>
+                    <TabsContent value="active">
+                        <TabBody data={data.filter((item) => item.status == "active")} />
+                    </TabsContent>
 
-                        <Link href="/fleets/add-fleet" className=" flex items-center gap-1 text-text-normal font-semibold border rounded-md py-2 px-2">
-                            <PlusIcon className="text-gray-500 w-4 h-4" />
-                            <p className="text-sm">Add New Fleet</p>
-                        </Link>
+                    <TabsContent value="all">
+                        <TabBody data={data} />
+                    </TabsContent>
 
+                    <TabsContent value="suspended">
+                        <TabBody data={data.filter((item) => item.status == "suspended")} />
+                    </TabsContent>
 
-                        <div className="border rounded-md">
-                            <DropdownMenu>
-                                <DropdownMenuTrigger>
-                                    <div className="flex items-center gap-3 text-text-normal font-semibold">
-                                        <p className="text-sm">Filter</p>
-                                        <ChevronDown className="text-gray-500" />
-                                    </div>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                    <DropdownMenuLabel>Action 1</DropdownMenuLabel>
-                                    <DropdownMenuItem>Action 2</DropdownMenuItem>
-                                    <DropdownMenuItem>Action 3</DropdownMenuItem>
-                                    <DropdownMenuItem>Action 4</DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </div>
-                    </div>
-
-                    <div>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead className="w-[100px]">
-                                        <div className="flex items-center">
-                                            <CheckBox />
-                                        </div>
-                                    </TableHead>
-                                    <TableHead>Fleet ID</TableHead>
-                                    <TableHead>Seats</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    <TableHead>Title</TableHead>
-                                    <TableHead></TableHead>
-                                </TableRow>
-                            </TableHeader>
-
-                            {Array(3).fill(0).map((item, index) => <TableBody key={index} className="bg-white">
-                                <TableRow>
-                                    <TableCell className="flex font-medium"><CheckBox /></TableCell>
-                                    <TableCell>
-                                        <div className="flex items-center gap-4">
-                                            <div className="bg-gray-200 h-10 w-10" />
-                                            <p>7406597</p>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>10</TableCell>
-                                    <TableCell className="flex">
-                                        <div className="bg-red-500 p-2 rounded-md">
-                                            <p className="text-sm">Pending</p>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>Lorem</TableCell>
-                                    <TableCell>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger>
-                                                <IconButton className="text-primary border border-primary rounded-sm">
-                                                    <MoreHorizontalIcon />
-                                                </IconButton>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent>
-                                                <DropdownMenuLabel>Action 1</DropdownMenuLabel>
-                                                <DropdownMenuItem>Action 2</DropdownMenuItem>
-                                                <DropdownMenuItem>Action 3</DropdownMenuItem>
-                                                <DropdownMenuItem>Action 4</DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </TableCell>
-                                </TableRow>
-                            </TableBody>)}
-                        </Table>
-                    </div>
+                    <TabsContent value="pending">
+                        <TabBody data={data.filter((item) => item.status == "pending")} />
+                    </TabsContent>
                 </div>
 
-
-                <div>
-
-                </div>
             </Tabs>
         </DashboardLayout>
     )
