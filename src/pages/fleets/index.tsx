@@ -51,7 +51,7 @@ const tabs = [
 ]
 
 
-const TableDataList = (props: TableDataListProps) => {
+export const FleetTableDataList = (props: TableDataListProps) => {
     const { data } = props
 
     const statusLabel = useMemo(() => {
@@ -174,7 +174,7 @@ const TabBody = (props: TabBodyProps) => {
                     </TableRow>
                 </TableHeader>
 
-                {data.map((item, index) => <TableDataList key={index} data={item} />)}
+                {data.map((item, index) => <FleetTableDataList key={index} data={item} />)}
             </Table>
         </div>
     </div>
