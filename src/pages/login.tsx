@@ -8,13 +8,13 @@ import Button from "@/components/buttons";
 
 export default function LoginPage() {
     return <AuthLayout>
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col  min-h-screen items-center justify-center py-8">
 
             <div className="flex flex-col gap-8 w-full px-2 md:w-[400px]">
                 <div className="flex flex-col gap-4">
                     <LogoIcon className="self-center" />
                     <div className="flex flex-col gap-2 text-center">
-                        <h1 className="font-bold text-3xl text-primary">Log In to Admin</h1>
+                        <h1 className="font-bold text-2xl md:text-3xl text-primary">Log In to Admin</h1>
                         <p className="text-[#666666]">Control Center</p>
                     </div>
                 </div>
