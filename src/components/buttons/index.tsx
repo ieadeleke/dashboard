@@ -11,11 +11,11 @@ const Button = forwardRef<HTMLButtonElement, ForwardRefButtonProps>((props, ref)
     const bgClassName = useMemo(() => {
         switch (props.variant) {
             case 'contained':
-                return 'bg-primary text-white border-none rounded-[3px]'
+                return 'bg-primary text-white border-none rounded-[3px] hover:bg-primary-800'
             case 'outlined':
                 return 'bg-transparent border border-solid border-primary text-primary'
             case 'text':
-                return 'bg-transparent text-primary'
+                return 'bg-transparent text-primary hover:bg-gray-100'
             default:
                 return 'text-primary'
         }
