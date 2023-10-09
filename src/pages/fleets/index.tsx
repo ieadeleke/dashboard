@@ -21,7 +21,7 @@ import {
 import { CheckBox } from "@/components/buttons/CheckBox";
 import Link from "next/link";
 import { Fleet, getFleetData } from "@/utils/data/fleets";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import SEO from "@/components/SEO";
 
 type TableDataListProps = {
@@ -182,7 +182,11 @@ const TabBody = (props: TabBodyProps) => {
 }
 
 export default function Home() {
-    const data = getFleetData(100)
+    const [data, setData] = useState<Fleet[]>([])
+
+    useEffect(() => {
+        setData(getFleetData(100))
+    }, [])
 
     return (
         <DashboardLayout>
