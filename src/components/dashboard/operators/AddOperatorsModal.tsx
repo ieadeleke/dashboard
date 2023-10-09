@@ -91,3 +91,5 @@ export const AddOperatorsModal = forwardRef<AddOperatorsModalRef, AddOperatorsMo
     </Dialog>
 
 })
+
+AddOperatorsModal.displayName = "AddOperatorsModal"

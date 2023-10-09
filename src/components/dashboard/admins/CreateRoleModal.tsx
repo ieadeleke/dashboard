@@ -89,3 +89,5 @@ export const CreateRoleModal = forwardRef<CreateRoleModalRef, CreateRoleModalPro
     </Dialog>
 
 })
+
+CreateRoleModal.displayName = "CreateRoleModal"

@@ -5,3 +5,5 @@ export const IconButton = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivEleme
 
     return <div ref={ref} className={cn(`p-1 cursor-pointer hover:bg-gray-100 rounded-full`, className)} {...props} />
 })
+
+IconButton.displayName = "IconButton"

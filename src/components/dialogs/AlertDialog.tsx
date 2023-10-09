@@ -86,3 +86,5 @@ export const IncidentAlertDialog = forwardRef<IncidentAlertDialogRef, IncidentAl
         </AlertDialogContent>
     </BaseAlertDialog>
 })
+
+IncidentAlertDialog.displayName = "IncidentAlertDialog"

@@ -19,3 +19,6 @@ export const TextField = {
     Container: TextFieldContainer,
     Input: Input
 }
+
+Input.displayName = "TextFieldInput"
+TextFieldContainer.displayName = "TextFieldContainer"

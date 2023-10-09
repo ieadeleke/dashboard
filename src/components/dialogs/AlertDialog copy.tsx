@@ -84,3 +84,5 @@ export const AlertDialog = forwardRef<AlertDialogRef, AlertDialogProps>((props, 
         </AlertDialogContent>
     </BaseAlertDialog>
 })
+
+AlertDialog.displayName = "AlertDialogCopy"

@@ -91,3 +91,5 @@ export const TripDetailModal = forwardRef<TripDetailModalRef, TripDetailModalPro
     </Dialog>
 
 })
+
+TripDetailModal.displayName = "TripDetailModal"

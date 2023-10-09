@@ -99,3 +99,5 @@ export const AddAdminsModal = forwardRef<AddAdminsModalRef, AddAdminsModalProps>
     </Dialog>
 
 })
+
+AddAdminsModal.displayName = "AddAdminsModal"
