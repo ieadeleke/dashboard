@@ -6,10 +6,12 @@ import { EyeIcon } from "lucide-react";
 import { CheckBox } from "@/components/buttons/CheckBox";
 import Button from "@/components/buttons";
 import Link from "next/link";
+import SEO from "@/components/SEO";
 
 export default function LoginPage() {
     return <AuthLayout>
         <div className="flex flex-col  min-h-screen items-center justify-center py-8">
+            <SEO title="Laswa | Login" />
 
             <div className="flex flex-col gap-8 w-full px-2 md:w-[400px]">
                 <div className="flex flex-col gap-4">

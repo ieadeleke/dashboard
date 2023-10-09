@@ -15,6 +15,7 @@ import { AddAdminsModal, AddAdminsModalRef } from "@/components/dashboard/admins
 import Button from "@/components/buttons";
 import { CreateRoleModal, CreateRoleModalRef } from "@/components/dashboard/admins/CreateRoleModal";
 import { Admin, getAdminData } from "@/utils/data/admins";
+import SEO from "@/components/SEO";
 
 export default function AdminsPage() {
   const [data, setData] = useState<Admin[]>([])
@@ -36,6 +37,7 @@ export default function AdminsPage() {
   return (
     <DashboardLayout>
       <div className="flex flex-col py-8">
+        <SEO title="Laswa | Admin" />
 
         <AddAdminsModal ref={addAdminsRef} />
         <CreateRoleModal ref={addRoleRef} />

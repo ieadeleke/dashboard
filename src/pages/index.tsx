@@ -5,11 +5,12 @@ import { LifeTracking } from "@/components/dashboard/LifeTracking";
 import { Stats } from "@/components/dashboard/stats/Stats";
 import { IncidentAlertDialog, IncidentAlertDialogRef } from "@/components/dialogs/AlertDialog";
 import { useEffect, useRef } from "react";
+import SEO from "@/components/SEO";
 
 export default function Home() {
   const alertRef = useRef<IncidentAlertDialogRef>(null)
 
-  function showAlertDialog(){
+  function showAlertDialog() {
     alertRef.current?.show({
       variant: "regular",
       data: {
@@ -34,6 +35,7 @@ export default function Home() {
   return (
     <DashboardLayout>
       <div className="flex flex-col py-8 gap-8">
+        <SEO title="Laswa | Home" />
         <Stats />
         <Activities />
         <LifeTracking />

@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { PassengerTabBody } from "@/components/dashboard/passengers/PassengerTabBody";
 import { useEffect, useState } from "react";
 import { getPassengersData, Passenger } from "@/utils/data/passengers";
+import SEO from "@/components/SEO";
 
 const tabs = [
   {
@@ -27,6 +28,8 @@ export default function PassengersPage() {
       <Tabs defaultValue="active" className="flex flex-col py-8">
 
         <div className="flex flex-col gap-6">
+        <SEO title="Laswa | Passengers" />
+
           <h1 className="text-2xl font-bold">Passengers <span className="text-primary">({data.length})</span></h1>
 
           <div>

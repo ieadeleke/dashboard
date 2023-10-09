@@ -6,14 +6,16 @@ import { IconButton } from "@/components/buttons/IconButton";
 import { EyeIcon } from "lucide-react";
 import Button from "@/components/buttons";
 import Link from "next/link";
+import SEO from "@/components/SEO";
 
 export default function GetStartedPage() {
     return <AuthLayout>
         <div className="relative flex flex-col  min-h-screen items-center justify-center py-8">
+            <SEO title="Laswa | Get Started" />
 
             <Link href="/login">
                 <Button variant="outlined" className="absolute py-3 right-2 top-4">Already Have an Account</Button>
-                </Link>
+            </Link>
 
             <div className="flex flex-col gap-8 w-full px-2 md:w-[400px]">
                 <div className="flex flex-col gap-4">

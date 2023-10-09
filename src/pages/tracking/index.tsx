@@ -6,6 +6,7 @@ import SearchIcon from '@/assets/icons/ic_search.svg'
 import { TripHistoryItem } from "@/components/dashboard/trip-history/TripHistoryItem";
 import Link from "next/link";
 import { getTripData, Trip } from "@/utils/data/trip";
+import SEO from "@/components/SEO";
 
 const containerStyle = {
   width: '100%',
@@ -45,7 +46,7 @@ export default function Tracking() {
   return (
     <DashboardLayout>
       <div className="flex flex-col py-8 gap-8">
-
+        <SEO title="Laswa | Activities" />
         <div className="flex flex-col gap-2 md:flex-row md:items-center">
           <h1 className="font-bold text-lg">Life Tracking</h1>
           <div className="flex-1" />

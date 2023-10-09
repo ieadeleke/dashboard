@@ -20,6 +20,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { FleetTableDataList } from "./fleets";
 import { Fleet, getFleetData } from "@/utils/data/fleets";
 import { useEffect, useState } from "react";
+import SEO from "@/components/SEO";
 
 const tabs = [
   {
@@ -46,6 +47,7 @@ export default function IndidentsPage() {
       <Tabs defaultValue="operators" className="flex flex-col py-8">
 
         <div className="flex flex-col gap-6">
+        <SEO title="Laswa | Incidents" />
           <div className="flex justify-center">
             <TabsList className="bg-white h-auto py-0 px-0">
               {tabs.map((item) => <div className={``} key={item.value}>

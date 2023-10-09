@@ -5,13 +5,14 @@ import { ActivityItem } from "@/components/dashboard/RecentActivities";
 import { Divider } from "@/components/Divider";
 import { IconButton } from "@/components/buttons/IconButton";
 import { MoreHorizontalIcon } from "lucide-react";
+import SEO from "@/components/SEO";
 
 export default function Tracking() {
 
     return (
         <DashboardLayout>
             <div className="flex flex-col py-8 gap-8">
-
+                <SEO title="Laswa | Activities" />
                 <div className="flex flex-col gap-2 md:flex-row md:items-center">
                     <h1 className="font-bold text-lg">Recent Activities</h1>
                     <div className="flex-1" />

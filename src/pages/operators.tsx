@@ -21,6 +21,7 @@ import { CheckBox } from "@/components/buttons/CheckBox";
 import { AddOperatorsModal, AddOperatorsModalRef } from "@/components/dashboard/operators/AddOperatorsModal";
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { getOperatorsData, Operator } from "@/utils/data/operators";
+import SEO from "@/components/SEO";
 
 export default function Home() {
   const [_data, setData] = useState<Operator[]>([])
@@ -50,7 +51,7 @@ export default function Home() {
   return (
     <DashboardLayout>
       <div className="flex flex-col py-8">
-
+      <SEO title="Laswa | Operators" />
         <AddOperatorsModal ref={addOperatorsRef} />
 
         <div className="flex flex-col gap-6">

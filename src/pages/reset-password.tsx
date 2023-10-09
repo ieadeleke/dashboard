@@ -3,20 +3,22 @@ import LogoIcon from '@/assets/icons/ic_logo.svg'
 import { TextField } from "@/components/input/InputText";
 import Button from "@/components/buttons";
 import { useState } from "react";
+import SEO from "@/components/SEO";
 
 export default function ResetPassword() {
     const [isFocused, setIsFocused] = useState(false)
 
-    function onBlur(){
+    function onBlur() {
         setIsFocused(false)
     }
 
-    function onFocused(){
+    function onFocused() {
         setIsFocused(true)
     }
 
     return <AuthLayout>
         <div className="flex flex-col items-center min-h-screen justify-center py-8">
+            <SEO title="Laswa | Reset Password" />
 
             <div className="flex flex-col gap-8 w-full px-2 md:w-[400px]">
                 <div className="flex flex-col gap-4">

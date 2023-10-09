@@ -15,6 +15,7 @@ import { TripDetailModal, TripDetailModalRef } from "@/components/dashboard/trip
 import { useEffect, useRef, useState } from "react";
 import { getTripData, Trip } from "@/utils/data/trip";
 import { TripHistoryTab } from "@/components/dashboard/trip-history/TripHistoryTab";
+import SEO from "@/components/SEO";
 
 const tabs = [
   {
@@ -50,6 +51,7 @@ export default function Home() {
       <Tabs defaultValue="active" className="flex flex-col py-8">
 
         <div className="flex flex-col gap-6">
+        <SEO title="Laswa | Trip History" />
           <h1 className="text-2xl font-bold">Trip History <span className="text-primary">({data.length})</span></h1>
 
           <div>

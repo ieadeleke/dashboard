@@ -22,6 +22,7 @@ import { CheckBox } from "@/components/buttons/CheckBox";
 import Link from "next/link";
 import { Fleet, getFleetData } from "@/utils/data/fleets";
 import { useMemo } from "react";
+import SEO from "@/components/SEO";
 
 type TableDataListProps = {
     data: Fleet
@@ -188,6 +189,8 @@ export default function Home() {
             <Tabs defaultValue="active" className="flex flex-col py-8">
 
                 <div className="flex flex-col gap-6">
+                    <SEO title="Laswa | Fleets" />
+
                     <h1 className="text-2xl font-bold">All Fleets <span className="text-primary">({data.length})</span></h1>
 
                     <div>
