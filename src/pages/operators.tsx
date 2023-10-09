@@ -102,7 +102,7 @@ export default function Home() {
                   </TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Email</TableHead>
-                  <TableHead>Owner's Name</TableHead>
+                  <TableHead>{`Owner's Name`}</TableHead>
                   <TableHead></TableHead>
                   <TableHead></TableHead>
                 </TableRow>
