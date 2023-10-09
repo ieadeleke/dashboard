@@ -9,21 +9,27 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AdminItem } from "@/components/admins/AdminItem";
 import { AddAdminsModal, AddAdminsModalRef } from "@/components/admins/AddAdminModal";
 import Button from "@/components/buttons";
 import { CreateRoleModal, CreateRoleModalRef } from "@/components/admins/CreateRoleModal";
+import { Admin, getAdminData } from "@/utils/data/admins";
 
 export default function AdminsPage() {
+  const [data, setData] = useState<Admin[]>([])
   const addAdminsRef = useRef<AddAdminsModalRef>(null)
   const addRoleRef = useRef<CreateRoleModalRef>(null)
+
+  useEffect(() => {
+    setData(getAdminData(12))
+  }, [])
 
   function addAdmin() {
     addAdminsRef.current?.open()
   }
 
-  function addRole(){
+  function addRole() {
     addRoleRef.current?.open()
   }
 
@@ -35,10 +41,10 @@ export default function AdminsPage() {
         <CreateRoleModal ref={addRoleRef} />
 
         <div className="flex flex-col gap-6">
-          <h1 className="text-2xl font-bold">Admins <span className="text-primary">(5)</span></h1>
+          <h1 className="text-2xl font-bold">Admins <span className="text-primary">({data.length})</span></h1>
 
           <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
-            
+
             <TextField.Container className="flex-1 border border-gray-200">
               <TextField.Input placeholder="Search" />
 
@@ -75,14 +81,7 @@ export default function AdminsPage() {
 
           <div>
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-              <AdminItem />
-              <AdminItem />
-              <AdminItem />
-              <AdminItem />
-              <AdminItem />
-              <AdminItem />
-              <AdminItem />
-              <AdminItem />
+              {data.map((item) => <AdminItem key={item.id} data={item} />)}
             </div>
           </div>
         </div>
