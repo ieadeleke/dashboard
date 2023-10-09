@@ -18,7 +18,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { CheckBox } from "@/components/buttons/CheckBox";
-import { AddOperatorsModal, AddOperatorsModalRef } from "@/components/operators/AddOperatorsModal";
+import { AddOperatorsModal, AddOperatorsModalRef } from "@/components/dashboard/operators/AddOperatorsModal";
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { getOperatorsData, Operator } from "@/utils/data/operators";
 

@@ -10,10 +10,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useEffect, useRef, useState } from "react";
-import { AdminItem } from "@/components/admins/AdminItem";
-import { AddAdminsModal, AddAdminsModalRef } from "@/components/admins/AddAdminModal";
+import { AdminItem } from "@/components/dashboard/admins/AdminItem";
+import { AddAdminsModal, AddAdminsModalRef } from "@/components/dashboard/admins/AddAdminModal";
 import Button from "@/components/buttons";
-import { CreateRoleModal, CreateRoleModalRef } from "@/components/admins/CreateRoleModal";
+import { CreateRoleModal, CreateRoleModalRef } from "@/components/dashboard/admins/CreateRoleModal";
 import { Admin, getAdminData } from "@/utils/data/admins";
 
 export default function AdminsPage() {

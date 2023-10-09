@@ -4,19 +4,21 @@ import {
 } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
 import { forwardRef, useImperativeHandle, useState } from "react"
-import Button from "../buttons"
-import { InputProps, TextField } from "../input/InputText"
+import Button from "../../buttons"
+import { CheckBox } from "../../buttons/CheckBox"
+import { Divider } from "../../Divider"
+import { InputProps, TextField } from "../../input/InputText"
 
-type AddOperatorsModalProps = {
+type CreateRoleModalProps = {
 
 }
 
-export type AddOperatorsModalRef = {
+export type CreateRoleModalRef = {
     open: () => void,
     close: () => void
 }
 
-const OperatorInputField = ({ className, ...props }: InputProps) => {
+const CreateRoleInputField = ({ className, ...props }: InputProps) => {
     const [isFocused, setIsFocused] = useState(false)
 
     function onBlur() {
@@ -32,7 +34,7 @@ const OperatorInputField = ({ className, ...props }: InputProps) => {
     </TextField.Container>
 }
 
-export const AddOperatorsModal = forwardRef<AddOperatorsModalRef, AddOperatorsModalProps>((props, ref) => {
+export const CreateRoleModal = forwardRef<CreateRoleModalRef, CreateRoleModalProps>((props, ref) => {
     const [isVisible, setIsVisible] = useState(false)
 
     function closeModal(){
@@ -55,36 +57,32 @@ export const AddOperatorsModal = forwardRef<AddOperatorsModalRef, AddOperatorsMo
     }
     
     return <Dialog open={isVisible} onOpenChange={onOpenChange}>
-        <DialogContent>
+        <DialogContent className="max-h-[90vh] overflow-y-scroll no-scrollbar">
             <div className="flex flex-col">
-                <h2 className="font-bold text-2xl text-center">Add Operators</h2>
+                <h2 className="font-bold text-2xl text-center">Create Role</h2>
             </div>
 
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
-                    <h4 className="text-sm font-medium">First Name*</h4>
-                    <OperatorInputField />
+                    <h4 className="text-sm font-medium">Role Name*</h4>
+                    <CreateRoleInputField placeholder="e.g Editor" />
+                </div>
+
+                <div className="flex justify-center items-center h-10 bg-primary text-white">
+                    <h1 className="text-center">Permisson</h1>
                 </div>
 
                 <div className="flex flex-col gap-2">
-                    <h4 className="text-sm font-medium">Last Name*</h4>
-                    <OperatorInputField />
-                </div>  
-
-                <div className="flex flex-col gap-2">
-                    <h4 className="text-sm font-medium">Home Address*</h4>
-                    <OperatorInputField />
-                </div>
-
-                <div className="flex flex-col gap-2">
-                    <h4 className="text-sm font-medium">Phone Number*</h4>
-                    <OperatorInputField inputMode="numeric" />
+                    {Array(5).fill(0).map((_, index) => <div className="flex items-center gap-2" key={index}>
+                        <CheckBox />
+                        <p className="text-sm font-medium">Permission {index + 1}</p>
+                    </div>)}
                 </div>
 
                 <div className="flex gap-8" onClick={closeModal}>
-                    <Button variant="outlined" className="flex-1 py-3">Close</Button>
+                    <Button variant="outlined" className="flex-1 py-2 border-none bg-[#F1F1F1]">Cancel</Button>
 
-                    <Button variant="contained" className="flex-1 py-3">Next</Button>
+                    <Button variant="contained" className="flex-1 py-2">Save</Button>
                 </div>
             </div>
         </DialogContent>

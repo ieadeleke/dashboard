@@ -4,21 +4,20 @@ import {
 } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
 import { forwardRef, useImperativeHandle, useState } from "react"
-import Button from "../buttons"
-import { CheckBox } from "../buttons/CheckBox"
-import { Divider } from "../Divider"
-import { InputProps, TextField } from "../input/InputText"
+import Button from "../../buttons"
+import { Divider } from "../../Divider"
+import { InputProps, TextField } from "../../input/InputText"
 
-type CreateRoleModalProps = {
+type AddAdminsModalProps = {
 
 }
 
-export type CreateRoleModalRef = {
+export type AddAdminsModalRef = {
     open: () => void,
     close: () => void
 }
 
-const CreateRoleInputField = ({ className, ...props }: InputProps) => {
+const AdminInputField = ({ className, ...props }: InputProps) => {
     const [isFocused, setIsFocused] = useState(false)
 
     function onBlur() {
@@ -34,7 +33,7 @@ const CreateRoleInputField = ({ className, ...props }: InputProps) => {
     </TextField.Container>
 }
 
-export const CreateRoleModal = forwardRef<CreateRoleModalRef, CreateRoleModalProps>((props, ref) => {
+export const AddAdminsModal = forwardRef<AddAdminsModalRef, AddAdminsModalProps>((props, ref) => {
     const [isVisible, setIsVisible] = useState(false)
 
     function closeModal(){
@@ -59,30 +58,41 @@ export const CreateRoleModal = forwardRef<CreateRoleModalRef, CreateRoleModalPro
     return <Dialog open={isVisible} onOpenChange={onOpenChange}>
         <DialogContent className="max-h-[90vh] overflow-y-scroll no-scrollbar">
             <div className="flex flex-col">
-                <h2 className="font-bold text-2xl text-center">Create Role</h2>
+                <h2 className="font-bold text-2xl text-center">Add Admin</h2>
             </div>
 
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
-                    <h4 className="text-sm font-medium">Role Name*</h4>
-                    <CreateRoleInputField placeholder="e.g Editor" />
-                </div>
-
-                <div className="flex justify-center items-center h-10 bg-primary text-white">
-                    <h1 className="text-center">Permisson</h1>
+                    <h4 className="text-sm font-medium">First Name*</h4>
+                    <AdminInputField />
                 </div>
 
                 <div className="flex flex-col gap-2">
-                    {Array(5).fill(0).map((_, index) => <div className="flex items-center gap-2" key={index}>
-                        <CheckBox />
-                        <p className="text-sm font-medium">Permission {index + 1}</p>
-                    </div>)}
+                    <h4 className="text-sm font-medium">Last Name*</h4>
+                    <AdminInputField />
+                </div>  
+
+                <div className="flex flex-col gap-2">
+                    <h4 className="text-sm font-medium">Email*</h4>
+                    <AdminInputField />
+                </div>
+
+                <Divider />
+
+                <div className="flex flex-col gap-2">
+                    <h4 className="text-sm font-medium">Password*</h4>
+                    <AdminInputField type="password" />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                    <h4 className="text-sm font-medium">Confirm Password*</h4>
+                    <AdminInputField type="password" />
                 </div>
 
                 <div className="flex gap-8" onClick={closeModal}>
-                    <Button variant="outlined" className="flex-1 py-2 border-none bg-[#F1F1F1]">Cancel</Button>
+                    <Button variant="outlined" className="flex-1 py-3">Close</Button>
 
-                    <Button variant="contained" className="flex-1 py-2">Save</Button>
+                    <Button variant="contained" className="flex-1 py-3">Next</Button>
                 </div>
             </div>
         </DialogContent>

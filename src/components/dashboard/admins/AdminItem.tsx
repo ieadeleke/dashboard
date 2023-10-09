@@ -2,7 +2,7 @@ import PhoneIcon from '@/assets/icons/ic_phone.svg'
 import MailIcon from '@/assets/icons/ic_mail.svg'
 import CautionIcon from '@/assets/icons/ic_caution.svg'
 import LockAccessIcon from '@/assets/icons/ic_lock_access.svg'
-import { IconButton } from "../buttons/IconButton"
+import { IconButton } from "../../buttons/IconButton"
 import { MoreVertical } from "lucide-react"
 import {
     Popover,

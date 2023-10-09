@@ -4,20 +4,19 @@ import {
 } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
 import { forwardRef, useImperativeHandle, useState } from "react"
-import Button from "../buttons"
-import { Divider } from "../Divider"
-import { InputProps, TextField } from "../input/InputText"
+import Button from "../../buttons"
+import { InputProps, TextField } from "../../input/InputText"
 
-type AddAdminsModalProps = {
+type AddOperatorsModalProps = {
 
 }
 
-export type AddAdminsModalRef = {
+export type AddOperatorsModalRef = {
     open: () => void,
     close: () => void
 }
 
-const AdminInputField = ({ className, ...props }: InputProps) => {
+const OperatorInputField = ({ className, ...props }: InputProps) => {
     const [isFocused, setIsFocused] = useState(false)
 
     function onBlur() {
@@ -33,7 +32,7 @@ const AdminInputField = ({ className, ...props }: InputProps) => {
     </TextField.Container>
 }
 
-export const AddAdminsModal = forwardRef<AddAdminsModalRef, AddAdminsModalProps>((props, ref) => {
+export const AddOperatorsModal = forwardRef<AddOperatorsModalRef, AddOperatorsModalProps>((props, ref) => {
     const [isVisible, setIsVisible] = useState(false)
 
     function closeModal(){
@@ -56,37 +55,30 @@ export const AddAdminsModal = forwardRef<AddAdminsModalRef, AddAdminsModalProps>
     }
     
     return <Dialog open={isVisible} onOpenChange={onOpenChange}>
-        <DialogContent className="max-h-[90vh] overflow-y-scroll no-scrollbar">
+        <DialogContent>
             <div className="flex flex-col">
-                <h2 className="font-bold text-2xl text-center">Add Admin</h2>
+                <h2 className="font-bold text-2xl text-center">Add Operators</h2>
             </div>
 
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h4 className="text-sm font-medium">First Name*</h4>
-                    <AdminInputField />
+                    <OperatorInputField />
                 </div>
 
                 <div className="flex flex-col gap-2">
                     <h4 className="text-sm font-medium">Last Name*</h4>
-                    <AdminInputField />
+                    <OperatorInputField />
                 </div>  
 
                 <div className="flex flex-col gap-2">
-                    <h4 className="text-sm font-medium">Email*</h4>
-                    <AdminInputField />
-                </div>
-
-                <Divider />
-
-                <div className="flex flex-col gap-2">
-                    <h4 className="text-sm font-medium">Password*</h4>
-                    <AdminInputField type="password" />
+                    <h4 className="text-sm font-medium">Home Address*</h4>
+                    <OperatorInputField />
                 </div>
 
                 <div className="flex flex-col gap-2">
-                    <h4 className="text-sm font-medium">Confirm Password*</h4>
-                    <AdminInputField type="password" />
+                    <h4 className="text-sm font-medium">Phone Number*</h4>
+                    <OperatorInputField inputMode="numeric" />
                 </div>
 
                 <div className="flex gap-8" onClick={closeModal}>
