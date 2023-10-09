@@ -11,6 +11,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { TripHistoryItem } from "@/components/dashboard/trip-history/TripHistoryItem";
+import { TripDetailModal, TripDetailModalRef } from "@/components/dashboard/trips/TripsDetail";
+import { useEffect, useRef, useState } from "react";
+import { getTripData, Trip } from "@/utils/data/trip";
 
 const tabs = [
   {
@@ -33,9 +36,22 @@ const tabs = [
 
 
 export default function Home() {
+  const [data, setData] = useState<Trip[]>([])
+  const tripDetailModalRef = useRef<TripDetailModalRef>(null)
+
+  useEffect(() => {
+    setData(getTripData(6))
+  }, [])
+
+  function onTripItemClicked() {
+    tripDetailModalRef.current?.open()
+  }
+
   return (
     <DashboardLayout>
       <Tabs defaultValue="active" className="flex flex-col py-8">
+
+        <TripDetailModal ref={tripDetailModalRef} />
 
         <div className="flex flex-col gap-6">
           <h1 className="text-2xl font-bold">Trip History <span className="text-primary">(50)</span></h1>
@@ -93,12 +109,9 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-3 gap-4">
-            <TripHistoryItem status="active" />
-            <TripHistoryItem status="complete" />
-            <TripHistoryItem status="canceled" />
-            <TripHistoryItem status="active" />
-            <TripHistoryItem status="canceled" />
-            <TripHistoryItem status="complete" />
+            {data.map((item) => <div onClick={onTripItemClicked} key={item.id}>
+              <TripHistoryItem data={item} />
+            </div>)}
           </div>
         </div>
 

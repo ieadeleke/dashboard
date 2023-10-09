@@ -1,17 +1,18 @@
 import DiscIcon from '@/assets/icons/ic_history_disc.svg'
 import { StatusChip } from '@/components/chips/StatusChip'
 import { Divider } from '@/components/Divider'
+import { Trip } from '@/utils/data/trip'
 import { useMemo } from 'react'
 
 type TripHistoryProps = {
-    status: "active" | "complete" | "canceled"
+    data: Trip
 }
 
 export const TripHistoryItem = (props: TripHistoryProps) => {
-    const { status } = props
+    const { data } = props
 
     const statusStyles = useMemo(() => {
-        switch (status) {
+        switch (data.status) {
             case "complete":
                 return {
                     container: 'bg-pattens-blue-100',
@@ -28,7 +29,11 @@ export const TripHistoryItem = (props: TripHistoryProps) => {
                     label: 'text-barley-white-900'
                 }
         }
-    }, [status])
+    }, [data.status])
+
+    const statusText = useMemo(() => {
+        return data.status == 'active' ? "Active" : data.status == "canceled" ? "Canceled" : "Complete"
+    }, [data.status])
 
     return <div className="flex flex-col rounded-xl border bg-white px-6 py-6">
 
@@ -52,7 +57,7 @@ export const TripHistoryItem = (props: TripHistoryProps) => {
                 <div className="flex-1" />
                 <StatusChip.Container className={statusStyles.container}>
                     <StatusChip.Label className={statusStyles.label}>
-                        Active
+                        {statusText}
                     </StatusChip.Label>
                 </StatusChip.Container>
             </div>
