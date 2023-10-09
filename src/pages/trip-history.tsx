@@ -1,7 +1,7 @@
 import { IconButton } from "@/components/buttons/IconButton";
 import { TextField } from "@/components/input/InputText";
 import DashboardLayout from "@/components/layout/dashboard";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ArrowLeftRightIcon, ChevronDown, SearchIcon } from "lucide-react";
 import {
   DropdownMenu,
@@ -14,6 +14,7 @@ import { TripHistoryItem } from "@/components/dashboard/trip-history/TripHistory
 import { TripDetailModal, TripDetailModalRef } from "@/components/dashboard/trips/TripsDetail";
 import { useEffect, useRef, useState } from "react";
 import { getTripData, Trip } from "@/utils/data/trip";
+import { TripHistoryTab } from "@/components/dashboard/trip-history/TripHistoryTab";
 
 const tabs = [
   {
@@ -26,7 +27,7 @@ const tabs = [
   },
   {
     name: "Cancelled",
-    value: "cancelled"
+    value: "canceled"
   },
   {
     name: "Complete",
@@ -37,24 +38,19 @@ const tabs = [
 
 export default function Home() {
   const [data, setData] = useState<Trip[]>([])
-  const tripDetailModalRef = useRef<TripDetailModalRef>(null)
 
   useEffect(() => {
-    setData(getTripData(6))
+    setData(getTripData(50))
   }, [])
 
-  function onTripItemClicked() {
-    tripDetailModalRef.current?.open()
-  }
+
 
   return (
     <DashboardLayout>
       <Tabs defaultValue="active" className="flex flex-col py-8">
 
-        <TripDetailModal ref={tripDetailModalRef} />
-
         <div className="flex flex-col gap-6">
-          <h1 className="text-2xl font-bold">Trip History <span className="text-primary">(50)</span></h1>
+          <h1 className="text-2xl font-bold">Trip History <span className="text-primary">({data.length})</span></h1>
 
           <div>
             <TabsList className="bg-white h-auto py-0 px-0">
@@ -64,59 +60,21 @@ export default function Home() {
             </TabsList>
           </div>
 
-          <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
-            <TextField.Container className="flex-1 border border-gray-200">
-              <TextField.Input placeholder="Search" />
+          <TabsContent value="active">
+            <TripHistoryTab data={data.filter((item) => item.status == "active")} />
+          </TabsContent>
 
-              <IconButton className="text-gray-200">
-                <SearchIcon />
-              </IconButton>
-            </TextField.Container>
+          <TabsContent value="all">
+            <TripHistoryTab data={data} />
+          </TabsContent>
 
-            <div className="border rounded-md py-2">
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <div className="flex items-center gap-3 text-sm text-text-normal font-semibold">
-                    <ArrowLeftRightIcon className="text-gray-300" />
-                    <p>Initiate Trip</p>
-                  </div>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuLabel>Action 1</DropdownMenuLabel>
-                  <DropdownMenuItem>Action 2</DropdownMenuItem>
-                  <DropdownMenuItem>Action 3</DropdownMenuItem>
-                  <DropdownMenuItem>Action 4</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+          <TabsContent value="canceled">
+            <TripHistoryTab data={data.filter((item) => item.status == "canceled")} />
+          </TabsContent>
 
-            <div className="border rounded-md py-2">
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <div className="flex items-center gap-3 text-text-normal font-semibold">
-                    <p>Filter</p>
-                    <ChevronDown className="text-gray-300" />
-                  </div>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuLabel>Action 1</DropdownMenuLabel>
-                  <DropdownMenuItem>Action 2</DropdownMenuItem>
-                  <DropdownMenuItem>Action 3</DropdownMenuItem>
-                  <DropdownMenuItem>Action 4</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-3 gap-4">
-            {data.map((item) => <div onClick={onTripItemClicked} key={item.id}>
-              <TripHistoryItem data={item} />
-            </div>)}
-          </div>
-        </div>
-
-
-        <div>
+          <TabsContent value="complete">
+            <TripHistoryTab data={data.filter((item) => item.status == "complete")} />
+          </TabsContent>
 
         </div>
       </Tabs>
