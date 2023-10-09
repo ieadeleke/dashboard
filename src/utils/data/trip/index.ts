@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 
-type TripStatus = "active" | "complete" | "canceled"
+export type TripStatus = "active" | "complete" | "canceled"
 
 export type Trip = {
     id: string,
@@ -24,4 +24,8 @@ export function getTripData(size: number): Trip[] {
         ship_id: faker.string.numeric({ length: 8 }),
         status: getRandomTripStatus()
     }))
+}
+
+export function parseTripStatus(status: TripStatus){
+    return status == 'active' ? "Active" : status == "canceled" ? "Canceled" : "Complete"
 }

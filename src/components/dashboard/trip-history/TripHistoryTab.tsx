@@ -22,12 +22,8 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
     const { data } = props
     const tripDetailModalRef = useRef<TripDetailModalRef>(null)
 
-    function onTripItemClicked() {
-        tripDetailModalRef.current?.open()
-    }
-
     function handleOnTripItemClicked(data: Trip) {
-        onTripItemClicked()
+        tripDetailModalRef.current?.open({ data })
     }
 
     return <div>

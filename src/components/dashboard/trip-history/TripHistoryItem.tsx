@@ -1,8 +1,7 @@
 import DiscIcon from '@/assets/icons/ic_history_disc.svg'
-import { StatusChip } from '@/components/chips/StatusChip'
 import { Divider } from '@/components/Divider'
 import { Trip } from '@/utils/data/trip'
-import { useMemo } from 'react'
+import { TripHistoryStatusChip } from './TripHistoryStatusChip'
 
 type TripHistoryProps = {
     data: Trip
@@ -11,42 +10,18 @@ type TripHistoryProps = {
 export const TripHistoryItem = (props: TripHistoryProps) => {
     const { data } = props
 
-    const statusStyles = useMemo(() => {
-        switch (data.status) {
-            case "complete":
-                return {
-                    container: 'bg-pattens-blue-100',
-                    label: 'text-pattens-blue-950'
-                }
-            case "canceled":
-                return {
-                    container: 'bg-we-peep-200',
-                    label: 'text-we-peep-900'
-                }
-            default:
-                return {
-                    container: 'bg-barley-white-100',
-                    label: 'text-barley-white-900'
-                }
-        }
-    }, [data.status])
-
-    const statusText = useMemo(() => {
-        return data.status == 'active' ? "Active" : data.status == "canceled" ? "Canceled" : "Complete"
-    }, [data.status])
-
     return <div className="flex flex-col rounded-xl border bg-white px-6 py-6">
 
         <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-8">
                 <div className="flex items-center gap-4">
                     <DiscIcon className="w-7 h-7 text-text-normal" />
-                    <p>1397  Walnut Street, Jackson</p>
+                    <p>{data.start}</p>
                 </div>
 
                 <div className="flex items-center gap-4">
                     <DiscIcon className="w-7 h-7 text-primary" />
-                    <p>345 Hardesty Street, 368972</p>
+                    <p>{data.destination}</p>
                 </div>
             </div>
 
@@ -55,11 +30,7 @@ export const TripHistoryItem = (props: TripHistoryProps) => {
             <div className="flex items-center">
                 <p>Ship ID</p>
                 <div className="flex-1" />
-                <StatusChip.Container className={statusStyles.container}>
-                    <StatusChip.Label className={statusStyles.label}>
-                        {statusText}
-                    </StatusChip.Label>
-                </StatusChip.Container>
+                <TripHistoryStatusChip status={data.status} />
             </div>
         </div>
     </div>

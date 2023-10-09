@@ -3,26 +3,34 @@ import {
     DialogContent
 } from "@/components/ui/dialog"
 import { forwardRef, useImperativeHandle, useState } from "react"
-import { StatusChip } from "@/components/chips/StatusChip"
+import { Trip } from "@/utils/data/trip"
+import { TripHistoryStatusChip } from "../trip-history/TripHistoryStatusChip"
 
 type TripDetailModalProps = {
 
 }
 
+type TripDetailOpenPayload = {
+    data: Trip
+}
+
 export type TripDetailModalRef = {
-    open: () => void,
+    open: (payload: TripDetailOpenPayload) => void,
     close: () => void
 }
 
 export const TripDetailModal = forwardRef<TripDetailModalRef, TripDetailModalProps>((props, ref) => {
     const [isVisible, setIsVisible] = useState(false)
+    const [trip, setTrip] = useState<Trip | null>(null)
 
     function closeModal() {
         setIsVisible(false)
+        setTrip(null)
     }
 
     useImperativeHandle(ref, () => ({
-        open() {
+        open(payload: TripDetailOpenPayload) {
+            setTrip(payload.data)
             setIsVisible(true)
         },
         close() {
@@ -41,17 +49,17 @@ export const TripDetailModal = forwardRef<TripDetailModalRef, TripDetailModalPro
             <div className="flex flex-col gap-8">
                 <h2 className="font-bold text-2xl text-center">Trip Details</h2>
 
-                <div className="flex flex-col gap-6">
-
+                {trip && <div className="flex flex-col gap-6">
                     <div className="flex items-center">
-                        <p className="font-bold">Ship ID</p>
+                        <div className="flex flex-col gap-2">
+                            <p className="font-bold">Ship ID</p>
+                            <p className="text-sm">{trip.ship_id}</p>
+                        </div>
                         <div className="flex-1" />
 
-                        <StatusChip.Container>
-                            <StatusChip.Label>Active</StatusChip.Label>
-                        </StatusChip.Container>
+                        <TripHistoryStatusChip status={trip.status} />
                     </div>
-                </div>
+                </div>}
             </div>
         </DialogContent>
     </Dialog>
