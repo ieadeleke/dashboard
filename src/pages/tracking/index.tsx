@@ -1,10 +1,11 @@
 import { TextField } from "@/components/input/InputText";
 import DashboardLayout from "@/components/layout/dashboard";
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import SearchIcon from '@/assets/icons/ic_search.svg'
 import { TripHistoryItem } from "@/components/dashboard/trip-history/TripHistoryItem";
 import Link from "next/link";
+import { getTripData, Trip } from "@/utils/data/trip";
 
 const containerStyle = {
   width: '100%',
@@ -17,6 +18,7 @@ const center = {
 };
 
 export default function Tracking() {
+  const [trips, setTrips] = useState<Trip[]>([])
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: "YOUR_API_KEY"
@@ -34,6 +36,10 @@ export default function Tracking() {
 
   const onUnmount = useCallback(function callback(map: any) {
     setMap(null)
+  }, [])
+
+  useEffect(() => {
+    setTrips(getTripData(6))
   }, [])
 
   return (
@@ -65,8 +71,8 @@ export default function Tracking() {
             </div>
 
             <div className="grid grid-cols-1 left-0 top-0 z-10 gap-4 h-full md:grid-cols-2 lg:absolute lg:flex flex-col lg:overflow-y-scroll lg:no-scrollbar lg:p-4">
-              {Array(6).fill(0).map((_, index) => <Link href={`/tracking/activities/${index}`}>
-                <TripHistoryItem key={index} status="active" />
+              {trips.map((item) => <Link href={`/tracking/activities/${item.id}`}>
+                <TripHistoryItem data={item} />
               </Link>)
               }
             </div>
