@@ -12,12 +12,19 @@ import {
 import { useRef } from "react";
 import { AdminItem } from "@/components/admins/AdminItem";
 import { AddAdminsModal, AddAdminsModalRef } from "@/components/admins/AddAdminModal";
+import Button from "@/components/buttons";
+import { CreateRoleModal, CreateRoleModalRef } from "@/components/admins/CreateRoleModal";
 
 export default function AdminsPage() {
   const addAdminsRef = useRef<AddAdminsModalRef>(null)
+  const addRoleRef = useRef<CreateRoleModalRef>(null)
 
   function addAdmin() {
     addAdminsRef.current?.open()
+  }
+
+  function addRole(){
+    addRoleRef.current?.open()
   }
 
   return (
@@ -25,11 +32,13 @@ export default function AdminsPage() {
       <div className="flex flex-col py-8">
 
         <AddAdminsModal ref={addAdminsRef} />
+        <CreateRoleModal ref={addRoleRef} />
 
         <div className="flex flex-col gap-6">
           <h1 className="text-2xl font-bold">Admins <span className="text-primary">(5)</span></h1>
 
           <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
+            
             <TextField.Container className="flex-1 border border-gray-200">
               <TextField.Input placeholder="Search" />
 
@@ -38,12 +47,13 @@ export default function AdminsPage() {
               </IconButton>
             </TextField.Container>
 
-            <div onClick={addAdmin} className="border cursor-pointer rounded-md py-2 px-2 pr-3">
-              <div className="flex items-center gap-2 text-sm text-text-normal font-semibold">
-                <PlusIcon className="text-gray-300" />
-                <p>Add New Admin</p>
-              </div>
-            </div>
+            <Button variant="contained" onClick={addRole}>
+              Add New Roles
+            </Button>
+
+            <Button variant="contained" onClick={addAdmin}>
+              Add New Admin
+            </Button>
 
             <div className="border rounded-md py-2">
               <DropdownMenu>
