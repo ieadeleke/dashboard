@@ -51,7 +51,7 @@ export default function LoginPage() {
                     <Button className="py-4" variant="contained">Login</Button>
 
                     <Link href='/reset-password' className="self-center">
-                        <Button className="py-4" variant="text">Can't remember your password?</Button>
+                        <Button className="py-4" variant="text">{`Can't remember your password?`}</Button>
                     </Link>
                 </div>
 

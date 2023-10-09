@@ -72,7 +72,7 @@ export default function Tracking() {
             </div>
 
             <div className="grid grid-cols-1 left-0 top-0 z-10 gap-4 h-full md:grid-cols-2 lg:absolute lg:flex flex-col lg:overflow-y-scroll lg:no-scrollbar lg:p-4">
-              {trips.map((item) => <Link href={`/tracking/activities/${item.id}`}>
+              {trips.map((item) => <Link key={item.id} href={`/tracking/activities/${item.id}`}>
                 <TripHistoryItem data={item} />
               </Link>)
               }
