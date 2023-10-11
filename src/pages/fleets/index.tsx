@@ -205,22 +205,24 @@ export default function Home() {
                         </TabsList>
                     </div>
 
+                    <div className="mt-4">
+                        <TabsContent value="active">
+                            <TabBody data={data.filter((item) => item.status == "active")} />
+                        </TabsContent>
 
-                    <TabsContent value="active">
-                        <TabBody data={data.filter((item) => item.status == "active")} />
-                    </TabsContent>
+                        <TabsContent value="all">
+                            <TabBody data={data} />
+                        </TabsContent>
 
-                    <TabsContent value="all">
-                        <TabBody data={data} />
-                    </TabsContent>
+                        <TabsContent value="suspended">
+                            <TabBody data={data.filter((item) => item.status == "suspended")} />
+                        </TabsContent>
 
-                    <TabsContent value="suspended">
-                        <TabBody data={data.filter((item) => item.status == "suspended")} />
-                    </TabsContent>
+                        <TabsContent value="pending">
+                            <TabBody data={data.filter((item) => item.status == "pending")} />
+                        </TabsContent>
+                    </div>
 
-                    <TabsContent value="pending">
-                        <TabBody data={data.filter((item) => item.status == "pending")} />
-                    </TabsContent>
                 </div>
 
             </Tabs>

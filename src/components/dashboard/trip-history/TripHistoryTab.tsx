@@ -26,7 +26,7 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
         tripDetailModalRef.current?.open({ data })
     }
 
-    return <div>
+    return <div className="flex flex-col gap-8">
         <TripDetailModal ref={tripDetailModalRef} />
         <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
             <TextField.Container className="flex-1 border border-gray-200">

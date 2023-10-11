@@ -10,7 +10,7 @@ type TripHistoryProps = {
 export const TripHistoryItem = (props: TripHistoryProps) => {
     const { data } = props
 
-    return <div className="flex flex-col rounded-xl border bg-white px-6 py-6">
+    return <div className="flex flex-col rounded-xl border bg-white px-6 py-6 cursor-pointer">
 
         <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-8">
