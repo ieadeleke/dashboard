@@ -10,7 +10,14 @@ export const NavBar = () => {
                 <NotificationIcon className="w-6 h-6" />
             </div>
 
-            <Avatar className="w-10 h-10 object-center object-cover" src={DEFAULT_PROFILE_URL} />
+            <div className="flex gap-2">
+                <Avatar className="w-10 h-10 object-center object-cover" src={DEFAULT_PROFILE_URL} />
+
+                <div className="flex flex-col">
+                    <h1 className="text-sm font-bold">Maruf Aregbesola</h1>
+                    <p className="text-sm text-gray-300">marouf@laswa.com</p>
+                </div>
+            </div>
         </div>
     </div>
 }
