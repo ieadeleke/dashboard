@@ -21,8 +21,9 @@ import {
 import { CheckBox } from "@/components/buttons/CheckBox";
 import Link from "next/link";
 import { Fleet, getFleetData } from "@/utils/data/fleets";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import SEO from "@/components/SEO";
+import { IncidentAlertDialog, IncidentAlertDialogRef } from "@/components/dialogs/AlertDialog";
 
 type TableDataListProps = {
     data: Fleet
@@ -54,6 +55,24 @@ const tabs = [
 
 export const FleetTableDataList = (props: TableDataListProps) => {
     const { data } = props
+
+    const alertRef = useRef<IncidentAlertDialogRef>(null)
+
+    function showAlertDialog() {
+        alertRef.current?.show({
+            variant: "regular",
+            data: {
+                title: "Are you sure you want to approve this incident on [Fleet Name]",
+                description: "",
+            },
+            onConfirm: () => {
+                alertRef.current?.dismiss()
+            },
+            onCancel: () => {
+                alertRef.current?.dismiss()
+            }
+        })
+    }
 
     const statusLabel = useMemo(() => {
         switch (data.status) {
@@ -87,6 +106,7 @@ export const FleetTableDataList = (props: TableDataListProps) => {
     }, [data.status])
 
     return <TableBody className="bg-white">
+        <IncidentAlertDialog ref={alertRef} />
         <TableRow>
             <TableCell className="flex font-medium"><CheckBox /></TableCell>
             <TableCell>
@@ -110,7 +130,7 @@ export const FleetTableDataList = (props: TableDataListProps) => {
                         </IconButton>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                        <DropdownMenuLabel>Action 1</DropdownMenuLabel>
+                        <DropdownMenuItem onClick={showAlertDialog}>Approve Incident</DropdownMenuItem>
                         <DropdownMenuItem>Action 2</DropdownMenuItem>
                         <DropdownMenuItem>Action 3</DropdownMenuItem>
                         <DropdownMenuItem>Action 4</DropdownMenuItem>
