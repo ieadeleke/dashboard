@@ -27,13 +27,15 @@ import { useFetchAllFleets } from "@/utils/apiHooks/fleets/useFetchAllFleets";
 import { Fleet } from "@/models/fleets";
 import Loading from "@/components/states/Loading";
 import Error from "@/components/states/Error";
+import { AddFleetModal, AddFleetModalRef } from "@/components/dashboard/fleet/AddFleetModal";
 
 type TableDataListProps = {
     data: Fleet
 }
 
 type TabBodyProps = {
-    tab: "active" | "all" | "suspended" | "pending"
+    tab: "active" | "all" | "suspended" | "pending",
+    addFleet?: () => void,
     updateSize?: (size: number) => void
 }
 
@@ -150,13 +152,13 @@ const TabBody = (props: TabBodyProps) => {
     const { tab } = props
 
     const data = useMemo(() => _data.filter((item) => {
-        if (tab == 'active'){
+        if (tab == 'active') {
             return item.status == 'active'
-        }else if(tab == 'pending'){
+        } else if (tab == 'pending') {
             return item.status == 'pending'
-        }else if(tab == 'suspended'){
+        } else if (tab == 'suspended') {
             return item.status == 'suspended'
-        }else return true
+        } else return true
     }), [JSON.stringify(_data)])
 
     useEffect(() => {
@@ -177,10 +179,10 @@ const TabBody = (props: TabBodyProps) => {
                 </IconButton>
             </TextField.Container>
 
-            <Link href="/fleets/add-fleet" className=" flex items-center gap-1 text-text-normal font-semibold border rounded-md py-2 px-2">
+            <div onClick={props.addFleet} className="cursor-pointer flex items-center gap-1 text-text-normal font-semibold border rounded-md py-2 px-2">
                 <PlusIcon className="text-gray-500 w-4 h-4" />
                 <p className="text-sm">Add New Fleet</p>
-            </Link>
+            </div>
 
 
             <div className="border rounded-md">
@@ -227,6 +229,15 @@ const TabBody = (props: TabBodyProps) => {
 
 export default function Home() {
     const [size, setSize] = useState(0)
+    const addFleetModalRef = useRef<AddFleetModalRef>(null)
+
+    function addFleet(){
+        addFleetModalRef.current?.open()
+    }
+
+    function onNewFleetAdded(fleet: Fleet){
+        
+    }
 
     return (
         <DashboardLayout>
@@ -234,7 +245,7 @@ export default function Home() {
 
                 <div className="flex flex-col gap-6">
                     <SEO title="Laswa | Fleets" />
-
+                    <AddFleetModal ref={addFleetModalRef} onNewFleetAdded={onNewFleetAdded} />
                     <h1 className="text-2xl font-bold">All Fleets <span className="text-primary">({size})</span></h1>
 
                     <div>
@@ -247,19 +258,19 @@ export default function Home() {
 
                     <div className="mt-4">
                         <TabsContent value="active">
-                            <TabBody tab="active" updateSize={setSize} />
+                            <TabBody addFleet={addFleet} tab="active" updateSize={setSize} />
                         </TabsContent>
 
                         <TabsContent value="all">
-                            <TabBody tab="all" updateSize={setSize} />
+                            <TabBody addFleet={addFleet} tab="all" updateSize={setSize} />
                         </TabsContent>
 
                         <TabsContent value="suspended">
-                            <TabBody tab="suspended" updateSize={setSize} />
+                            <TabBody addFleet={addFleet} tab="suspended" updateSize={setSize} />
                         </TabsContent>
 
                         <TabsContent value="pending">
-                            <TabBody tab="pending" updateSize={setSize} />
+                            <TabBody addFleet={addFleet} tab="pending" updateSize={setSize} />
                         </TabsContent>
                     </div>
 

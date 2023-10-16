@@ -1,3 +1,5 @@
+import { User } from "../users"
+
 export type FleetStatus = "pending" | "suspended" | "active"
 
 export type Fleet = {
@@ -10,20 +12,7 @@ export type Fleet = {
     image: string,
     model: string,
     AddByAdmin: string,
-    User: {
-        isActive: boolean,
-        loginDisabled: boolean,
-        loginCount: number,
-        Boats: string[],
-        _id: string,
-        phoneNumber: string,
-        firstName: string,
-        lastName: string,
-        email: string,
-        createdAt: string,
-        updatedAt: string,
-        loginReTryTime: string
-    },
+    User: User,
     createdAt: string,
     updatedAt: string,
 }

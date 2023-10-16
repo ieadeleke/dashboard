@@ -1,6 +1,6 @@
 import { formatFleet } from "@/utils/data/fleets"
 import { request, RequestConfig } from "../../request"
-import { GetAllFleetResponse } from "./types"
+import { AddFleetParams, AddFleetResponse, GetAllFleetResponse } from "./types"
 
 
 export function FleetService(config?: RequestConfig) {
@@ -13,8 +13,19 @@ export function FleetService(config?: RequestConfig) {
         })
     }
 
+    async function addFleet(payload: AddFleetParams) {
+        const { data } = await request(`api/v1/boat/admin/AddBoat`, "POST", {
+            body: payload
+        })
+        const _data = (data as AddFleetResponse)
+        return Object.assign({}, _data, {
+            Boat: (formatFleet(_data.Boat))
+        })
+    }
+
     return {
-        getAllFleets
+        getAllFleets,
+        addFleet
     }
 
 }
