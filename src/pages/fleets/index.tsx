@@ -28,6 +28,7 @@ import { Fleet } from "@/models/fleets";
 import Loading from "@/components/states/Loading";
 import Error from "@/components/states/Error";
 import { AddFleetModal, AddFleetModalRef } from "@/components/dashboard/fleet/AddFleetModal";
+import { useRouter } from "next/router";
 
 type TableDataListProps = {
     data: Fleet
@@ -227,21 +228,35 @@ const TabBody = (props: TabBodyProps) => {
     </div>
 }
 
-export default function Home() {
+export default function Fleets() {
     const [size, setSize] = useState(0)
     const addFleetModalRef = useRef<AddFleetModalRef>(null)
+    const router = useRouter()
+    const [activeTab, setActiveTab] = useState<string>()
 
-    function addFleet(){
+    useEffect(() => {
+        const tab = router.query.tab as string | undefined
+        if (!tab) {
+            setActiveTab(`active`)
+        } else setActiveTab(tab)
+    }, [router.query])
+
+    function onTabValueChanged(value: string) {
+        router.push(`/fleets?tab=${value}`)
+    }
+
+    function addFleet() {
         addFleetModalRef.current?.open()
     }
 
-    function onNewFleetAdded(fleet: Fleet){
-        
+    function onNewFleetAdded(fleet: Fleet) {
+        addFleetModalRef.current?.close()
+        router.push(`/fleets?tab=${fleet.status}`)
     }
 
     return (
         <DashboardLayout>
-            <Tabs defaultValue="active" className="flex flex-col py-8">
+            <Tabs value={activeTab} onValueChange={onTabValueChanged} className="flex flex-col py-8">
 
                 <div className="flex flex-col gap-6">
                     <SEO title="Laswa | Fleets" />
