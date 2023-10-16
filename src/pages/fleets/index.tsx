@@ -20,17 +20,21 @@ import {
 } from "@/components/ui/table"
 import { CheckBox } from "@/components/buttons/CheckBox";
 import Link from "next/link";
-import { Fleet, getFleetData } from "@/utils/data/fleets";
 import { useEffect, useMemo, useRef, useState } from "react";
 import SEO from "@/components/SEO";
 import { IncidentAlertDialog, IncidentAlertDialogRef } from "@/components/dialogs/AlertDialog";
+import { useFetchAllFleets } from "@/utils/apiHooks/fleets/useFetchAllFleets";
+import { Fleet } from "@/models/fleets";
+import Loading from "@/components/states/Loading";
+import Error from "@/components/states/Error";
 
 type TableDataListProps = {
     data: Fleet
 }
 
 type TabBodyProps = {
-    data: Fleet[]
+    tab: "active" | "all" | "suspended" | "pending"
+    updateSize?: (size: number) => void
 }
 
 const tabs = [
@@ -112,10 +116,10 @@ export const FleetTableDataList = (props: TableDataListProps) => {
             <TableCell>
                 <div className="flex items-center gap-4">
                     <img src={data.image} className="bg-gray-200 h-10 w-10 object-cover object-center" />
-                    <p>{data.id}</p>
+                    <p>{data._id}</p>
                 </div>
             </TableCell>
-            <TableCell>{data.seats}</TableCell>
+            <TableCell>{5}</TableCell>
             <TableCell className="flex">
                 <div className={`${statusStyles.container} p-2 rounded-md`}>
                     <p className={`${statusStyles.label} text-sm`}>{statusLabel}</p>
@@ -142,7 +146,26 @@ export const FleetTableDataList = (props: TableDataListProps) => {
 }
 
 const TabBody = (props: TabBodyProps) => {
-    const { data } = props
+    const { isLoading, error, fetchAllFleets, data: _data } = useFetchAllFleets()
+    const { tab } = props
+
+    const data = useMemo(() => _data.filter((item) => {
+        if (tab == 'active'){
+            return item.status == 'active'
+        }else if(tab == 'pending'){
+            return item.status == 'pending'
+        }else if(tab == 'suspended'){
+            return item.status == 'suspended'
+        }else return true
+    }), [JSON.stringify(_data)])
+
+    useEffect(() => {
+        fetchAllFleets()
+    }, [])
+
+    useEffect(() => {
+        props.updateSize?.(data.length)
+    }, [data.length])
 
     return <div>
         <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
@@ -197,16 +220,13 @@ const TabBody = (props: TabBodyProps) => {
 
                 {data.map((item, index) => <FleetTableDataList key={index} data={item} />)}
             </Table>
+            {isLoading ? <Loading className="h-[400px]" /> : error ? <Error onRetry={fetchAllFleets} className="h-[400px]" /> : null}
         </div>
     </div>
 }
 
 export default function Home() {
-    const [data, setData] = useState<Fleet[]>([])
-
-    useEffect(() => {
-        setData(getFleetData(100))
-    }, [])
+    const [size, setSize] = useState(0)
 
     return (
         <DashboardLayout>
@@ -215,7 +235,7 @@ export default function Home() {
                 <div className="flex flex-col gap-6">
                     <SEO title="Laswa | Fleets" />
 
-                    <h1 className="text-2xl font-bold">All Fleets <span className="text-primary">({data.length})</span></h1>
+                    <h1 className="text-2xl font-bold">All Fleets <span className="text-primary">({size})</span></h1>
 
                     <div>
                         <TabsList className="flex flex-wrap justify-start bg-white h-auto py-0 px-0">
@@ -227,19 +247,19 @@ export default function Home() {
 
                     <div className="mt-4">
                         <TabsContent value="active">
-                            <TabBody data={data.filter((item) => item.status == "active")} />
+                            <TabBody tab="active" updateSize={setSize} />
                         </TabsContent>
 
                         <TabsContent value="all">
-                            <TabBody data={data} />
+                            <TabBody tab="all" updateSize={setSize} />
                         </TabsContent>
 
                         <TabsContent value="suspended">
-                            <TabBody data={data.filter((item) => item.status == "suspended")} />
+                            <TabBody tab="suspended" updateSize={setSize} />
                         </TabsContent>
 
                         <TabsContent value="pending">
-                            <TabBody data={data.filter((item) => item.status == "pending")} />
+                            <TabBody tab="pending" updateSize={setSize} />
                         </TabsContent>
                     </div>
 
