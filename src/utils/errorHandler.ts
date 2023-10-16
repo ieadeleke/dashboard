@@ -3,7 +3,7 @@ export function errorHandler(error: any) {
     const { response } = error
     if (response && response.data) {
         const { data } = response
-        if (data.message && data.status) {
+        if (data.message) {
             return {
                 status: data.status as number,
                 message: data.message as string

@@ -1,12 +1,72 @@
 import AuthLayout from "@/components/layout/AuthLayout";
 import LogoIcon from '@/assets/icons/ic_logo.svg'
-import { TextField } from "@/components/input/InputText";
+import { InputProps, TextField } from "@/components/input/InputText";
 import Button from "@/components/buttons";
-import { useState } from "react";
+import { ChangeEvent, useContext, useEffect, useMemo, useState } from "react";
 import SEO from "@/components/SEO";
+import { useResetPassword } from "@/utils/apiHooks/auth/useResetPassword";
+import { GlobalActionContext } from "@/context/GlobalActionContext";
+import { useConfirmResetPassword } from "@/utils/apiHooks/auth/useConfirmResetPassword";
+import { useRouter } from "next/router";
+
+type ResetPasswordInputField = {
+
+} & InputProps
+
+const ResetPasswordInputField = ({ className, ...props }: InputProps) => {
+    const [isFocused, setIsFocused] = useState(false)
+
+    function onBlur() {
+        setIsFocused(false)
+    }
+
+    function onFocus() {
+        setIsFocused(true)
+    }
+
+    return <TextField.Container className={`bg-white rounded-2xl ${isFocused ? 'border border-primary' : ''}`}>
+        <TextField.Input onBlur={onBlur} onFocus={onFocus} {...props} />
+    </TextField.Container>
+}
 
 export default function ResetPassword() {
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [activationCode, setActivationCode] = useState('')
+    const { showSnackBar } = useContext(GlobalActionContext)
+    const { resetPassword, data: resetData, isLoading: isInitResetLoading, error: initResetError } = useResetPassword()
+    const { confirmResetPassword, error: confirmResetError, isLoading: isConfirmResetLoading, data: confirmResetData } = useConfirmResetPassword()
+    const router = useRouter()
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null)
     const [isFocused, setIsFocused] = useState(false)
+
+    useEffect(() => {
+        if (error) {
+            showSnackBar({
+                severity: 'error',
+                message: error
+            })
+        }
+    }, [error])
+
+    useEffect(() => {
+        if (confirmResetData) {
+            showSnackBar({ severity: 'success', message: "Password reset successfully" })
+            setTimeout(() => router.push('/login'), 2000)
+        }
+    }, [confirmResetData])
+
+    useEffect(() => {
+        setError(initResetError || confirmResetError)
+    }, [initResetError, confirmResetError])
+
+    useEffect(() => {
+        setIsLoading(isInitResetLoading || isConfirmResetLoading)
+    }, [isInitResetLoading, isConfirmResetLoading])
+
+    const isCodeSent = useMemo(() => !!resetData, [resetData])
+
 
     function onBlur() {
         setIsFocused(false)
@@ -14,6 +74,29 @@ export default function ResetPassword() {
 
     function onFocused() {
         setIsFocused(true)
+    }
+
+    function onEmailChanged(event: ChangeEvent<HTMLInputElement>) {
+        setEmail(event.target.value)
+    }
+
+    function onActivationCodeChanged(event: ChangeEvent<HTMLInputElement>) {
+        setActivationCode(event.target.value)
+    }
+
+    function onPasswordChanged(event: ChangeEvent<HTMLInputElement>) {
+        setPassword(event.target.value)
+    }
+
+    function submit() {
+        if (!isCodeSent) {
+            return resetPassword({ email })
+        }
+        confirmResetPassword({
+            email,
+            activationCode,
+            newPassword: password
+        })
     }
 
     return <AuthLayout>
@@ -30,16 +113,27 @@ export default function ResetPassword() {
                 </div>
 
                 <div className="flex flex-col gap-4">
-                    <div className="flex flex-col gap-2">
+                    <div className={`flex flex-col gap-2 ${isCodeSent ? 'opacity-50' : 'opacity-100'}`}>
                         <p className="font-medium text-[#3F3F3F]">Enter your email</p>
-                        <TextField.Container className={`bg-white rounded-2xl ${isFocused ? 'border border-primary' : ''}`}>
-                            <TextField.Input type="email" onBlur={onBlur} onFocus={onFocused} />
-                        </TextField.Container>
+                        <ResetPasswordInputField contentEditable={isCodeSent} disabled={isCodeSent} onChange={onEmailChanged} type="email" />
                     </div>
+
+                    {isCodeSent && <div className="flex flex-col gap-[inherit]">
+                        <div className="flex flex-col gap-2">
+                            <p className="font-medium text-[#3F3F3F]">Activation Code</p>
+                            <ResetPasswordInputField onChange={onActivationCodeChanged} />
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                            <p className="font-medium text-[#3F3F3F]">New Password</p>
+                            <ResetPasswordInputField onChange={onPasswordChanged} type="password" />
+                        </div>
+                    </div>
+                    }
                 </div>
 
                 <div className="flex flex-col gap-4">
-                    <Button className="py-4 rounded-2xl" variant="contained">Send Password Reset Link</Button>
+                    <Button onClick={submit} disabled={isLoading} className="py-4 rounded-2xl" variant="contained">{isCodeSent ? `Reset Password` : `Send Password Reset Code`}</Button>
                 </div>
 
             </div>

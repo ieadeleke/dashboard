@@ -20,14 +20,14 @@ export function AuthService() {
     }
 
     async function login(payload: LoginParams) {
-        const { data } = await request(`api/v1/auth/login`, "POST", {
+        const { data } = await request(`api/v1/admin/Login`, "PUT", {
             body: payload
         })
         return data as LoginResponse
     }
 
     async function resetPassword(payload: ResetPasswordParams) {
-        const { data } = await request(`api/v1/auth/ResetPassword`, "PUT", {
+        const { data } = await request(`api/v1/admin/ResetPassword`, "PUT", {
             body: payload
         })
         return data as ResetPasswordResponse
