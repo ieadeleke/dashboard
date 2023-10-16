@@ -6,3 +6,8 @@ export type GetDashboardStatistics = ApiResponse & {
     totalIncident: number,
     totalUser: number
 }
+
+export type RecentActivities = {
+    Activities: string[],
+    count: number
+}
