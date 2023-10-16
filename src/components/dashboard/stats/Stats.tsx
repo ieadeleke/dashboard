@@ -4,40 +4,15 @@ import CautionIcon from '@/assets/icons/ic_caution.svg'
 import HistoryIcon from '@/assets/icons/ic_history.svg'
 import { StatItem } from "@/components/dashboard/stats/StatItem";
 import Button from "@/components/buttons";
+import { GetDashboardStatistics } from '@/models/activities/ActivitiesResponse';
 
-const stats = [
-    {
-        name: "Boats",
-        count: "143k",
-        color: "#00BD09",
-        accentColor: '#EAFFE1',
-        icon: ShipLine
-    },
-    {
-        name: "Incidents",
-        count: "500",
-        color: "#FF5C00",
-        accentColor: '#FFFBED',
-        icon: CautionIcon
-    },
-    {
-        name: "Total Trips",
-        count: "99K",
-        color: "#428BC1",
-        accentColor: '#F3F9FF',
-        icon: HistoryIcon
-    },
-    {
-        name: "Passengers",
-        count: "17,532",
-        color: "#9300D9",
-        accentColor: '#FCF3FF',
-        icon: UsersIcon
-    }
-]
+type StatsProps = {
+    data: GetDashboardStatistics
+}
 
+export const Stats = (props: StatsProps) => {
+    const { data } = props
 
-export const Stats = () => {
     return <div className="grid grid-cols-1 gap-2 lg:grid-cols-[minmax(auto,55%),minmax(auto,45%)] xl:grid-cols-[minmax(auto,60%),minmax(auto,40%)] lg:h-[320px]">
         <div style={{
             backgroundImage: `url(https://res.cloudinary.com/dfzhxlgll/image/upload/v1695210553/Rectangle_13_sfp8ss.png)`
@@ -51,7 +26,11 @@ export const Stats = () => {
         </div>
 
         <div className="w-full grid grid-cols-1 gap-2 px-2 lg:grid-cols-2 grid-rows-2 lg:h-full">
-            {stats.map((item) => <StatItem key={item.name} icon={item.icon} name={item.name} color={item.color} count={item.count} colorAccent={item.accentColor} />)}
+
+            <StatItem icon={ShipLine} name="Boats" count={data.totalBoat.toString()} colorAccent={'#EAFFE1'} color={`#00BD09`} />
+            <StatItem icon={CautionIcon} name="Incidents" count={data.totalIncident.toString()} colorAccent={'#FFFBED'} color={`#FF5C00`} />
+            <StatItem icon={HistoryIcon} name="Total Trips" count={data.totalTrip.toString()} colorAccent={'#F3F9FF'} color={`#428BC1`} />
+            <StatItem icon={UsersIcon} name="Passengers" count={data.totalUser.toString()} colorAccent={'#FCF3FF'} color={`#9300D9`} />
         </div>
     </div>
 }

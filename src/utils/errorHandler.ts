@@ -2,15 +2,15 @@
 export function errorHandler(error: any) {
     const { response } = error
     if (response && response.data) {
-        const { data } = response
+        const { data, status } = response
         if (data.message) {
             return {
-                status: data.status as number,
+                status: status as number,
                 message: data.message as string
             }
         } else {
             return {
-                status: response.status,
+                status: status,
                 message: "An unexpected error has occurred"
             }
         }

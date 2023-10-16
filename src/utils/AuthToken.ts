@@ -6,6 +6,7 @@ export default function AuthToken() {
 
     function saveToken(token: string) {
         Cookies.set(key, token)
+        localStorage.setItem(key, token)
     }
 
     // pass req object for server side

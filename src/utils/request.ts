@@ -6,7 +6,7 @@ import { errorHandler } from "./errorHandler";
 
 type RequestType = "GET" | "POST" | "PUT" | "DELETE"
 
-type RequestConfig = {
+export type RequestConfig = {
     req?: any,
     body?: any
 }
@@ -31,7 +31,6 @@ export async function request(route: string, method: RequestType, config?: Reque
                 // localStorage.clear()
                 AuthToken().clearToken()
             }
-            Router.push("/login-required")
             throw error
         }
         throw error
