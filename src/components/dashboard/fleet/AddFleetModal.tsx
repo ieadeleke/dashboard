@@ -60,7 +60,8 @@ export const AddFleetModal = forwardRef<AddFleetModalRef, AddFleetModalProps>((p
     }, [error])
 
     useEffect(() => {
-        if(data){
+        if (data) {
+            showSnackBar({ severity: 'success', message: "New Fleet Added" })
             props.onNewFleetAdded?.(data)
         }
     }, [data])
