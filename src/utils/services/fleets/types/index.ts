@@ -14,3 +14,11 @@ export type AddFleetParams = {
 export type AddFleetResponse = ApiResponse & {
     Boat: Fleet
 }
+
+export type VerifyFleetResponse = ApiResponse & {
+
+}
+
+export type VerifyFleetParams = {
+    boatId: string
+}

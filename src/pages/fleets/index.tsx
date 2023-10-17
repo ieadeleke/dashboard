@@ -19,8 +19,7 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { CheckBox } from "@/components/buttons/CheckBox";
-import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import SEO from "@/components/SEO";
 import { IncidentAlertDialog, IncidentAlertDialogRef } from "@/components/dialogs/AlertDialog";
 import { useFetchAllFleets } from "@/utils/apiHooks/fleets/useFetchAllFleets";
@@ -29,9 +28,14 @@ import Loading from "@/components/states/Loading";
 import Error from "@/components/states/Error";
 import { AddFleetModal, AddFleetModalRef } from "@/components/dashboard/fleet/AddFleetModal";
 import { useRouter } from "next/router";
+import { useVerifyFleet } from "@/utils/apiHooks/fleets/useVerifyFleet";
+import CircularProgress from "@mui/material/CircularProgress";
+import { GlobalActionContext } from "@/context/GlobalActionContext";
 
 type TableDataListProps = {
-    data: Fleet
+    data: Fleet,
+    onVerifyError?: (error: string) => void,
+    onVerifySuccess?: (fleet: Fleet) => void
 }
 
 type TabBodyProps = {
@@ -62,18 +66,32 @@ const tabs = [
 
 export const FleetTableDataList = (props: TableDataListProps) => {
     const { data } = props
+    const { isLoading, error, verifyFleet, data: verifyData } = useVerifyFleet()
 
     const alertRef = useRef<IncidentAlertDialogRef>(null)
 
-    function showAlertDialog() {
+    useEffect(() => {
+        if (error) {
+            props.onVerifyError?.(error)
+        }
+    }, [error])
+
+    useEffect(() => {
+        if (verifyData) {
+            props.onVerifySuccess?.({ ...data, status: 'active' })
+        }
+    }, [verifyData])
+
+    function handleVerifyFleet() {
         alertRef.current?.show({
             variant: "regular",
             data: {
-                title: "Are you sure you want to approve this incident on [Fleet Name]",
+                title: "Are you sure you want to verify this fleet?",
                 description: "",
             },
             onConfirm: () => {
                 alertRef.current?.dismiss()
+                verifyFleet({ boatId: data._id })
             },
             onCancel: () => {
                 alertRef.current?.dismiss()
@@ -130,19 +148,18 @@ export const FleetTableDataList = (props: TableDataListProps) => {
             </TableCell>
             <TableCell>Lorem</TableCell>
             <TableCell>
-                <DropdownMenu>
+                {isLoading ? <CircularProgress size={24} /> : <DropdownMenu>
                     <DropdownMenuTrigger>
                         <IconButton className="text-primary border border-primary rounded-sm">
                             <MoreHorizontalIcon />
                         </IconButton>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                        <DropdownMenuItem onClick={showAlertDialog}>Approve Incident</DropdownMenuItem>
-                        <DropdownMenuItem>Action 2</DropdownMenuItem>
-                        <DropdownMenuItem>Action 3</DropdownMenuItem>
-                        <DropdownMenuItem>Action 4</DropdownMenuItem>
+                        {data.status != 'active' ? <DropdownMenuItem onClick={handleVerifyFleet}>Approve Fleet</DropdownMenuItem> : <DropdownMenuItem>Suspend Fleet</DropdownMenuItem>}
                     </DropdownMenuContent>
                 </DropdownMenu>
+                }
+
             </TableCell>
         </TableRow>
     </TableBody>
@@ -150,6 +167,7 @@ export const FleetTableDataList = (props: TableDataListProps) => {
 
 const TabBody = (props: TabBodyProps) => {
     const { isLoading, error, fetchAllFleets, data: _data } = useFetchAllFleets()
+    const { showSnackBar } = useContext(GlobalActionContext)
     const { tab } = props
 
     const data = useMemo(() => _data.filter((item) => {
@@ -169,6 +187,14 @@ const TabBody = (props: TabBodyProps) => {
     useEffect(() => {
         props.updateSize?.(data.length)
     }, [data.length])
+
+    function onVerifyError(error: string) {
+        showSnackBar({ severity: 'error', message: error })
+    }
+
+    function onVerifySuccess(fleet: Fleet) {
+        showSnackBar({ severity: 'success', message: 'Fleet verified successfully' })
+    }
 
     return <div>
         <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
@@ -221,7 +247,7 @@ const TabBody = (props: TabBodyProps) => {
                     </TableRow>
                 </TableHeader>
 
-                {data.map((item, index) => <FleetTableDataList key={index} data={item} />)}
+                {data.map((item, index) => <FleetTableDataList key={index} data={item} onVerifyError={onVerifyError} onVerifySuccess={onVerifySuccess} />)}
             </Table>
             {isLoading ? <Loading className="h-[400px]" /> : error ? <Error onRetry={fetchAllFleets} className="h-[400px]" /> : null}
         </div>

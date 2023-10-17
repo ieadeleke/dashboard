@@ -1,6 +1,6 @@
 import { formatFleet } from "@/utils/data/fleets"
 import { request, RequestConfig } from "../../request"
-import { AddFleetParams, AddFleetResponse, GetAllFleetResponse } from "./types"
+import { AddFleetParams, AddFleetResponse, GetAllFleetResponse, VerifyFleetParams, VerifyFleetResponse } from "./types"
 
 
 export function FleetService(config?: RequestConfig) {
@@ -23,8 +23,17 @@ export function FleetService(config?: RequestConfig) {
         })
     }
 
+    async function verifyFleet(payload: VerifyFleetParams) {
+        const { data } = await request(`api/v1/boat/admin/VerifyBoat`, "PUT", {
+            body: payload
+        })
+        const _data = (data as VerifyFleetResponse)
+        return _data
+    }
+
     return {
         getAllFleets,
+        verifyFleet,
         addFleet
     }
 
