@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useApi } from "../index"
 import { Fleet } from "@/models/fleets"
 import { FleetService } from "@/utils/services/fleets"
+import { fleetActions } from "@/redux/reducers/fleets"
 
 export const useFetchAllFleets = () => {
     const [data, setData] = useState<Fleet[]>([])
@@ -11,6 +12,7 @@ export const useFetchAllFleets = () => {
         setData([])
         const response = await execute(async () => await FleetService().getAllFleets())
         if (response) {
+            fleetActions.addFleets(response.Boats)
             setData(response.Boats)
         }
     }

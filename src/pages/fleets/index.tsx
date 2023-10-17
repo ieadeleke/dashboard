@@ -31,6 +31,8 @@ import { useRouter } from "next/router";
 import { useVerifyFleet } from "@/utils/apiHooks/fleets/useVerifyFleet";
 import CircularProgress from "@mui/material/CircularProgress";
 import { GlobalActionContext } from "@/context/GlobalActionContext";
+import { fleetActions } from "@/redux/reducers/fleets";
+import { useFleetsSelector } from "@/redux/selectors/fleets.selector";
 
 type TableDataListProps = {
     data: Fleet,
@@ -78,7 +80,12 @@ export const FleetTableDataList = (props: TableDataListProps) => {
 
     useEffect(() => {
         if (verifyData) {
-            props.onVerifySuccess?.({ ...data, status: 'active' })
+            const updatedFleet = Object.assign({}, data, { status: "active" })
+            fleetActions.updateFleet({
+                fleet_id: data._id,
+                data: updatedFleet
+            })
+            props.onVerifySuccess?.(updatedFleet)
         }
     }, [verifyData])
 
@@ -166,7 +173,8 @@ export const FleetTableDataList = (props: TableDataListProps) => {
 }
 
 const TabBody = (props: TabBodyProps) => {
-    const { isLoading, error, fetchAllFleets, data: _data } = useFetchAllFleets()
+    const { isLoading, error, fetchAllFleets } = useFetchAllFleets()
+    const _data = useFleetsSelector()
     const { showSnackBar } = useContext(GlobalActionContext)
     const { tab } = props
 
