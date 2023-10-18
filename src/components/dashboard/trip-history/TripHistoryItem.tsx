@@ -1,6 +1,7 @@
 import DiscIcon from '@/assets/icons/ic_history_disc.svg'
 import { Divider } from '@/components/Divider'
-import { Trip } from '@/utils/data/trip'
+import { Trip } from '@/models/trips'
+import { TripStatus } from '@/utils/data/trip'
 import { TripHistoryStatusChip } from './TripHistoryStatusChip'
 
 type TripHistoryProps = {
@@ -16,12 +17,12 @@ export const TripHistoryItem = (props: TripHistoryProps) => {
             <div className="flex flex-col gap-8">
                 <div className="flex items-center gap-4">
                     <DiscIcon className="w-7 h-7 text-text-normal" />
-                    <p>{data.start}</p>
+                    <p>{data.tripOrigin}</p>
                 </div>
 
                 <div className="flex items-center gap-4">
                     <DiscIcon className="w-7 h-7 text-primary" />
-                    <p>{data.destination}</p>
+                    <p>{data.tripDestination}</p>
                 </div>
             </div>
 
@@ -30,7 +31,7 @@ export const TripHistoryItem = (props: TripHistoryProps) => {
             <div className="flex items-center">
                 <p>Ship ID</p>
                 <div className="flex-1" />
-                <TripHistoryStatusChip status={data.status} />
+                <TripHistoryStatusChip status={data.status as TripStatus} />
             </div>
         </div>
     </div>
