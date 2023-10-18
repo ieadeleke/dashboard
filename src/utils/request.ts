@@ -26,7 +26,8 @@ export async function request(route: string, method: RequestType, config?: Reque
         })
         return response
     } catch (error) {
-        if (errorHandler(error).status == 401) {
+        const errorData = errorHandler(error)
+        if (errorData.status == 401 || errorData.message == 'Not authenticated') {
             if (typeof window != "undefined") {
                 // localStorage.clear()
                 AuthToken().clearToken()
