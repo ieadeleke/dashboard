@@ -22,14 +22,17 @@ import { AddOperatorsModal, AddOperatorsModalRef } from "@/components/dashboard/
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { getOperatorsData, Operator } from "@/utils/data/operators";
 import SEO from "@/components/SEO";
+import { useFetchOperators } from "@/utils/apiHooks/operators/useFetchOperators";
+import Loading from "@/components/states/Loading";
+import Error from "@/components/states/Error";
 
-export default function Home() {
-  const [_data, setData] = useState<Operator[]>([])
+export default function Operators() {
   const addOperatorsRef = useRef<AddOperatorsModalRef>(null)
+  const { isLoading, error, data: _data, fetchOperators } = useFetchOperators()
   const [searchWord, setSearchWord] = useState('')
 
   useEffect(() => {
-    setData(getOperatorsData(50))
+    fetchOperators()
   }, [])
 
   function addOperator() {
@@ -40,22 +43,22 @@ export default function Home() {
     setSearchWord(event.target.value)
   }
 
-  const data = useMemo(() => {
+  const operatorData = useMemo(() => {
     const word = searchWord.toLowerCase()
     if (word.trim().length == 0) {
       return _data
     }
-    return _data.filter((item) => item.name.toLowerCase().includes(word) || item.email.toLowerCase().includes(word) || item.owners_name.toLowerCase().includes(word))
+    return _data.filter((item) => item.firstName.toLowerCase().includes(word) || item.lastName.toLowerCase().includes(word) || item.email.toLowerCase().includes(word))
   }, [searchWord, JSON.stringify(_data)])
 
   return (
     <DashboardLayout>
       <div className="flex flex-col py-8">
-      <SEO title="Laswa | Operators" />
+        <SEO title="Laswa | Operators" />
         <AddOperatorsModal ref={addOperatorsRef} />
 
         <div className="flex flex-col gap-6">
-          <h1 className="text-2xl font-bold">Operators <span className="text-primary">(50)</span></h1>
+          <h1 className="text-2xl font-bold">Operators <span className="text-primary">({operatorData.length})</span></h1>
 
           <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
             <TextField.Container className="flex-1 border border-gray-200">
@@ -108,7 +111,7 @@ export default function Home() {
                 </TableRow>
               </TableHeader>
 
-              {data.map((item) => <TableBody key={item.id} className="bg-white">
+              {operatorData.map((item) => <TableBody key={item._id} className="bg-white">
                 <TableRow>
                   <TableCell className="font-medium">
                     <div className="flex items-center">
@@ -116,11 +119,11 @@ export default function Home() {
                     </div>
                   </TableCell>
                   <TableCell>
-                    {item.name}
+                    {item.firstName}
                   </TableCell>
                   <TableCell>{item.email}</TableCell>
                   <TableCell>
-                    {item.owners_name}
+                    {item.lastName}
                   </TableCell>
                   <TableCell>Lorem</TableCell>
                   <TableCell>
@@ -141,9 +144,10 @@ export default function Home() {
                     </DropdownMenu>
                   </TableCell>
                 </TableRow>
-           
+
               </TableBody>)}
             </Table>
+            {isLoading ? <Loading className="h-[400px]" /> : error ? <Error onRetry={fetchOperators} className="h-[400px]" /> : null}
           </div>
         </div>
 
