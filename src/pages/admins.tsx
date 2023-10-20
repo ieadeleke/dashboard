@@ -16,15 +16,14 @@ import Button from "@/components/buttons";
 import { CreateRoleModal, CreateRoleModalRef } from "@/components/dashboard/admins/CreateRoleModal";
 import { Admin, getAdminData } from "@/utils/data/admins";
 import SEO from "@/components/SEO";
+import { useFetchAdmins } from "@/utils/apiHooks/admins/useFetchAdmins";
+import Loading from "@/components/states/Loading";
+import Error from "@/components/states/Error";
 
 export default function AdminsPage() {
-  const [data, setData] = useState<Admin[]>([])
+  const { isLoading, error, data, fetchAdmins } = useFetchAdmins()
   const addAdminsRef = useRef<AddAdminsModalRef>(null)
   const addRoleRef = useRef<CreateRoleModalRef>(null)
-
-  useEffect(() => {
-    setData(getAdminData(12))
-  }, [])
 
   function addAdmin() {
     addAdminsRef.current?.open()
@@ -33,6 +32,10 @@ export default function AdminsPage() {
   function addRole() {
     addRoleRef.current?.open()
   }
+
+  useEffect(() => {
+    fetchAdmins()
+  }, [])
 
   return (
     <DashboardLayout>
@@ -83,9 +86,10 @@ export default function AdminsPage() {
 
           <div>
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-              {data.map((item) => <AdminItem key={item.id} data={item} />)}
+              {data.map((item) => <AdminItem key={item._id} data={item} />)}
             </div>
           </div>
+          {isLoading ? <Loading /> : error ? <Error /> : null}
         </div>
 
       </div>

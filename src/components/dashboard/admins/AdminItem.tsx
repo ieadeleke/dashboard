@@ -9,8 +9,9 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import { Admin } from "@/utils/data/admins"
 import { useMemo } from "react"
+import { Admin } from '@/models/admins'
+import { DEFAULT_PROFILE_URL } from '@/utils/constants/strings'
 
 
 type AdminItemProps = {
@@ -19,11 +20,12 @@ type AdminItemProps = {
 
 export const AdminItem = (props: AdminItemProps) => {
     const { data } = props
+    const { personalInfo } = data
 
     const initials = useMemo(() => {
-        const names = data.name.split(' ')
-        return `${names[0].substring(0,1)}${names[1].substring(0,1)}`
-    }, [data.name])
+        const names = `${personalInfo.firstName} ${personalInfo.lastName}`.split(' ')
+        return `${names[0].substring(0,1)}${names[1].substring(0,1)}`.toUpperCase()
+    }, [personalInfo.firstName, personalInfo.lastName])
 
     return <div className="relative flex flex-col gap-6 bg-white py-8 px-3 rounded-md">
 
@@ -50,12 +52,12 @@ export const AdminItem = (props: AdminItemProps) => {
 
         <div className="flex flex-col gap-3 text-center">
             <div className="relative w-28 h-28 self-center rounded-2xl">
-                <img className="w-full h-full rounded-2xl" src={data.image} />
+                <img className="w-full h-full rounded-2xl" src={DEFAULT_PROFILE_URL} />
 
                 <p className="absolute z-10 bg-primary p-1 text-white rounded-md -right-4 bottom-0">{initials}</p>
             </div>
-            <h1 className="font-bold text-primary">{data.name}</h1>
-            <p className="text-gray-400">{data.department}</p>
+            <h1 className="font-bold text-primary">{personalInfo.firstName}</h1>
+            <p className="text-gray-400">{data.superAdmin ? 'Super Admin' : 'Staff'}</p>
         </div>
 
         <div className="flex flex-col gap-4">
@@ -63,14 +65,14 @@ export const AdminItem = (props: AdminItemProps) => {
                 <div className="p-1 bg-primary-100 rounded-xl text-primary">
                     <PhoneIcon className="w-5 h-5" />
                 </div>
-                <p className="font-semibold text-xs text-[#3F3F3F]">{data.phone_number}</p>
+                <p className="font-semibold text-xs text-[#3F3F3F]">{personalInfo.phoneNumber}</p>
             </div>
 
             <div className="flex flex-nowrap items-center gap-3">
                 <div className="p-2 bg-primary-100 rounded-xl text-primary">
                     <MailIcon className="w-4 h-4" />
                 </div>
-                <p className="flex-1 font-semibold text-xs line-clamp-1 text-[#3F3F3F]">{data.email}</p>
+                <p className="flex-1 font-semibold text-xs line-clamp-1 text-[#3F3F3F]">{personalInfo.email}</p>
             </div>
         </div>
 
