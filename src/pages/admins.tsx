@@ -9,21 +9,65 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AdminItem } from "@/components/dashboard/admins/AdminItem";
 import { AddAdminsModal, AddAdminsModalRef } from "@/components/dashboard/admins/AddAdminModal";
 import Button from "@/components/buttons";
 import { CreateRoleModal, CreateRoleModalRef } from "@/components/dashboard/admins/CreateRoleModal";
-import { Admin, getAdminData } from "@/utils/data/admins";
 import SEO from "@/components/SEO";
 import { useFetchAdmins } from "@/utils/apiHooks/admins/useFetchAdmins";
 import Loading from "@/components/states/Loading";
 import Error from "@/components/states/Error";
+import { ConfirmationAlertDialog, ConfirmationAlertDialogRef } from "@/components/dialogs/ConfirmationAlertDialog";
+import { Admin } from "@/models/admins";
+import { useSuspendAdmin } from "@/utils/apiHooks/admins/useSuspendAdmins";
+import { useUnSuspendAdmin } from "@/utils/apiHooks/admins/useUnSuspendAdmin";
+import { GlobalActionContext } from "@/context/GlobalActionContext";
+import { LoadingModal } from "@/components/states/LoadingModal";
 
 export default function AdminsPage() {
-  const { isLoading, error, data, fetchAdmins } = useFetchAdmins()
+  const { isLoading: isFetchLoading, error: isFetchError, data, fetchAdmins } = useFetchAdmins()
   const addAdminsRef = useRef<AddAdminsModalRef>(null)
   const addRoleRef = useRef<CreateRoleModalRef>(null)
+  const confirmationDialogRef = useRef<ConfirmationAlertDialogRef>(null)
+  const { isLoading: isSuspendLoading, error: suspendError, data: suspendData, suspendAdmin } = useSuspendAdmin()
+  const { isLoading: isUnSuspendLoading, error: unSuspendError, data: unSuspendData, unSuspendAdmin } = useUnSuspendAdmin()
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const { showSnackBar } = useContext(GlobalActionContext)
+  const [admins, setAdmins] = useState<Admin[]>([])
+
+  useEffect(() => {
+    if (error) {
+      showSnackBar({ severity: 'error', message: error })
+    }
+  }, [error])
+
+  useEffect(() => {
+    setAdmins([...data])
+  }, [JSON.stringify(data)])
+
+  useEffect(() => {
+    setIsLoading(isUnSuspendLoading || isSuspendLoading)
+  }, [isUnSuspendLoading, isSuspendLoading])
+
+  useEffect(() => {
+    setError(suspendError || unSuspendError)
+  }, [suspendError, unSuspendError])
+
+  useEffect(() => {
+    if (suspendData) {
+      showSnackBar({ severity: 'success', message: `${suspendData.personalInfo.firstName} ${suspendData.personalInfo.lastName} has been suspended` })
+      setAdmins((prevAdmins) => prevAdmins.map((admin) => admin._id == suspendData._id ? suspendData : admin))
+    }
+  }, [suspendData])
+
+  useEffect(() => {
+    if (unSuspendData) {
+      showSnackBar({ severity: 'success', message: `${unSuspendData.personalInfo.firstName} ${unSuspendData.personalInfo.lastName} has been unsuspended` })
+      setAdmins((prevAdmins) => prevAdmins.map((admin) => admin._id == unSuspendData._id ? unSuspendData : admin))
+    }
+  }, [unSuspendData])
 
   function addAdmin() {
     addAdminsRef.current?.open()
@@ -33,6 +77,38 @@ export default function AdminsPage() {
     addRoleRef.current?.open()
   }
 
+  function onSuspendAdmin(admin: Admin) {
+    confirmationDialogRef.current?.show({
+      data: {
+        title: "Are you sure you want to suspend this admin?",
+        description: "They won't have access to the admin dashboard once it is complete"
+      },
+      onConfirm: () => {
+        confirmationDialogRef.current?.dismiss()
+        suspendAdmin({ userId: admin._id })
+      },
+      onCancel: () => {
+        confirmationDialogRef.current?.dismiss()
+      }
+    })
+  }
+
+  function onUnSuspendAdmin(admin: Admin) {
+    confirmationDialogRef.current?.show({
+      data: {
+        title: "Are you sure you want to unsuspend this admin?",
+        description: "They will have access to the admin dashboard once it is complete"
+      },
+      onConfirm: () => {
+        confirmationDialogRef.current?.dismiss()
+        unSuspendAdmin({ userId: admin._id })
+      },
+      onCancel: () => {
+        confirmationDialogRef.current?.dismiss()
+      }
+    })
+  }
+
   useEffect(() => {
     fetchAdmins()
   }, [])
@@ -40,10 +116,12 @@ export default function AdminsPage() {
   return (
     <DashboardLayout>
       <div className="flex flex-col py-8">
+        <ConfirmationAlertDialog ref={confirmationDialogRef} />
         <SEO title="Laswa | Admin" />
 
         <AddAdminsModal ref={addAdminsRef} />
         <CreateRoleModal ref={addRoleRef} />
+        <LoadingModal isVisible={isLoading} />
 
         <div className="flex flex-col gap-6">
           <h1 className="text-2xl font-bold">Admins <span className="text-primary">({data.length})</span></h1>
@@ -86,10 +164,10 @@ export default function AdminsPage() {
 
           <div>
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-              {data.map((item) => <AdminItem key={item._id} data={item} />)}
+              {admins.map((item) => <AdminItem key={item._id} data={item} onSuspendAdmin={onSuspendAdmin} onUnSuspendAdmin={onUnSuspendAdmin} />)}
             </div>
           </div>
-          {isLoading ? <Loading /> : error ? <Error /> : null}
+          {isFetchLoading ? <Loading /> : isFetchError ? <Error /> : null}
         </div>
 
       </div>

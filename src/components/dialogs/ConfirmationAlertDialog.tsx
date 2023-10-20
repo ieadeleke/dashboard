@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { forwardRef, useImperativeHandle, useRef, useState } from "react"
 
-export type AlertDialogRef = {
+export type ConfirmationAlertDialogRef = {
     show: (params: ShowParams) => void,
     dismiss: () => void
 }
@@ -25,7 +25,7 @@ type ShowParams = {
     onCancel?: () => void
 }
 
-type AlertDialogProps = {
+type ConfirmationAlertDialogProps = {
     
 }
 
@@ -34,7 +34,7 @@ type ActionLabel = {
     cancel?: string
 }
 
-export const AlertDialog = forwardRef<AlertDialogRef, AlertDialogProps>((props, ref) => {
+export const ConfirmationAlertDialog = forwardRef<ConfirmationAlertDialogRef, ConfirmationAlertDialogProps>((props, ref) => {
     const [isVisible, setIsVisible] = useState(false)
     const [content, setContent] = useState({
         title: "",
@@ -85,4 +85,4 @@ export const AlertDialog = forwardRef<AlertDialogRef, AlertDialogProps>((props, 
     </BaseAlertDialog>
 })
 
-AlertDialog.displayName = "AlertDialogCopy"
+ConfirmationAlertDialog.displayName = "ConfirmationAlertDialog"

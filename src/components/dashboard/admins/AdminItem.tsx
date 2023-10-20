@@ -3,7 +3,7 @@ import MailIcon from '@/assets/icons/ic_mail.svg'
 import CautionIcon from '@/assets/icons/ic_caution.svg'
 import LockAccessIcon from '@/assets/icons/ic_lock_access.svg'
 import { IconButton } from "../../buttons/IconButton"
-import { MoreVertical } from "lucide-react"
+import { CheckIcon, MoreVertical } from "lucide-react"
 import {
     Popover,
     PopoverContent,
@@ -15,17 +15,27 @@ import { DEFAULT_PROFILE_URL } from '@/utils/constants/strings'
 
 
 type AdminItemProps = {
-    data: Admin
+    data: Admin,
+    onSuspendAdmin?: (admin: Admin) => void,
+    onUnSuspendAdmin?: (admin: Admin) => void
 }
 
 export const AdminItem = (props: AdminItemProps) => {
     const { data } = props
-    const { personalInfo } = data
+    const { personalInfo, isActive } = data
 
     const initials = useMemo(() => {
         const names = `${personalInfo.firstName} ${personalInfo.lastName}`.split(' ')
-        return `${names[0].substring(0,1)}${names[1].substring(0,1)}`.toUpperCase()
+        return `${names[0].substring(0, 1)}${names[1].substring(0, 1)}`.toUpperCase()
     }, [personalInfo.firstName, personalInfo.lastName])
+
+    function handleSuspendAdmin() {
+        props.onSuspendAdmin?.(data)
+    }
+
+    function handleUnSuspendAdmin() {
+        props.onUnSuspendAdmin?.(data)
+    }
 
     return <div className="relative flex flex-col gap-6 bg-white py-8 px-3 rounded-md">
 
@@ -42,10 +52,13 @@ export const AdminItem = (props: AdminItemProps) => {
                         <p className="text-[#444444]">Update Access</p>
                     </div>
 
-                    <div className="flex items-center gap-4 py-3 px-2 text-red-500 cursor-pointer hover:bg-gray-50">
+                    {isActive ? <div onClick={handleSuspendAdmin} className="flex items-center gap-4 py-3 px-2 text-red-500 cursor-pointer hover:bg-gray-50">
                         <CautionIcon className="w-6 h-6" />
-                        <p>Remove Admin</p>
-                    </div>
+                        <p>Suspend Admin</p>
+                    </div> : <div onClick={handleUnSuspendAdmin} className="flex items-center gap-4 py-3 px-2 text-primary cursor-pointer hover:bg-gray-50">
+                        <CheckIcon className="w-6 h-6" />
+                        <p>Unsuspend Admin</p>
+                    </div>}
                 </div>
             </PopoverContent>
         </Popover>
