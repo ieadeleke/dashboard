@@ -31,7 +31,7 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
     const tripDetailModalRef = useRef<TripDetailModalRef>(null)
 
     function handleOnTripItemClicked(data: Trip) {
-        // tripDetailModalRef.current?.open({ data })
+        tripDetailModalRef.current?.open({ data })
     }
 
     function onPhraseChanged(event: ChangeEvent<HTMLInputElement>){

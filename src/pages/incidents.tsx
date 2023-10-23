@@ -18,9 +18,10 @@ import {
 import { CheckBox } from "@/components/buttons/CheckBox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { FleetTableDataList } from "./fleets";
-import { Fleet, getFleetData } from "@/utils/data/fleets";
+// import { Fleet, getFleetData } from "@/utils/data/fleets";
 import { useEffect, useState } from "react";
 import SEO from "@/components/SEO";
+import { Fleet } from "@/models/fleets";
 
 const tabs = [
   {
@@ -35,11 +36,11 @@ const tabs = [
 
 
 export default function IndidentsPage() {
-  const fleets = getFleetData(50)
+  // const fleets = getFleetData(50)
   const [data, setData] = useState<Fleet[]>([])
 
   useEffect(() => {
-    setData(fleets)
+    // setData(fleets)
   }, [])
 
   return (
@@ -119,7 +120,7 @@ export default function IndidentsPage() {
                 </TableRow>
               </TableHeader>
 
-              {data.map((item) => <FleetTableDataList key={item.id} data={item} />)}
+              {data.map((item) => <FleetTableDataList key={item._id} data={item} />)}
             </Table>
           </TabsContent>
         </div>

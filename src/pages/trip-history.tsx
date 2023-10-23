@@ -1,10 +1,12 @@
 import DashboardLayout from "@/components/layout/dashboard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TripHistoryTab } from "@/components/dashboard/trip-history/TripHistoryTab";
 import SEO from "@/components/SEO";
 import { InitiateTripModal, InitiateTripModalRef } from "@/components/dashboard/trips/InitiateTripModal";
+import { io } from 'socket.io-client'
+import { Trip } from "@/models/trips";
 
 const tabs = [
   {
@@ -29,13 +31,41 @@ const tabs = [
   }
 ]
 
-
+const TRIP_ACTIVITIES = "laswa/TripActivities"
 export default function TripHistory() {
   const [size, setSize] = useState(0)
   const initiateTripRef = useRef<InitiateTripModalRef>(null)
+  const socket = io("ws://laswa.damdamtechnology.com", {
+    transports: ['websocket']
+  });
 
+  function onTripActivities(data: Trip) {
+    console.log({ data })
+  }
 
-  function initiateTrip(){
+  useEffect(() => {
+    socket.on('disconnect', () => {
+      console.log("diconnected")
+    })
+
+    socket.on("connect_error", (error) => {
+      console.log(error)
+    });
+
+    socket.on('connect', () => {
+      console.log("connected succesfully")
+    })
+
+    socket.on(TRIP_ACTIVITIES, onTripActivities)
+
+    socket.connect()
+
+    return () => {
+      socket.off(TRIP_ACTIVITIES, onTripActivities)
+    }
+  }, [])
+
+  function initiateTrip() {
     initiateTripRef.current?.open()
   }
 

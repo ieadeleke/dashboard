@@ -3,9 +3,10 @@ import {
     DialogContent
 } from "@/components/ui/dialog"
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react"
-import { getTripData, Trip } from "@/utils/data/trip"
+// import { getTripData, Trip } from "@/utils/data/trip"
 import { TripHistoryStatusChip } from "../trip-history/TripHistoryStatusChip"
 import { TripHistoryItem } from "../trip-history/TripHistoryItem"
+import { Trip } from "@/models/trips"
 
 type TripDetailModalProps = {
 
@@ -27,7 +28,7 @@ export const TripDetailModal = forwardRef<TripDetailModalRef, TripDetailModalPro
 
     useEffect(() => {
         if (isVisible) {
-            setAllTrips(getTripData(4))
+            // setAllTrips(getTripData(4))
         }
     }, [isVisible])
 
@@ -62,11 +63,11 @@ export const TripDetailModal = forwardRef<TripDetailModalRef, TripDetailModalPro
                     <div className="flex items-center">
                         <div className="flex flex-col gap-2">
                             <p className="font-bold">Ship ID</p>
-                            <p className="text-sm">{trip.ship_id}</p>
+                            <p className="text-sm">{"asdasddsa"}</p>
                         </div>
                         <div className="flex-1" />
 
-                        <TripHistoryStatusChip status={trip.status} />
+                        <TripHistoryStatusChip status={"active"} />
                     </div>
 
                     <div className="flex gap-4">
@@ -80,7 +81,7 @@ export const TripDetailModal = forwardRef<TripDetailModalRef, TripDetailModalPro
                             <div className="bg-gray-500 h-32 rounded-md" />
 
                             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                                {allTrips.map((item) => <TripHistoryItem data={item} key={item.id} />)}
+                                {allTrips.map((item) => <TripHistoryItem data={item} key={"item.id"} />)}
                             </div>
                         </div>
 

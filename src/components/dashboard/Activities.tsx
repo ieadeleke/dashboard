@@ -11,7 +11,7 @@ export const Activities = () => {
                 <p className="text-base font-bold">Sale Statistics</p>
 
 
-                <div className="hidden lg:flex gap-4">
+                {/* <div className="hidden lg:flex gap-4">
                     <div className="flex gap-2 items-center">
                         <div className="bg-[#3F3F3F] w-2 h-2 rounded-full" />
                         <p className="text-gray-600">Sales</p>
@@ -21,7 +21,7 @@ export const Activities = () => {
                         <div className="bg-primary w-2 h-2 rounded-full" />
                         <p className="text-gray-600">Returns</p>
                     </div>
-                </div>
+                </div> */}
 
                 <LucideMoreHorizontal className="text-gray-500" />
             </div>
