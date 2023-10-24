@@ -153,7 +153,7 @@ export const FleetTableDataList = (props: TableDataListProps) => {
                     <p className={`${statusStyles.label} text-sm`}>{statusLabel}</p>
                 </div>
             </TableCell>
-            <TableCell>Lorem</TableCell>
+            <TableCell>{data.model}</TableCell>
             <TableCell>
                 {isLoading ? <CircularProgress size={24} /> : <DropdownMenu>
                     <DropdownMenuTrigger>
@@ -250,7 +250,7 @@ const TabBody = (props: TabBodyProps) => {
                         <TableHead>Fleet ID</TableHead>
                         <TableHead>Seats</TableHead>
                         <TableHead>Status</TableHead>
-                        <TableHead>Title</TableHead>
+                        <TableHead>Model</TableHead>
                         <TableHead></TableHead>
                     </TableRow>
                 </TableHeader>
