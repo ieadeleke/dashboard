@@ -5,24 +5,20 @@ import { useCallback, useEffect, useState } from "react";
 import SearchIcon from '@/assets/icons/ic_search.svg'
 import { TripHistoryItem } from "@/components/dashboard/trip-history/TripHistoryItem";
 import Link from "next/link";
-import { getTripData, Trip } from "@/utils/data/trip";
+// import { getTripData, Trip } from "@/utils/data/trip";
 import SEO from "@/components/SEO";
+import { Trip } from "@/models/trips";
+import { io } from 'socket.io-client'
+import { BASE_WEBSOCKET_URL } from "@/utils/constants/strings";
 
-const containerStyle = {
-  width: '100%',
-  height: '500px'
-};
 
-const center = {
-  lat: -3.745,
-  lng: -38.523
-};
+const TRIP_STATUS_CHANNEL = "Trip/Admin/LiveTracking"
 
 export default function Tracking() {
-  const [trips, setTrips] = useState<Trip[]>([])
+  // const [trips, setTrips] = useState<Trip[]>([])
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: "YOUR_API_KEY"
+    googleMapsApiKey: "AIzaSyCjEOk6vk9MIcyZOjff2O-GXebUkEngPzY"
   })
 
   const [map, setMap] = useState(null)
@@ -40,8 +36,40 @@ export default function Tracking() {
   }, [])
 
   useEffect(() => {
-    setTrips(getTripData(6))
+    // setTrips(getTripData(6))
   }, [])
+
+
+  const socket = io(BASE_WEBSOCKET_URL, {
+    transports: ['websocket']
+  });
+
+  function onTripStatusChanged(data: Trip) {
+    console.log({ data })
+  }
+
+  useEffect(() => {
+    socket.on('disconnect', () => {
+      console.log("diconnected")
+    })
+
+    socket.on("connect_error", (error) => {
+      console.log(error)
+    });
+
+    socket.on('connect', () => {
+      console.log("connected succesfully")
+    })
+
+    socket.on(TRIP_STATUS_CHANNEL, onTripStatusChanged)
+
+    socket.connect()
+
+    return () => {
+      socket.off(TRIP_STATUS_CHANNEL, onTripStatusChanged)
+    }
+  }, [])
+
 
   return (
     <DashboardLayout>
@@ -71,15 +99,25 @@ export default function Tracking() {
               </GoogleMap>
             </div>
 
-            <div className="grid grid-cols-1 left-0 top-0 z-10 gap-4 h-full md:grid-cols-2 lg:absolute lg:flex flex-col lg:overflow-y-scroll lg:no-scrollbar lg:p-4">
+            {/* <div className="grid grid-cols-1 left-0 top-0 z-10 gap-4 h-full md:grid-cols-2 lg:absolute lg:flex flex-col lg:overflow-y-scroll lg:no-scrollbar lg:p-4">
               {trips.map((item) => <Link key={item.id} href={`/tracking/activities/${item.id}`}>
                 <TripHistoryItem data={item} />
               </Link>)
               }
-            </div>
+            </div> */}
           </div>
         ) : <></>}
       </div>
     </DashboardLayout>
   )
 }
+
+const containerStyle = {
+  width: '100%',
+  height: '500px'
+};
+
+const center = {
+  lat: -3.745,
+  lng: -38.523
+};

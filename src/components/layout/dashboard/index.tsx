@@ -1,3 +1,4 @@
+import { RegularTextInput } from "@/components/input/RegularTextInput"
 import { MenuSideBar } from "./components/MenuSideBar"
 import { NavBar } from "./components/NavBar"
 // import Footer from "../Footer"
@@ -21,6 +22,7 @@ export default function DashboardLayout(props: LayoutProps) {
 
         <div className="px-3 py-8 w-full relative md:px-8 md:py-8">
             <NavBar />
+            {/* <RegularTextInput /> */}
             {props.children}
 
         </div>
