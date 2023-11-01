@@ -1,5 +1,6 @@
+import { ApiResponse } from "@/models"
 import { request, RequestConfig } from "../../request"
-import { GetAdminResponse, SuspendAdminParams, SuspendAdminResponse } from "./types"
+import { AddAdminParams, GetAdminResponse, SuspendAdminParams, SuspendAdminResponse } from "./types"
 
 
 export function AdminService(config?: RequestConfig) {
@@ -26,10 +27,19 @@ export function AdminService(config?: RequestConfig) {
         return _data
     }
 
+    async function addAdmin(payload: AddAdminParams) {
+        const { data } = await request(`api/v1/admin/AddStaff`, "POST", {
+            body: payload
+        })
+        const _data = (data as ApiResponse & { status: string })
+        return true
+    }
+
     return {
         getAllAdmins,
         suspendAdmin,
-        unSuspendAdmin
+        unSuspendAdmin,
+        addAdmin
     }
 
 }

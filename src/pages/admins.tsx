@@ -70,7 +70,13 @@ export default function AdminsPage() {
   }, [unSuspendData])
 
   function addAdmin() {
-    addAdminsRef.current?.open()
+    addAdminsRef.current?.open({
+      onNewAdminAdded: () => {
+        fetchAdmins()
+        addAdminsRef.current?.close()
+        showSnackBar({ severity: 'success', message: "New admin added succesfully" })
+      }
+    })
   }
 
   function addRole() {

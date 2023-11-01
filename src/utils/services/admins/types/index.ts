@@ -13,3 +13,11 @@ export type SuspendAdminParams = {
 export type SuspendAdminResponse = {
     user: Admin
 }
+
+export type AddAdminParams = {
+    firstName: string,
+    lastName: string,
+    email: string,
+    phoneNumber: string,
+    roleId: string
+}
