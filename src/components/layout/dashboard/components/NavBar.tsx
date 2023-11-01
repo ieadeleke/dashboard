@@ -14,8 +14,8 @@ export const NavBar = () => {
                 <Avatar className="w-10 h-10 object-center object-cover" src={DEFAULT_PROFILE_URL} />
 
                 <div className="flex flex-col">
-                    <h1 className="text-sm font-bold">Maruf Aregbesola</h1>
-                    <p className="text-sm text-gray-300">marouf@laswa.com</p>
+                    <h1 className="text-sm font-bold">Yemo Olamide</h1>
+                    <p className="text-sm text-gray-300">yemiakiije@gmail.com</p>
                 </div>
             </div>
         </div>
