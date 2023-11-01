@@ -19,7 +19,7 @@ export const LifeTracking = () => {
 
     return <div className="flex flex-col gap-4">
         <div className="flex flex-col py-2 gap-2 md:flex-row md:items-center">
-            <p className="font-bold">Life Tracking</p>
+            <p className="font-bold">Live Tracking</p>
             <div className="flex-1" />
             <TextField.Container className="w-[300px] bg-white text-text-color">
                 <SearchIcon />
