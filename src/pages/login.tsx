@@ -11,6 +11,7 @@ import { useLogin } from "@/utils/apiHooks/auth/useLogin";
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { GlobalActionContext } from "@/context/GlobalActionContext";
+import { isEmail } from "@/utils/validation/validation";
 
 export default function LoginPage() {
     const { isLoading, data, login, error } = useLogin()
@@ -45,10 +46,16 @@ export default function LoginPage() {
     }, [data])
 
     function handleLogin() {
-        login({
-            email,
-            password
-        })
+        if (!isEmail(email)) {
+            showSnackBar({ severity: 'error', message: "Invalid Email Address" })
+        } else if (password.length < 3) {
+            showSnackBar({ severity: 'error', message: "Password should be 3 or more characters" })
+        } else {
+            login({
+                email,
+                password
+            })
+        }
     }
 
     return <AuthLayout>
