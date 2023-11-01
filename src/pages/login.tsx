@@ -82,8 +82,6 @@ export default function LoginPage() {
                                     {isPasswordRevealed ? <EyeOffIcon /> : <EyeIcon />}
                                 </IconButton>
                             </div>
-
-                            <TextField.Label>Heyy</TextField.Label>
                         </TextField.Container>
                     </div>
                 </div>

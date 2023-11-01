@@ -51,7 +51,7 @@
     "typescript": "5.2.2"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.1.0",
+    "@faker-js/faker": "^8.2.0",
     "@types/cookie": "^0.5.2",
     "@types/js-cookie": "^3.0.4"
   }
