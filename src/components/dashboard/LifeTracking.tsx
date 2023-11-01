@@ -2,6 +2,7 @@ import { SearchIcon, XIcon } from "lucide-react"
 import { ChangeEvent, useMemo, useRef, useState } from "react"
 import { IconButton } from "../buttons/IconButton"
 import { TextField } from "../input/InputText"
+import { DefaultMap } from "../map/DefaultMap"
 
 export const LifeTracking = () => {
     const [value, setValue] = useState('')
@@ -30,6 +31,8 @@ export const LifeTracking = () => {
             </TextField.Container>
         </div>
 
-        <div className="h-[400px] bg-white rounded-lg" />
+        <div className="min-h-[400px] bg-white rounded-lg">
+            <DefaultMap />
+        </div>
     </div>
 }
