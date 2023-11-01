@@ -1,13 +1,9 @@
 import { ApiResponse } from ".."
+import { User } from "../users"
 
 export type LoginResponse = ApiResponse & {
     profile: {
-        _id: string,
-        email: string,
-        firstName: string,
-        lastName: string,
-        Boats: string[],
-        phoneNumber: string
+        personalInfo: User
     },
     token: string
 }
