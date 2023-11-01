@@ -67,21 +67,19 @@ export default function LoginPage() {
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-2">
                         <p className="font-medium text-[#3F3F3F]">Email</p>
-                        <TextField.Container>
-                            <TextField.Input className="bg-white rounded:lg" type="email" inputMode="email" defaultValue={email} onChange={onEmailEntered} />
+                        <TextField.Container className="bg-white rounded:lg">
+                            <TextField.Input type="email" inputMode="email" defaultValue={email} onChange={onEmailEntered} />
                         </TextField.Container>
                     </div>
 
                     <div className="flex flex-col gap-2">
                         <p className="font-medium text-[#3F3F3F]">Password</p>
-                        <TextField.Container className="">
-                            <div className="relative">
-                                <TextField.Input className="bg-white rounded-lg relative" defaultValue={password} onChange={onPasswordEntered} type={isPasswordRevealed ? 'text' : 'password'} />
+                        <TextField.Container className="bg-white rounded:lg">
+                            <TextField.Input defaultValue={password} onChange={onPasswordEntered} type={isPasswordRevealed ? 'text' : 'password'} />
 
-                                <IconButton className="absolute right-4" onClick={revealPassword}>
-                                    {isPasswordRevealed ? <EyeOffIcon /> : <EyeIcon />}
-                                </IconButton>
-                            </div>
+                            <IconButton onClick={revealPassword}>
+                                {isPasswordRevealed ? <EyeOffIcon /> : <EyeIcon />}
+                            </IconButton>
                         </TextField.Container>
                     </div>
                 </div>
