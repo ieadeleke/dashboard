@@ -1,13 +1,26 @@
 import { Avatar } from "@/components/image/Avatar"
 import { DEFAULT_PROFILE_URL } from "@/utils/constants/strings"
 import { faker } from '@faker-js/faker'
+import { useEffect, useState } from "react"
 
-const image = faker.image.dataUri()
-const name = faker.airline.airline().name
-const username = faker.name.zodiacSign()
-const count = faker.number.int({ min: 54, max: 1000 })
+
 
 export const FleetItem = () => {
+    const [name, setName] = useState('')
+    const [image, setImage] = useState('')
+    const [username, setUsername] = useState('')
+    const [count, setCount] = useState(0)
+
+    useEffect(() => {
+        const image = faker.image.dataUri()
+        const name = faker.airline.airline().name
+        const username = faker.name.zodiacSign()
+        const count = faker.number.int({ min: 54, max: 1000 })
+        setName(name)
+        setUsername(username)
+        setCount(count)
+        setImage(image)
+    }, [])
 
     return <div className="flex flex-col gap-4">
         <img src={image} className="bg-grey-200 object-cover object-center rounded-lg h-[400px]" />
