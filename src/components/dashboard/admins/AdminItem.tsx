@@ -9,10 +9,10 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import { useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Admin } from '@/models/admins'
 import { DEFAULT_PROFILE_URL } from '@/utils/constants/strings'
-
+import { faker } from '@faker-js/faker'
 
 type AdminItemProps = {
     data: Admin,
@@ -23,6 +23,11 @@ type AdminItemProps = {
 export const AdminItem = (props: AdminItemProps) => {
     const { data } = props
     const { personalInfo, isActive } = data
+    const [image, setImage] = useState('')
+
+    useEffect(() => {
+        setImage(faker.image.avatar())
+    }, [])
 
     const initials = useMemo(() => {
         const names = `${personalInfo.firstName} ${personalInfo.lastName}`.split(' ')
@@ -65,7 +70,7 @@ export const AdminItem = (props: AdminItemProps) => {
 
         <div className="flex flex-col gap-3 text-center">
             <div className="relative w-28 h-28 self-center rounded-2xl">
-                <img className="w-full h-full rounded-2xl" src={DEFAULT_PROFILE_URL} />
+                <img className="w-full h-full rounded-2xl" src={image} />
 
                 <p className="absolute z-10 bg-primary p-1 text-white rounded-md -right-4 bottom-0">{initials}</p>
             </div>
