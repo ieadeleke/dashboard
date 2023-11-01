@@ -19,21 +19,58 @@ import {
 } from "@/components/ui/table"
 import { CheckBox } from "@/components/buttons/CheckBox";
 import { AddOperatorsModal, AddOperatorsModalRef } from "@/components/dashboard/operators/AddOperatorsModal";
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
-import { getOperatorsData, Operator } from "@/utils/data/operators";
+import { ChangeEvent, useContext, useEffect, useMemo, useRef, useState } from "react";
 import SEO from "@/components/SEO";
 import { useFetchOperators } from "@/utils/apiHooks/operators/useFetchOperators";
 import Loading from "@/components/states/Loading";
 import Error from "@/components/states/Error";
+import { useSuspendOperator } from "@/utils/apiHooks/operators/useSuspendOperator";
+import { useUnSuspendOperator } from "@/utils/apiHooks/operators/useUnSuspendOperator";
+import { ConfirmationAlertDialog, ConfirmationAlertDialogRef } from "@/components/dialogs/ConfirmationAlertDialog";
+import { Operator } from "@/models/operators";
+import { GlobalActionContext } from "@/context/GlobalActionContext";
+import { LoadingModal } from "@/components/states/LoadingModal";
 
 export default function Operators() {
   const addOperatorsRef = useRef<AddOperatorsModalRef>(null)
-  const { isLoading, error, data: _data, fetchOperators } = useFetchOperators()
+  const { isLoading:isFetchLoading, error: isFetchError, data: _data, fetchOperators } = useFetchOperators()
+  const confirmationDialogRef = useRef<ConfirmationAlertDialogRef>(null)
   const [searchWord, setSearchWord] = useState('')
+  const { isLoading: isSuspendLoading, error: suspendError, data: suspendData, suspendOperator } = useSuspendOperator()
+  const { isLoading: isUnSuspendLoading, error: unSuspendError, data: unSuspendData, unSuspendOperator } = useUnSuspendOperator()
+  const { showSnackBar } = useContext(GlobalActionContext)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [operators, setOperators] = useState<Operator[]>([])
+
+  useEffect(() => {
+    setOperators(_data)
+  }, [JSON.stringify(_data)])
 
   useEffect(() => {
     fetchOperators()
   }, [])
+
+  useEffect(() => {
+    if (error) {
+      showSnackBar({ severity: 'error', message: error })
+    }
+  })
+
+  useEffect(() => {
+    setIsLoading(isUnSuspendLoading || isSuspendLoading)
+  }, [isUnSuspendLoading, isSuspendLoading])
+
+  useEffect(() => {
+    if (unSuspendData) {
+      showSnackBar({ severity: 'success', message: `${unSuspendData.firstName} ${unSuspendData.lastName} has been unsuspended` })
+      setOperators((prevAdmins) => prevAdmins.map((admin) => admin._id == unSuspendData._id ? unSuspendData : admin))
+    }
+  }, [unSuspendData])
+
+  useEffect(() => {
+    setError(suspendError || unSuspendError)
+  }, [suspendError, unSuspendError])
 
   function addOperator() {
     addOperatorsRef.current?.open()
@@ -46,16 +83,51 @@ export default function Operators() {
   const operatorData = useMemo(() => {
     const word = searchWord.toLowerCase()
     if (word.trim().length == 0) {
-      return _data
+      return operators
     }
-    return _data.filter((item) => item.firstName.toLowerCase().includes(word) || item.lastName.toLowerCase().includes(word) || item.email.toLowerCase().includes(word))
-  }, [searchWord, JSON.stringify(_data)])
+    return operators.filter((item) => item.firstName.toLowerCase().includes(word) || item.lastName.toLowerCase().includes(word) || item.email.toLowerCase().includes(word))
+  }, [searchWord, JSON.stringify(operators)])
+
+
+  function onSuspendAdmin(operator: Operator) {
+    confirmationDialogRef.current?.show({
+      data: {
+        title: "Are you sure you want to suspend this operator?",
+        description: "They won't have access to the app once it is complete"
+      },
+      onConfirm: () => {
+        confirmationDialogRef.current?.dismiss()
+        suspendOperator({ userId: operator._id })
+      },
+      onCancel: () => {
+        confirmationDialogRef.current?.dismiss()
+      }
+    })
+  }
+
+  function onUnSuspendOperator(operator: Operator) {
+    confirmationDialogRef.current?.show({
+      data: {
+        title: "Are you sure you want to unsuspend this operator?",
+        description: "They will have access to the dashboard once it is complete"
+      },
+      onConfirm: () => {
+        confirmationDialogRef.current?.dismiss()
+        unSuspendOperator({ userId: operator._id })
+      },
+      onCancel: () => {
+        confirmationDialogRef.current?.dismiss()
+      }
+    })
+  }
 
   return (
     <DashboardLayout>
       <div className="flex flex-col py-8">
         <SEO title="Laswa | Operators" />
         <AddOperatorsModal ref={addOperatorsRef} />
+        <ConfirmationAlertDialog ref={confirmationDialogRef} />
+        <LoadingModal isVisible={isLoading} />
 
         <div className="flex flex-col gap-6">
           <h1 className="text-2xl font-bold">Operators <span className="text-primary">({operatorData.length})</span></h1>
@@ -85,10 +157,8 @@ export default function Operators() {
                   </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuLabel>Action 1</DropdownMenuLabel>
+                  <DropdownMenuLabel>Suspend Admin</DropdownMenuLabel>
                   <DropdownMenuItem>Action 2</DropdownMenuItem>
-                  <DropdownMenuItem>Action 3</DropdownMenuItem>
-                  <DropdownMenuItem>Action 4</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -136,10 +206,8 @@ export default function Operators() {
                         </div>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <DropdownMenuLabel>Action 1</DropdownMenuLabel>
-                        <DropdownMenuItem>Action 2</DropdownMenuItem>
-                        <DropdownMenuItem>Action 3</DropdownMenuItem>
-                        <DropdownMenuItem>Action 4</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => onSuspendAdmin(item)}>Suspend Operator</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => onUnSuspendOperator(item)}>Unsuspend Operator</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -147,7 +215,7 @@ export default function Operators() {
 
               </TableBody>)}
             </Table>
-            {isLoading ? <Loading className="h-[400px]" /> : error ? <Error onRetry={fetchOperators} className="h-[400px]" /> : null}
+            {isFetchLoading ? <Loading className="h-[400px]" /> : isFetchError ? <Error onRetry={fetchOperators} className="h-[400px]" /> : null}
           </div>
         </div>
 

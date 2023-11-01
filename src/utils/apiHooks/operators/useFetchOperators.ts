@@ -11,7 +11,7 @@ export const useFetchOperators = () => {
         setData([])
         const response = await execute(async () => await OperatorsService().getOperators())
         if (response) {
-            setData(response)
+            setData(response.Users)
         }
     }
 
