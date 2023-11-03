@@ -8,7 +8,7 @@ export const Activities = () => {
 
         <div className="flex flex-col bg-white py-2 rounded-lg">
             <div className="flex px-4 py-4 items-center justify-between">
-                <p className="text-base font-bold">Sale Statistics</p>
+                <p className="text-base font-bold">Trips Statistics</p>
 
 
                 {/* <div className="hidden lg:flex gap-4">

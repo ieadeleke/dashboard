@@ -8,6 +8,7 @@ import { useResetPassword } from "@/utils/apiHooks/auth/useResetPassword";
 import { GlobalActionContext } from "@/context/GlobalActionContext";
 import { useConfirmResetPassword } from "@/utils/apiHooks/auth/useConfirmResetPassword";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 type ResetPasswordInputField = {
 
@@ -134,6 +135,10 @@ export default function ResetPassword() {
 
                 <div className="flex flex-col gap-4">
                     <Button onClick={submit} disabled={isLoading} className="py-4 rounded-2xl" variant="contained">{isCodeSent ? `Reset Password` : `Send Password Reset Code`}</Button>
+
+                    <Link href="/login" className="flex flex-col">
+                        <Button disabled={isLoading} className="py-4 rounded-2xl" variant="text">Back to Login</Button>
+                    </Link>
                 </div>
 
             </div>
