@@ -173,7 +173,7 @@ export const FleetTableDataList = (props: TableDataListProps) => {
 }
 
 const TabBody = (props: TabBodyProps) => {
-    const { isLoading, isUnauthorized, error, fetchAllFleets } = useFetchAllFleets()
+    const { isLoading, error, fetchAllFleets } = useFetchAllFleets()
     const _data = useFleetsSelector()
     const { showSnackBar } = useContext(GlobalActionContext)
     const { tab } = props
@@ -192,11 +192,11 @@ const TabBody = (props: TabBodyProps) => {
         fetchAllFleets()
     }, [])
 
-    useEffect(() => {
-        if (isUnauthorized) {
-            showSnackBar({ severity: 'error', message: 'Unauthorized' })
-        }
-    }, [isUnauthorized])
+    // useEffect(() => {
+    //     if (error == 'Unauthorized' || error == 'Not authenticated') {
+    //         showSnackBar({ severity: 'error', message: error })
+    //     }
+    // }, [error])
 
     useEffect(() => {
         props.updateSize?.(data.length)

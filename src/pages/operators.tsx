@@ -61,6 +61,12 @@ export default function Operators() {
     setIsLoading(isUnSuspendLoading || isSuspendLoading)
   }, [isUnSuspendLoading, isSuspendLoading])
 
+//   useEffect(() => {
+//     if (isFetchError == 'Unauthorized' || isFetchError == 'Not authenticated') {
+//         showSnackBar({ severity: 'error', message: isFetchError })
+//     }
+// }, [isFetchError])
+
   useEffect(() => {
     if (unSuspendData) {
       showSnackBar({ severity: 'success', message: `${unSuspendData.firstName} ${unSuspendData.lastName} has been unsuspended` })

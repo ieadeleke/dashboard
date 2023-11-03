@@ -1,7 +1,8 @@
-import { useRef, useState } from "react"
+import { useContext, useRef, useState } from "react"
 import { errorHandler } from "@/utils/errorHandler"
 import Router from "next/router";
 import AuthToken from "../AuthToken";
+import { GlobalActionContext } from "@/context/GlobalActionContext";
 
 type ExecuteConfig = {
     onError?: (error: string) => void
@@ -15,6 +16,7 @@ export const useApi = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const isFetching = useRef(false)
+    const { showSnackBar } = useContext(GlobalActionContext)
 
     async function execute<T>(callback: () => Promise<T>, config?: ExecuteConfig) {
         if (!isFetching.current) {
@@ -30,10 +32,12 @@ export const useApi = () => {
                     return
                 }
                 const parsedError = errorHandler(error)
-                if(parsedError.status == 401){
-                    Router.push("/login")
-                    AuthToken().clearToken()
-                    return
+                console.log(parsedError)
+                if (parsedError.status == 401) {
+                    showSnackBar({severity: 'error', message: "Not Authourized"})
+                    // Router.push("/login")
+                    // AuthToken().clearToken()
+                    
                 }
                 setError(parsedError.message)
             } finally {
