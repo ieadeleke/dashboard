@@ -34,7 +34,7 @@ export const useApi = () => {
                 const parsedError = errorHandler(error)
                 console.log(parsedError)
                 if (parsedError.status == 401) {
-                    showSnackBar({severity: 'error', message: "Not Authourized"})
+                    showSnackBar({severity: 'error', message: "Not Authorized"})
                     // Router.push("/login")
                     // AuthToken().clearToken()
                     
