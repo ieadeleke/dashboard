@@ -50,7 +50,9 @@ export const AddFleetModal = forwardRef<AddFleetModalRef, AddFleetModalProps>((p
     const userOptions: BaseSelectOption[] = useMemo(() => users.map((item) => ({ id: item._id, label: item.firstName, value: item.firstName })), [JSON.stringify(users)])
 
     useEffect(() => {
-        fetchAllUsers()
+        if (isVisible) {
+            fetchAllUsers()
+        }
     }, [isVisible])
 
     useEffect(() => {

@@ -27,14 +27,14 @@ export async function request(route: string, method: RequestType, config?: Reque
         return response
     } catch (error) {
         const errorData = errorHandler(error)
-        if (errorData.status == 401 || errorData.message == 'Not authenticated') {
-            if (typeof window != "undefined") {
-                Router.push('/login')
-                // localStorage.clear()
-                AuthToken().clearToken()
-            }
-            throw error
-        }
+        // if (errorData.status == 401 || errorData.message == 'Not authenticated') {
+        //     // if (typeof window != "undefined") {
+        //     //     Router.push('/login')
+        //     //     // localStorage.clear()
+        //     //     AuthToken().clearToken()
+        //     // }
+        //     throw error
+        // }
         throw error
     }
 

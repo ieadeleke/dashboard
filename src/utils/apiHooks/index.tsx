@@ -1,5 +1,7 @@
 import { useRef, useState } from "react"
 import { errorHandler } from "@/utils/errorHandler"
+import Router from "next/router";
+import AuthToken from "../AuthToken";
 
 type ExecuteConfig = {
     onError?: (error: string) => void
@@ -28,6 +30,11 @@ export const useApi = () => {
                     return
                 }
                 const parsedError = errorHandler(error)
+                if(parsedError.status == 401){
+                    Router.push("/login")
+                    AuthToken().clearToken()
+                    return
+                }
                 setError(parsedError.message)
             } finally {
                 setIsLoading(false)
