@@ -31,7 +31,7 @@ export default function PassengersPage() {
       <div className="flex flex-col gap-6">
         <SEO title="Laswa | Passengers" />
         <div className="mt-4 flex flex-col gap-4">
-        <h1 className="text-2xl font-bold">Activities</h1>
+        <h1 className="text-2xl font-bold">System Log</h1>
 
           <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
             <TextField.Container className="flex-1 border border-gray-200">
