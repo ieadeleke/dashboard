@@ -1,11 +1,16 @@
 import { Avatar } from "@/components/image/Avatar"
+import { Fleet } from "@/models/fleets"
 import { DEFAULT_PROFILE_URL } from "@/utils/constants/strings"
 import { faker } from '@faker-js/faker'
 import { useEffect, useState } from "react"
 
 
+type FleetItemProps = {
+    data: Fleet
+}
 
-export const FleetItem = () => {
+export const FleetItem = (props: FleetItemProps) => {
+    const { data } = props
     const [name, setName] = useState('')
     const [image, setImage] = useState('')
     const [username, setUsername] = useState('')
@@ -27,13 +32,13 @@ export const FleetItem = () => {
 
         <div className="flex flex-col gap-3">
             <div className="flex justify-between items-center">
-                <h1 className="font-bold text-text-color text-xl md:text-2xl">{name}</h1>
-                <p className="text-gray-600">{count} Passengers</p>
+                <h1 className="font-bold text-text-color text-xl md:text-2xl">{data.model}</h1>
+                <p className="text-gray-600">0 Passengers</p>
             </div>
 
             <div className="flex items-center gap-2">
                 <Avatar src={DEFAULT_PROFILE_URL} className="w-8 h-8" />
-                <p>@{username}</p>
+                <p>{data.User.firstName} {data.User.lastName}</p>
             </div>
 
             <p className="text-text-color font-bold">Active</p>

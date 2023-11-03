@@ -7,7 +7,7 @@ import '@/styles/globals.css'
 import { theme } from '@/utils/theme'
 import { ThemeProvider } from '@mui/material'
 import type { AppProps } from 'next/app'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -19,7 +19,15 @@ export default function App({ Component, pageProps }: AppProps) {
     snackBarRef.current?.open(params)
   }
 
+  useEffect(() => {
+    const user = localStorage.getItem('user')
+    if (user) {
+      setUser(JSON.parse(user))
+    }
+  }, [])
+
   function updateUser(user: User | null) {
+    localStorage.setItem('user', JSON.stringify(user))
     setUser(user)
   }
 
