@@ -72,7 +72,7 @@ export const ConfirmationAlertDialog = forwardRef<ConfirmationAlertDialogRef, Co
         <AlertDialogContent>
             <AlertDialogHeader>
                 <AlertDialogTitle className="text-center font-medium text-2xl text-[#3F3F3F]">{content.title || ""}</AlertDialogTitle>
-                <AlertDialogDescription>
+                <AlertDialogDescription className="text-center">
                     {content.description || ""}
                 </AlertDialogDescription>
             </AlertDialogHeader>
