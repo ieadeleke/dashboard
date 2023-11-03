@@ -70,7 +70,7 @@ export const AdminItem = (props: AdminItemProps) => {
 
         <div className="flex flex-col gap-3 text-center">
             <div className="relative w-28 h-28 self-center rounded-2xl">
-                <img className="w-full h-full rounded-2xl" src={image} />
+                <img className="w-full h-full rounded-2xl" src={DEFAULT_PROFILE_URL} />
 
                 <p className="absolute z-10 bg-primary p-1 text-white rounded-md -right-4 bottom-0">{initials}</p>
             </div>
