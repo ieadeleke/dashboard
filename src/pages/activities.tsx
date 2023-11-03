@@ -76,7 +76,7 @@ export default function PassengersPage() {
                 </TableRow>
               </TableHeader>
 
-              {data.map((data) => <TableBody className="bg-white">
+              {data.map((data) => <TableBody key={data.id} className="bg-white">
                 <TableRow>
                   <TableCell className="flex font-medium"><CheckBox /></TableCell>
                   <TableCell>
