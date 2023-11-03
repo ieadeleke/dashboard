@@ -50,7 +50,7 @@ export const MenuSideBar = () => {
                 <ListItem startIcon={<FleetIcon />} name="Fleets" href="/fleets" />
                 <ListItem startIcon={<StaffIcon />} name="Operators" href="/operators" />
                 <ListItem startIcon={<HistoryIcon />} name="Trip History" href="/trip-history" />
-                <ListItem startIcon={<TimerIcon />} name="Activities" href="/activities" />
+                <ListItem startIcon={<TimerIcon />} name="System Log" href="/system-log" />
                 <ListItem startIcon={<PassengersIcon />} name="Incidents" href="/incidents" />
                 <ListItem startIcon={<TrackingIcon />} name="Tracking" href="/tracking" />
                 <Divider />
