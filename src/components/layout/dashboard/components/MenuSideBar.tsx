@@ -10,6 +10,7 @@ import LogOutIcon from '@/assets/icons/ic_logout.svg'
 import { ListItem } from './ListItem'
 import Link from 'next/link'
 import { Divider } from '@/components/Divider'
+import { TimerIcon } from 'lucide-react'
 
 
 export const MenuSideBar = () => {
@@ -27,7 +28,7 @@ export const MenuSideBar = () => {
                 <ListItem startIcon={<FleetIcon />} name="Fleets" href="/fleets" />
                 <ListItem startIcon={<StaffIcon />} name="Operators" href="/operators" />
                 <ListItem startIcon={<HistoryIcon />} name="Trip History" href="/trip-history" />
-                <ListItem startIcon={<PassengersIcon />} name="Passengers" href="/passengers" />
+                <ListItem startIcon={<TimerIcon />} name="Activities" href="/activities" />
                 <ListItem startIcon={<PassengersIcon />} name="Incidents" href="/incidents" />
                 <ListItem startIcon={<TrackingIcon />} name="Tracking" href="/tracking" />
                 <Divider />

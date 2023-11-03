@@ -1,6 +1,6 @@
 import { GetDashboardStatistics } from "@/models/activities/ActivitiesResponse"
 import { request, RequestConfig } from "../../request"
-import { RecentActivtiesResponse } from "./types"
+import { AdminActivitiesResponse, RecentActivtiesResponse } from "./types"
 
 
 export function ActivitiesService(config?: RequestConfig) {
@@ -15,9 +15,15 @@ export function ActivitiesService(config?: RequestConfig) {
         return data as RecentActivtiesResponse
     }
 
+    async function getAdminActivities() {
+        const { data } = await request(`api/v1/activities/Admin/AdminActivities`, "GET", config)
+        return data as AdminActivitiesResponse
+    }
+
     return {
         getDashboardStatistics,
-        getRecentActivities
+        getRecentActivities,
+        getAdminActivities
     }
 
 }
