@@ -152,7 +152,7 @@ export const FleetTableDataList = (props: TableDataListProps) => {
             <TableCell>
                 <div className="flex items-center gap-4">
                     <img src={data.image} className="bg-gray-200 h-10 w-10 object-cover object-center" />
-                    <p>{data._id}</p>
+                    <p>{data.model}</p>
                 </div>
             </TableCell>
             <TableCell>{5}</TableCell>
@@ -161,7 +161,7 @@ export const FleetTableDataList = (props: TableDataListProps) => {
                     <p className={`${statusStyles.label} text-sm`}>{statusLabel}</p>
                 </div>
             </TableCell>
-            <TableCell>{data.model}</TableCell>
+            <TableCell>{data.User.firstName} {data.User.lastName}</TableCell>
             <TableCell>
                 {isLoading ? <CircularProgress size={24} /> :
                     <Popover>
@@ -281,10 +281,10 @@ const TabBody = (props: TabBodyProps) => {
                                 <CheckBox />
                             </div>
                         </TableHead>
-                        <TableHead>Fleet ID</TableHead>
+                        <TableHead>Boat Name</TableHead>
                         <TableHead>Seats</TableHead>
                         <TableHead>Status</TableHead>
-                        <TableHead>Model</TableHead>
+                        <TableHead>{`Owner's`} Name</TableHead>
                         <TableHead></TableHead>
                     </TableRow>
                 </TableHeader>
