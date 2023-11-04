@@ -35,6 +35,7 @@ import { fleetActions } from "@/redux/reducers/fleets";
 import { useFleetsSelector } from "@/redux/selectors/fleets.selector";
 import { BoatDetailModal, BoatDetailModalRef } from "@/components/dashboard/fleet/FleetDetail";
 import { Trip } from "@/models/trips";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 type TableDataListProps = {
     data: Fleet,
@@ -162,17 +163,28 @@ export const FleetTableDataList = (props: TableDataListProps) => {
             </TableCell>
             <TableCell>{data.model}</TableCell>
             <TableCell>
-                {isLoading ? <CircularProgress size={24} /> : <DropdownMenu>
-                    <DropdownMenuTrigger>
-                        <IconButton className="text-primary border border-primary rounded-sm">
-                            <MoreHorizontalIcon />
-                        </IconButton>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        {data.status != 'active' ? <DropdownMenuItem onClick={handleVerifyFleet}>Approve Fleet</DropdownMenuItem> : <DropdownMenuItem>Suspend Fleet</DropdownMenuItem>}
-                        <DropdownMenuItem onClick={handleViewBoatDetails}>Fleet Details</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                {isLoading ? <CircularProgress size={24} /> :
+                    <Popover>
+                        <PopoverTrigger>
+                            <IconButton className="text-primary border border-primary rounded-sm">
+                                <MoreHorizontalIcon />
+                            </IconButton>
+                        </PopoverTrigger>
+
+                        <PopoverContent className="w-auto px-0 py-1">
+                            {data.status != 'active' ? <p className="text-sm cursor-pointer py-1 hover:bg-gray-50 px-2" onClick={handleVerifyFleet}>Approve Fleet</p> : <p className="text-sm cursor-pointer py-2 hover:bg-gray-50 px-2">Suspend Fleet</p>}
+                            <p className="text-sm cursor-pointer py-1 hover:bg-gray-50 px-2" onClick={handleViewBoatDetails}>Fleet Details</p>
+                        </PopoverContent>
+                    </Popover>
+                    // <DropdownMenu>
+                    //     <DropdownMenuTrigger>
+
+                    //     </DropdownMenuTrigger>
+                    //     <DropdownMenuContent>
+                    //         {data.status != 'active' ? <DropdownMenuItem onClick={handleVerifyFleet}>Approve Fleet</DropdownMenuItem> : <DropdownMenuItem>Suspend Fleet</DropdownMenuItem>}
+                    //         <DropdownMenuItem onClick={handleViewBoatDetails}>Fleet Details</DropdownMenuItem>
+                    //     </DropdownMenuContent>
+                    // </DropdownMenu>
                 }
 
             </TableCell>
