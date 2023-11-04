@@ -1,4 +1,4 @@
-import { Fleet } from '@/models/fleets';
+import { Fleet, FleetStatus } from '@/models/fleets';
 import { faker } from '@faker-js/faker'
 
 // function getRandomFleetStatus(): FleetStatus {
@@ -22,4 +22,8 @@ export function formatFleet(fleet: Fleet){
         status: fleet.status.toLowerCase(),
         image: faker.image.url()
     }
+}
+
+export function parseFleetStatus(status: FleetStatus) {
+    return status == 'active' ? "Active" : status == "pending" ? "Pending" : status == 'suspended' ? "Suspended" : "Complete"
 }

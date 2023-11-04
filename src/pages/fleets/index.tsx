@@ -33,9 +33,12 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { GlobalActionContext } from "@/context/GlobalActionContext";
 import { fleetActions } from "@/redux/reducers/fleets";
 import { useFleetsSelector } from "@/redux/selectors/fleets.selector";
+import { BoatDetailModal, BoatDetailModalRef } from "@/components/dashboard/fleet/FleetDetail";
+import { Trip } from "@/models/trips";
 
 type TableDataListProps = {
     data: Fleet,
+    onViewBoatDetails?: (data: Fleet) => void,
     onVerifyError?: (error: string) => void,
     onVerifySuccess?: (fleet: Fleet) => void
 }
@@ -106,6 +109,10 @@ export const FleetTableDataList = (props: TableDataListProps) => {
         })
     }
 
+    function handleViewBoatDetails(){
+        props.onViewBoatDetails?.(data)
+    }
+
     const statusLabel = useMemo(() => {
         switch (data.status) {
             case "active":
@@ -163,6 +170,7 @@ export const FleetTableDataList = (props: TableDataListProps) => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                         {data.status != 'active' ? <DropdownMenuItem onClick={handleVerifyFleet}>Approve Fleet</DropdownMenuItem> : <DropdownMenuItem>Suspend Fleet</DropdownMenuItem>}
+                        <DropdownMenuItem onClick={handleViewBoatDetails}>Fleet Details</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
                 }
@@ -177,6 +185,7 @@ const TabBody = (props: TabBodyProps) => {
     const _data = useFleetsSelector()
     const { showSnackBar } = useContext(GlobalActionContext)
     const { tab } = props
+    const BoatDetailModalRef = useRef<BoatDetailModalRef>(null)
 
     const data = useMemo(() => _data.filter((item) => {
         if (tab == 'active') {
@@ -191,6 +200,12 @@ const TabBody = (props: TabBodyProps) => {
     useEffect(() => {
         fetchAllFleets()
     }, [])
+
+    function onViewBoatDetails(fleet: Fleet){
+        BoatDetailModalRef.current?.open({
+            data: fleet
+        })
+    }
 
     // useEffect(() => {
     //     if (error == 'Unauthorized' || error == 'Not authenticated') {
@@ -211,6 +226,7 @@ const TabBody = (props: TabBodyProps) => {
     }
 
     return <div>
+        <BoatDetailModal ref={BoatDetailModalRef} />
         <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
             <TextField.Container className="flex-1 border border-gray-200">
                 <TextField.Input className="h-10" placeholder="Search" />
@@ -261,7 +277,7 @@ const TabBody = (props: TabBodyProps) => {
                     </TableRow>
                 </TableHeader>
 
-                {data.map((item, index) => <FleetTableDataList key={index} data={item} onVerifyError={onVerifyError} onVerifySuccess={onVerifySuccess} />)}
+                {data.map((item, index) => <FleetTableDataList key={index} data={item} onViewBoatDetails={onViewBoatDetails} onVerifyError={onVerifyError} onVerifySuccess={onVerifySuccess} />)}
             </Table>
             {isLoading ? <Loading className="h-[400px]" /> : error ? <Error onRetry={fetchAllFleets} className="h-[400px]" /> : null}
         </div>
