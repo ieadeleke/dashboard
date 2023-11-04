@@ -70,7 +70,7 @@ export default function PassengersPage() {
                     </div>
                   </TableHead>
                   <TableHead>Name</TableHead>
-                  <TableHead>Staff ID</TableHead>
+                  
                   <TableHead>Email</TableHead>
                   <TableHead>Event</TableHead>
                 </TableRow>
@@ -85,7 +85,7 @@ export default function PassengersPage() {
                       <p>{data.firstname} {data.lastname}</p>
                     </div>
                   </TableCell>
-                  <TableCell>{data.staffId}</TableCell>
+                  
                   <TableCell>{data.email}</TableCell>
                   <TableCell>
                   <TableCell>{data.event}</TableCell>
@@ -101,4 +101,4 @@ export default function PassengersPage() {
       </div>
     </DashboardLayout>
   )
-}
+      }
