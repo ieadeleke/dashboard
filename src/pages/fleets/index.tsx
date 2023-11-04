@@ -51,12 +51,12 @@ type TabBodyProps = {
 
 const tabs = [
     {
-        name: "Active",
-        value: "active"
-    },
-    {
         name: "All",
         value: "all"
+    },
+    {
+        name: "Active",
+        value: "active"
     },
     {
         name: "Suspended",
@@ -109,7 +109,7 @@ export const FleetTableDataList = (props: TableDataListProps) => {
         })
     }
 
-    function handleViewBoatDetails(){
+    function handleViewBoatDetails() {
         props.onViewBoatDetails?.(data)
     }
 
@@ -201,7 +201,7 @@ const TabBody = (props: TabBodyProps) => {
         fetchAllFleets()
     }, [])
 
-    function onViewBoatDetails(fleet: Fleet){
+    function onViewBoatDetails(fleet: Fleet) {
         BoatDetailModalRef.current?.open({
             data: fleet
         })

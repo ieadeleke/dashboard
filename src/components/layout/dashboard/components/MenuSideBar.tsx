@@ -31,7 +31,7 @@ export const MenuSideBar = () => {
             onConfirm: () => {
                 confirmationDialogRef.current?.dismiss()
                 logOut()
-                location.href="/"
+                location.href = "/"
             }
         })
     }
@@ -50,11 +50,11 @@ export const MenuSideBar = () => {
                 <ListItem startIcon={<FleetIcon />} name="Fleets" href="/fleets" />
                 <ListItem startIcon={<StaffIcon />} name="Operators" href="/operators" />
                 <ListItem startIcon={<HistoryIcon />} name="Trip History" href="/trip-history" />
-                <ListItem startIcon={<TimerIcon />} name="System Log" href="/system-log" />
                 <ListItem startIcon={<PassengersIcon />} name="Incidents" href="/incidents" />
                 <ListItem startIcon={<TrackingIcon />} name="Tracking" href="/tracking" />
                 <Divider />
                 <ListItem startIcon={<MessagesIcon />} name="Admins" href="/admins" />
+                <ListItem startIcon={<TimerIcon />} name="System Log" href="/system-log" />
                 <div
                     onClick={handleLogout}
                     className={`flex cursor-pointer rounded-md items-center gap-4 px-3 py-3 hover:bg-primary-20`}>
