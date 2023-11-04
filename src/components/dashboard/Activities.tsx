@@ -3,7 +3,11 @@ import { LucideMoreHorizontal } from "lucide-react"
 import { Chart } from "./activities/chart"
 import { RecentActivities } from "./RecentActivities"
 
-export const Activities = () => {
+type ActivitiesProps = {
+    data: Record<string, number>
+}
+
+export const Activities = (props: ActivitiesProps) => {
     return <div className="grid grid-cols-1 min-h-[380px] gap-2 md:grid-cols-[minmax(auto,60%),minmax(auto,40%)]">
 
         <div className="flex flex-col bg-white py-2 rounded-lg">
@@ -29,7 +33,7 @@ export const Activities = () => {
             <Divider />
 
             <div>
-                <Chart />
+                <Chart data={props.data} />
             </div>
         </div>
         <RecentActivities />

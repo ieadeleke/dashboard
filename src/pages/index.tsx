@@ -21,7 +21,7 @@ export default function Home(props: HomeProps) {
       <div className="flex flex-col py-8 gap-8">
         <SEO title="Laswa | Home" />
         <Stats data={data} />
-        <Activities />
+        <Activities data={data.Trips} />
         <LifeTracking />
         <Fleets />
       </div>
