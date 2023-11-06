@@ -3,19 +3,26 @@ import { Divider } from "@/components/Divider"
 import { RecentActivity } from "@/models/activities/ActivitiesResponse"
 import { useRecentActivities } from "@/utils/apiHooks/activities/useRecentActivities"
 import { LucideMoreHorizontal } from "lucide-react"
+import moment from "moment"
 import { useRef } from "react"
 import { useEffect } from "react"
 import Empty from "../states/Empty"
 import { NetworkRequestContainer } from "../states/NetworkRequestContainer"
 import { RecentActvityDetailModal, RecentActvityDetailModalRef } from "./activities/RecentActivityDetail"
 
-export const ActivityItem = () => {
+type ActivityItemProps = {
+    data: RecentActivity
+}
+
+export const ActivityItem = (props: ActivityItemProps) => {
+    const { data } = props
+    const timestamp = moment(data.createdAt).fromNow()
 
     return <div className="px-2 py-2 cursor-pointer hover:bg-gray-50">
         <div className="flex">
             <div className="flex-1 text-sm">
-                <p className="font-semibold">(Boat 098) <span className="text-gray-500">on route</span></p>
-                <p className="text-gray-400">5 mins ago...</p>
+                <p className="font-semibold">(Boat {data.boatNo}) <span className="text-gray-500">{data.event}</span></p>
+                <p className="text-gray-400">{timestamp}...</p>
             </div>
 
             <div />
@@ -52,7 +59,7 @@ export const RecentActivities = () => {
         <NetworkRequestContainer isLoading={isLoading} error={error}>
             <div className="h-full">
                 {data.length == 0 ? <Empty title="Nothing to show" message="List is empty   " /> : data.slice(0, 5).map((item) => <div key={item._id} onClick={() => handleOpenActivityModal(item)}>
-                    <ActivityItem />
+                    <ActivityItem data={item} />
                 </div>)}
             </div>
         </NetworkRequestContainer>
