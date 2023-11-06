@@ -1,6 +1,6 @@
 import { GetDashboardStatistics } from "@/models/activities/ActivitiesResponse"
 import { request, RequestConfig } from "../../request"
-import { AdminActivitiesResponse, RecentActivtiesResponse } from "./types"
+import { AdminActivitiesResponse, GetAdminActivitiesParams, RecentActivtiesResponse } from "./types"
 
 
 export function ActivitiesService(config?: RequestConfig) {
@@ -15,8 +15,8 @@ export function ActivitiesService(config?: RequestConfig) {
         return data as RecentActivtiesResponse
     }
 
-    async function getAdminActivities() {
-        const { data } = await request(`api/v1/activities/Admin/AdminActivities`, "GET", config)
+    async function getAdminActivities(params?: GetAdminActivitiesParams) {
+        const { data } = await request(`api/v1/activities/Admin/AdminActivities?page=${params?.page || 1}`, "GET", config)
         return data as AdminActivitiesResponse
     }
 

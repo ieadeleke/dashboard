@@ -10,7 +10,7 @@ export type AdminActivitiesResponse = ApiResponse & {
     AdminActivities: [
         {
             _id: string,
-            staffId : {
+            staffId? : {
                 _id: string,
                 personalInfo: User
             }
@@ -18,4 +18,8 @@ export type AdminActivitiesResponse = ApiResponse & {
             createdAt: string
         }
     ]
+}
+
+export type GetAdminActivitiesParams = {
+    page?: number
 }

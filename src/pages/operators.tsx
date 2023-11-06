@@ -98,9 +98,9 @@ export default function Operators() {
 
   function onPageChange(selectedItem: {
     selected: number;
-}) {
+  }) {
     setPage(selectedItem.selected)
-}
+  }
 
 
   function onSuspendAdmin(operator: Operator) {

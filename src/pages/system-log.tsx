@@ -1,37 +1,44 @@
 import DashboardLayout from "@/components/layout/dashboard";
-import { useEffect, useState } from "react";
-import { getPassengersData, Passenger } from "@/utils/data/passengers";
+import { useEffect } from "react";
 import SEO from "@/components/SEO";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Table, TableHead, TableHeader } from "@/components/ui/table"
 import {
   TableBody,
   TableCell,
   TableRow,
 } from "@/components/ui/table"
-import { TextField } from "@/components/input/InputText";
-import { ChevronDown, MoreHorizontalIcon, PlusIcon, SearchIcon } from "lucide-react";
-import { IconButton } from "@/components/buttons/IconButton";
 import { CheckBox } from "@/components/buttons/CheckBox";
-import { AdminActivity } from "@/models/activities/AdminActivity";
 import { useFetchAdminActivities } from "@/utils/apiHooks/admins/useFetchAdminActivities";
 import Loading from "@/components/states/Loading";
 import Error from "@/components/states/Error";
+import { useState } from "react";
+import { TablePagination } from "@/components/pagination/TablePagination";
 
 
 export default function PassengersPage() {
-  const {isLoading, error, data, fetchAdminActivities} = useFetchAdminActivities()
+  const [page, setPage] = useState(0)
+  const { isLoading, error, data, count, fetchAdminActivities } = useFetchAdminActivities()
+
+  function fectchData() {
+    fetchAdminActivities({ page })
+  }
+
+  function onPageChange(selectedItem: {
+    selected: number;
+  }) {
+    setPage(selectedItem.selected)
+  }
 
   useEffect(() => {
-    fetchAdminActivities()
-  }, [])
+    fectchData()
+  }, [page])
 
   return (
     <DashboardLayout>
       <div className="flex flex-col gap-6">
         <SEO title="Laswa | Passengers" />
         <div className="mt-4 flex flex-col gap-4">
-        <h1 className="text-2xl font-bold">Activities</h1>
+          <h1 className="text-2xl font-bold">System Log</h1>
 
           {/* <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
             <TextField.Container className="flex-1 border border-gray-200">
@@ -70,7 +77,7 @@ export default function PassengersPage() {
                     </div>
                   </TableHead>
                   <TableHead>Name</TableHead>
-                  
+
                   <TableHead>Email</TableHead>
                   <TableHead>Event</TableHead>
                 </TableRow>
@@ -85,10 +92,10 @@ export default function PassengersPage() {
                       <p>{data.firstname} {data.lastname}</p>
                     </div>
                   </TableCell>
-                  
+
                   <TableCell>{data.email}</TableCell>
                   <TableCell>
-                  <TableCell>{data.event}</TableCell>
+                    <TableCell>{data.event}</TableCell>
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -97,8 +104,27 @@ export default function PassengersPage() {
           </div>
         </div>
 
-        {isLoading ? <Loading className="h-[400px]" /> : error ? <Error onRetry={fetchAdminActivities} className="h-[400px]" /> : null}
+        {isLoading ? <Loading className="h-[400px]" /> : error ? <Error onRetry={fectchData} className="h-[400px]" /> : null}
+
+        <div className="flex mt-8 justify-center">
+          <TablePagination
+            breakLabel="..."
+            nextLabel=">"
+            onPageChange={onPageChange}
+            pageRangeDisplayed={5}
+            currentPage={page}
+            pageCount={Math.max(0, count / 20)}
+            // pageCount={1}
+            className="flex gap-4"
+            nextClassName="text-gray-500"
+            previousClassName="text-gray-500"
+            pageClassName="flex w-8 h-7 bg-white justify-center items-center text-sm text-gray-500 rounded-sm outline outline-2 outline-gray-100 text-center"
+            activeClassName="!bg-primary text-white !outline-none"
+            previousLabel="<"
+            renderOnZeroPageCount={null}
+          />
+        </div>
       </div>
     </DashboardLayout>
   )
-      }
+}
