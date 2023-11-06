@@ -151,7 +151,7 @@ export const FleetTableDataList = (props: TableDataListProps) => {
             <TableCell className="flex font-medium"><CheckBox /></TableCell>
             <TableCell>
                 <div className="flex items-center gap-4">
-                    <img src={data.image} className="bg-gray-200 h-10 w-10 object-cover object-center" />
+                    <div className="bg-gray-200 h-10 w-10 object-cover object-center" />
                     <p>{data.model}</p>
                 </div>
             </TableCell>
