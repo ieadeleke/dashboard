@@ -93,7 +93,7 @@ export const TripDetailModal = forwardRef<TripDetailModalRef, TripDetailModalPro
                                 <h1 className="font-bold">Passengers</h1>
 
                                 <div className="flex flex-col gap-4">
-                                    {trip.passengers.map((item) => <div className="border rounded-lg p-2">
+                                    {trip.passengers.map((item) => <div key={item._id} className="border rounded-lg p-2">
                                         <h3 className="font-semibold text-sm">{item.fullName}</h3>
                                         <p className="text-sm text-gray-500">{item.phoneNumber}</p>
                                     </div>)}
