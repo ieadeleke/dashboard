@@ -28,7 +28,7 @@ export const FleetItem = (props: FleetItemProps) => {
     }, [])
 
     return <div className="flex flex-col gap-4">
-        <img src={image} className="bg-grey-200 object-cover object-center rounded-lg h-[400px]" />
+        <img src={data.imgUrl} className="bg-grey-200 object-cover object-center rounded-lg h-[400px]" />
 
         <div className="flex flex-col gap-3">
             <div className="flex justify-between items-center">

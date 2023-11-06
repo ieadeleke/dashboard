@@ -9,6 +9,8 @@ export type Fleet = {
     verify: boolean,
     _id: string,
     regNumber: string,
+    imgUrl: string,
+    capacity: string,
     captains?: {
         _id: string,
         isActive: boolean,
