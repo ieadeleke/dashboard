@@ -4,11 +4,12 @@ import { useMemo } from "react"
 import { useState } from "react"
 
 type CheckBoxProps = {
+    isChecked?: boolean,
     onValueChange?: (value: boolean) => void
 }
 
 export const CheckBox = (props: CheckBoxProps) => {
-    const [isChecked, setIsChecked] = useState(false)
+    const [isChecked, setIsChecked] = useState(props.isChecked ?? false)
 
     const className = useMemo(() => isChecked ? `bg-primary text-white border-none` : `text-transparent`, [isChecked])
 
