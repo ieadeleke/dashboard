@@ -88,9 +88,16 @@ export default function AdminsPage() {
   function onUpdateAccess(admin: Admin) {
     addAdminsRef.current?.open({
       data: admin,
-      onAdminRoleUpdated: (admin: Admin) => {
+      onAdminRoleUpdated: (newAdmin: Admin) => {
         addAdminsRef.current?.close()
-        showSnackBar({ severity: 'success', message: `${admin.personalInfo.firstName}'s role has been updated successfully` })
+
+        setAdmins((prevAdmins) => prevAdmins.map((admin) => {
+          if (admin._id == newAdmin._id) {
+            return newAdmin
+          } else return admin
+        }))
+        
+        showSnackBar({ severity: 'success', message: `${newAdmin.personalInfo.firstName}'s role has been updated successfully` })
       }
     })
   }

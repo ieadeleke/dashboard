@@ -63,7 +63,7 @@ export const AddAdminsModal = forwardRef<AddAdminsModalRef, AddAdminsModalProps>
     const [error, setError] = useState<string | null>(null)
 
     const { isLoading: isAddAdminLoading, error: addAdminError, data: addAdminData, addAdmin } = useAddAdmin()
-    const { isLoading: isUpdateRoleLoading, error: updateRoleError, data: updateRoleData, updateAdminRole } = useUpdateAdminRole()
+    const { isLoading: isUpdateRoleLoading, error: updateRoleError, data: updateRoleData, clearUpdatedData, updateAdminRole } = useUpdateAdminRole()
 
     const isEditMode = useMemo(() => !!admin, [admin])
 
@@ -97,12 +97,15 @@ export const AddAdminsModal = forwardRef<AddAdminsModalRef, AddAdminsModalProps>
 
     useEffect(() => {
         if (updateRoleData && admin) {
-            onAdminRoleUpdated.current?.(admin)
+            const newData = Object.assign({}, admin, {})
+            onAdminRoleUpdated.current?.(newData)
+            clearUpdatedData()
         }
     }, [updateRoleData, admin])
 
     function closeModal() {
         setIsVisible(false)
+        setAdmin(undefined)
         setFirstName('')
         setLastName('')
         setEmail('')
@@ -129,7 +132,7 @@ export const AddAdminsModal = forwardRef<AddAdminsModalRef, AddAdminsModalProps>
                 setRole({ id: selectedRole._id, label: selectedRole.roleName, value: selectedRole.roleName })
             }
         }
-    }, [admin, JSON.stringify(roles)])
+    }, [admin])
 
     useImperativeHandle(ref, () => ({
         open(payload?: AddAdminsModalDataPayload) {

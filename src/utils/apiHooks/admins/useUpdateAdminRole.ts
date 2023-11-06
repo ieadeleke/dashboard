@@ -15,5 +15,9 @@ export const useUpdateAdminRole = () => {
         }
     }
 
-    return { isLoading, error, data, updateAdminRole }
+    function clearUpdatedData() {
+        setData(null)
+    }
+
+    return { isLoading, error, data, clearUpdatedData, updateAdminRole }
 }
