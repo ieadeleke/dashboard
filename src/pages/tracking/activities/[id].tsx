@@ -37,7 +37,7 @@ export default function Tracking() {
                     <Divider />
 
                     <div className="flex flex-col">
-                        {Array(20).fill(0).map((item, index) => <ActivityItem key={index} />)}
+                        {/* {Array(20).fill(0).map((item, index) => <ActivityItem key={index} />)} */}
                     </div>
                 </div>
 
