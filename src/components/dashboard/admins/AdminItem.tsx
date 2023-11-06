@@ -16,6 +16,7 @@ import { faker } from '@faker-js/faker'
 
 type AdminItemProps = {
     data: Admin,
+    updateAccess?: (admin: Admin) => void,
     onSuspendAdmin?: (admin: Admin) => void,
     onUnSuspendAdmin?: (admin: Admin) => void
 }
@@ -38,6 +39,10 @@ export const AdminItem = (props: AdminItemProps) => {
         props.onSuspendAdmin?.(data)
     }
 
+    function handleUpdateAccess() {
+        props.updateAccess?.(data)
+    }
+
     function handleUnSuspendAdmin() {
         props.onUnSuspendAdmin?.(data)
     }
@@ -52,7 +57,7 @@ export const AdminItem = (props: AdminItemProps) => {
             </PopoverTrigger>
             <PopoverContent>
                 <div>
-                    <div className="flex items-center gap-4 py-3 px-2 cursor-pointer hover:bg-gray-50">
+                    <div onClick={handleUpdateAccess} className="flex items-center gap-4 py-3 px-2 cursor-pointer hover:bg-gray-50">
                         <LockAccessIcon className="text-gray-300 w-6 h-6" />
                         <p className="text-[#444444]">Update Access</p>
                     </div>

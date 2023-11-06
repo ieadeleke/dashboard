@@ -1,11 +1,16 @@
+import { BaseSelect, BaseSelectOption } from "@/components/select/BaseSelect"
 import {
     Dialog,
     DialogContent
 } from "@/components/ui/dialog"
 import { GlobalActionContext } from "@/context/GlobalActionContext"
 import { cn } from "@/lib/utils"
+import { Admin } from "@/models/admins"
 import { useAddAdmin } from "@/utils/apiHooks/admins/useAddAdmin"
+import { useUpdateAdminRole } from "@/utils/apiHooks/admins/useUpdateAdminRole"
+import { useFetchRoles } from "@/utils/apiHooks/roles/useFetchRoles"
 import { isEmail, validateName } from "@/utils/validation/validation"
+import { useMemo } from "react"
 import { ChangeEvent, forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from "react"
 import Button from "../../buttons"
 import { Divider } from "../../Divider"
@@ -16,6 +21,8 @@ type AddAdminsModalProps = {
 }
 
 type AddAdminsModalDataPayload = {
+    data?: Admin,
+    onAdminRoleUpdated?: (admin: Admin) => void,
     onNewAdminAdded?: () => void
 }
 
@@ -46,9 +53,35 @@ export const AddAdminsModal = forwardRef<AddAdminsModalRef, AddAdminsModalProps>
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
     const [phoneNumber, setPhoneNumber] = useState('')
+    const [admin, setAdmin] = useState<Admin>()
     const { showSnackBar } = useContext(GlobalActionContext)
     const onNewAdminAdded = useRef<() => void>()
-    const { isLoading, error, data, addAdmin } = useAddAdmin()
+    const onAdminRoleUpdated = useRef<(admin: Admin) => void>()
+    const [role, setRole] = useState<BaseSelectOption | null>(null)
+    const { isLoading: isFetchRolesLoading, error: fetchRoleError, data: roles, fetchRoles } = useFetchRoles()
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null)
+
+    const { isLoading: isAddAdminLoading, error: addAdminError, data: addAdminData, addAdmin } = useAddAdmin()
+    const { isLoading: isUpdateRoleLoading, error: updateRoleError, data: updateRoleData, updateAdminRole } = useUpdateAdminRole()
+
+    const isEditMode = useMemo(() => !!admin, [admin])
+
+    const roleOptions: BaseSelectOption[] = useMemo(() => roles.map((item) => ({ id: item._id, label: item.roleName, value: item.roleName })), [JSON.stringify(roles)])
+
+    useEffect(() => {
+        if (isVisible) {
+            fetchRoles()
+        }
+    }, [isVisible])
+
+    useEffect(() => {
+        setError(addAdminError || updateRoleError)
+    }, [updateRoleError, addAdminError])
+
+    useEffect(() => {
+        setIsLoading(isAddAdminLoading || isUpdateRoleLoading)
+    }, [isAddAdminLoading, isUpdateRoleLoading])
 
     useEffect(() => {
         if (error) {
@@ -57,19 +90,52 @@ export const AddAdminsModal = forwardRef<AddAdminsModalRef, AddAdminsModalProps>
     }, [error])
 
     useEffect(() => {
-        if (data) {
+        if (addAdminData) {
             onNewAdminAdded.current?.()
         }
-    }, [data])
+    }, [addAdminData])
+
+    useEffect(() => {
+        if (updateRoleData && admin) {
+            onAdminRoleUpdated.current?.(admin)
+        }
+    }, [updateRoleData, admin])
 
     function closeModal() {
         setIsVisible(false)
+        setFirstName('')
+        setLastName('')
+        setEmail('')
+        setPhoneNumber('')
+        setRole(null)
+        onAdminRoleUpdated.current = undefined
         onNewAdminAdded.current = undefined
     }
 
+    useEffect(() => {
+        if (admin) {
+            setFirstName(admin.personalInfo.firstName)
+            setLastName(admin.personalInfo.lastName)
+            setEmail(admin.personalInfo.email)
+            setPhoneNumber(admin.personalInfo.phoneNumber)
+        }
+    }, [admin])
+
+    //hack to retrive the actual role from db since api response only returns the role id
+    useEffect(() => {
+        if (admin) {
+            const selectedRole = roles.find((item) => item._id == admin.roleId)
+            if (selectedRole) {
+                setRole({ id: selectedRole._id, label: selectedRole.roleName, value: selectedRole.roleName })
+            }
+        }
+    }, [admin, JSON.stringify(roles)])
+
     useImperativeHandle(ref, () => ({
         open(payload?: AddAdminsModalDataPayload) {
+            setAdmin(payload?.data)
             onNewAdminAdded.current = payload?.onNewAdminAdded
+            onAdminRoleUpdated.current = payload?.onAdminRoleUpdated
             setIsVisible(true)
         },
         close() {
@@ -93,13 +159,22 @@ export const AddAdminsModal = forwardRef<AddAdminsModalRef, AddAdminsModalProps>
         } else if (phoneNumber.length < 11 || isNaN(parseInt(phoneNumber))) {
             showSnackBar({ severity: 'error', message: "Invalid Phone number" })
         } else {
-            addAdmin({
-                email,
-                lastName,
-                firstName,
-                phoneNumber,
-                roleId: ''
-            })
+            if (!isEditMode) {
+                addAdmin({
+                    email,
+                    lastName,
+                    firstName,
+                    phoneNumber,
+                    roleId: role?.id ?? null
+                })
+            } else {
+                if (admin && role) {
+                    if (!role) {
+                        return showSnackBar({ severity: 'error', message: "You need to select a role" })
+                    }
+                    updateAdminRole({ userId: admin._id, roleId: role.id })
+                }
+            }
         }
     }
 
@@ -119,33 +194,55 @@ export const AddAdminsModal = forwardRef<AddAdminsModalRef, AddAdminsModalProps>
         setPhoneNumber(event.target.value)
     }
 
+    function onRoleSelected(option: BaseSelectOption) {
+        setRole(option)
+    }
+
     return <Dialog open={isVisible} onOpenChange={onOpenChange}>
         <DialogContent className="max-h-[90vh] overflow-y-scroll no-scrollbar">
             <div className="flex flex-col">
-                <h2 className="font-bold text-2xl text-center">Add Admin</h2>
+                <h2 className="font-bold text-2xl text-center">{isEditMode ? "Update Admin" : "Add Admin"}</h2>
             </div>
 
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h4 className="text-sm font-medium">First Name*</h4>
-                    <AdminInputField onChange={onFirstNameChanged} />
+                    <AdminInputField value={firstName} defaultValue={firstName} onChange={onFirstNameChanged} />
                 </div>
 
                 <div className="flex flex-col gap-2">
                     <h4 className="text-sm font-medium">Last Name*</h4>
-                    <AdminInputField onChange={onLastNameChanged} />
+                    <AdminInputField value={lastName} defaultValue={lastName} disabled={isEditMode} onChange={onLastNameChanged} />
                 </div>
 
                 <div className="flex flex-col gap-2">
                     <h4 className="text-sm font-medium">Email*</h4>
-                    <AdminInputField onChange={onEmailChanged} />
+                    <AdminInputField defaultValue={email} value={email} disabled={isEditMode} onChange={onEmailChanged} />
                 </div>
 
                 <Divider />
 
                 <div className="flex flex-col gap-2">
                     <h4 className="text-sm font-medium">Phone Number*</h4>
-                    <AdminInputField onChange={onPhoneNumberChanged} type="number" />
+                    <AdminInputField defaultValue={phoneNumber} value={phoneNumber} disabled={isEditMode} onChange={onPhoneNumberChanged} type="number" />
+
+                    <h4 className="text-sm font-medium">Role*</h4>
+                    <BaseSelect
+                        isLoading={isFetchRolesLoading}
+                        value={role}
+                        placeholder="Search for roles"
+                        onChange={onRoleSelected}
+                        options={roleOptions}
+                    // formatOptionLabel={(option) => {
+                    //     const fleet = roleOptions.find((item) => item._id == option.id)
+                    //     return <div>
+                    //         <div className="flex items-center gap-4">
+                    //             <p>{fleet?.model}</p>
+                    //         </div>
+                    //     </div>
+                    // }}
+                    />
+                    {/* <AdminInputField disabled={isEditMode} onChange={onRoleChanged} /> */}
                 </div>
 
                 <div className="flex gap-8">

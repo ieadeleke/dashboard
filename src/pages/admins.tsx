@@ -75,7 +75,6 @@ export default function AdminsPage() {
   function addAdmin() {
     addAdminsRef.current?.open({
       onNewAdminAdded: () => {
-        fetchAdmins()
         addAdminsRef.current?.close()
         showSnackBar({ severity: 'success', message: "New admin added succesfully" })
       }
@@ -84,6 +83,16 @@ export default function AdminsPage() {
 
   function addRole() {
     addRoleRef.current?.open()
+  }
+
+  function onUpdateAccess(admin: Admin) {
+    addAdminsRef.current?.open({
+      data: admin,
+      onAdminRoleUpdated: (admin: Admin) => {
+        addAdminsRef.current?.close()
+        showSnackBar({ severity: 'success', message: `${admin.personalInfo.firstName}'s role has been updated successfully` })
+      }
+    })
   }
 
   function onSuspendAdmin(admin: Admin) {
@@ -191,7 +200,7 @@ export default function AdminsPage() {
 
           <div>
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-              {adminData.map((item) => <AdminItem key={item._id} data={item} onSuspendAdmin={onSuspendAdmin} onUnSuspendAdmin={onUnSuspendAdmin} />)}
+              {adminData.map((item) => <AdminItem key={item._id} data={item} onSuspendAdmin={onSuspendAdmin} updateAccess={onUpdateAccess} onUnSuspendAdmin={onUnSuspendAdmin} />)}
             </div>
           </div>
           {isFetchLoading ? <Loading /> : isFetchError ? <Error /> : null}

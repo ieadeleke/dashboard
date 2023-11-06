@@ -19,9 +19,14 @@ export type AddAdminParams = {
     lastName: string,
     email: string,
     phoneNumber: string,
-    roleId: string
+    roleId: string | null
 }
 
 export type GetAdminsRequestParams = {
     page?: number
+}
+
+export type UpdateAdminRoleParams = {
+    roleId: string,
+    userId: string
 }

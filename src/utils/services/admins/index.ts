@@ -1,6 +1,6 @@
 import { ApiResponse } from "@/models"
 import { request, RequestConfig } from "../../request"
-import { AddAdminParams, GetAdminResponse, GetAdminsRequestParams, SuspendAdminParams, SuspendAdminResponse } from "./types"
+import { AddAdminParams, GetAdminResponse, GetAdminsRequestParams, SuspendAdminParams, SuspendAdminResponse, UpdateAdminRoleParams } from "./types"
 
 
 export function AdminService(config?: RequestConfig) {
@@ -35,11 +35,20 @@ export function AdminService(config?: RequestConfig) {
         return true
     }
 
+    async function updateAdminRole(payload: UpdateAdminRoleParams) {
+        const { data } = await request(`api/v1/admin/UpdateRole`, "PUT", {
+            body: payload
+        })
+        const _data = (data as ApiResponse & { status: string })
+        return true
+    }
+
     return {
         getAllAdmins,
         suspendAdmin,
         unSuspendAdmin,
-        addAdmin
+        addAdmin,
+        updateAdminRole
     }
 
 }
