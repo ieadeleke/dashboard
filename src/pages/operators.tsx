@@ -30,10 +30,12 @@ import { ConfirmationAlertDialog, ConfirmationAlertDialogRef } from "@/component
 import { Operator } from "@/models/operators";
 import { GlobalActionContext } from "@/context/GlobalActionContext";
 import { LoadingModal } from "@/components/states/LoadingModal";
+import { TablePagination } from "@/components/pagination/TablePagination";
 
 export default function Operators() {
   const addOperatorsRef = useRef<AddOperatorsModalRef>(null)
-  const { isLoading:isFetchLoading, error: isFetchError, data: _data, fetchOperators } = useFetchOperators()
+  const { isLoading: isFetchLoading, count, error: isFetchError, data: _data, fetchOperators } = useFetchOperators()
+  const [page, setPage] = useState(0)
   const confirmationDialogRef = useRef<ConfirmationAlertDialogRef>(null)
   const [searchWord, setSearchWord] = useState('')
   const { isLoading: isSuspendLoading, error: suspendError, data: suspendData, suspendOperator } = useSuspendOperator()
@@ -48,8 +50,8 @@ export default function Operators() {
   }, [JSON.stringify(_data)])
 
   useEffect(() => {
-    fetchOperators()
-  }, [])
+    fetchOperators({ page })
+  }, [page])
 
   useEffect(() => {
     if (error) {
@@ -61,11 +63,11 @@ export default function Operators() {
     setIsLoading(isUnSuspendLoading || isSuspendLoading)
   }, [isUnSuspendLoading, isSuspendLoading])
 
-//   useEffect(() => {
-//     if (isFetchError == 'Unauthorized' || isFetchError == 'Not authenticated') {
-//         showSnackBar({ severity: 'error', message: isFetchError })
-//     }
-// }, [isFetchError])
+  //   useEffect(() => {
+  //     if (isFetchError == 'Unauthorized' || isFetchError == 'Not authenticated') {
+  //         showSnackBar({ severity: 'error', message: isFetchError })
+  //     }
+  // }, [isFetchError])
 
   useEffect(() => {
     if (unSuspendData) {
@@ -93,6 +95,12 @@ export default function Operators() {
     }
     return operators.filter((item) => item.firstName.toLowerCase().includes(word) || item.lastName.toLowerCase().includes(word) || item.email.toLowerCase().includes(word))
   }, [searchWord, JSON.stringify(operators)])
+
+  function onPageChange(selectedItem: {
+    selected: number;
+}) {
+    setPage(selectedItem.selected)
+}
 
 
   function onSuspendAdmin(operator: Operator) {
@@ -170,7 +178,7 @@ export default function Operators() {
             </div>
           </div>
 
-          <div>
+          <div className="min-h-[500px]">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -226,8 +234,23 @@ export default function Operators() {
         </div>
 
 
-        <div>
-
+        <div className="flex mt-8 justify-center">
+          <TablePagination
+            breakLabel="..."
+            nextLabel=">"
+            onPageChange={onPageChange}
+            pageRangeDisplayed={5}
+            currentPage={page}
+            pageCount={Math.max(0, count / 20)}
+            // pageCount={1}
+            className="flex gap-4"
+            nextClassName="text-gray-500"
+            previousClassName="text-gray-500"
+            pageClassName="flex w-8 h-7 bg-white justify-center items-center text-sm text-gray-500 rounded-sm outline outline-2 outline-gray-100 text-center"
+            activeClassName="!bg-primary text-white !outline-none"
+            previousLabel="<"
+            renderOnZeroPageCount={null}
+          />
         </div>
       </div>
     </DashboardLayout>

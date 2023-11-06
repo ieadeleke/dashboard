@@ -1,11 +1,11 @@
 import { request, RequestConfig } from "../../request"
-import { GetAllOperatorsResponse, SuspendOperatorParams, SuspendOperatorResponse } from "./types"
+import { GetAllOperatorsResponse, GetOperatorsRequestParams, SuspendOperatorParams, SuspendOperatorResponse } from "./types"
 
 
 export function OperatorsService(config?: RequestConfig) {
 
-    async function getOperators() {
-        const { data } = await request(`api/v1/admin/user/GetAllUsers`, "GET", config)
+    async function getOperators(params?: GetOperatorsRequestParams) {
+        const { data } = await request(`api/v1/admin/user/GetAllUsers?page=${params?.page || 1}`, "GET", config)
         const response = data as GetAllOperatorsResponse
         return response
     }

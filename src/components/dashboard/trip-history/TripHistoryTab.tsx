@@ -26,7 +26,7 @@ type TripHistoryTab = {
 
 export const TripHistoryTab = (props: TripHistoryTab) => {
     const { type } = props
-    const [page, setPage] = useState(0)
+    const [page, setPage] = useState(1)
     const [searchPhrase, setSearchPhrase] = useState('')
     const { isLoading, data, count, fetchActiveTrips, fetchAllTrips, fetchCancelledTrips, fetchCompleteTrips, error } = useFetchTrips()
 
