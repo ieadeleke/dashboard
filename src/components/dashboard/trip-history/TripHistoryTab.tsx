@@ -15,6 +15,8 @@ import { Trip } from "@/models/trips";
 import { useFetchTrips } from "@/utils/apiHooks/trips/useFetchTrips";
 import { NetworkRequestContainer } from "@/components/states/NetworkRequestContainer";
 import { TripStatus } from "@/utils/data/trip";
+import ReactPaginate from "react-paginate";
+import { TablePagination } from "@/components/pagination/TablePagination";
 
 type TripHistoryTab = {
     onSizeUpdated?: (size: number) => void,
@@ -25,6 +27,7 @@ type TripHistoryTab = {
 
 export const TripHistoryTab = (props: TripHistoryTab) => {
     const { type } = props
+    const [page, setPage] = useState(0)
     const [searchPhrase, setSearchPhrase] = useState('')
     const { isLoading, data, fetchActiveTrips, fetchAllTrips, fetchCancelledTrips, fetchCompleteTrips, error } = useFetchTrips()
 
@@ -34,8 +37,15 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
         tripDetailModalRef.current?.open({ data })
     }
 
-    function onPhraseChanged(event: ChangeEvent<HTMLInputElement>){
+    function onPhraseChanged(event: ChangeEvent<HTMLInputElement>) {
         setSearchPhrase(event.target.value)
+    }
+
+    function onPageChange(selectedItem: {
+        selected: number;
+    }) {
+        setPage(selectedItem.selected)
+        // alert(selectedItem.selected)
     }
 
     useEffect(() => {
@@ -45,22 +55,22 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
     useEffect(() => {
         switch (type) {
             case 'active':
-                fetchActiveTrips()
+                fetchActiveTrips({ page })
                 break;
             case 'canceled':
-                fetchCancelledTrips()
+                fetchCancelledTrips({ page })
                 break;
             case 'complete':
-                fetchCompleteTrips()
+                fetchCompleteTrips({ page })
                 break;
             default:
-                fetchAllTrips()
+                fetchAllTrips({ page })
         }
-    }, [type])
+    }, [type, page])
 
     const trips = useMemo(() => {
         const phrase = searchPhrase.trim().toLowerCase()
-        if(phrase.length == 0){
+        if (phrase.length == 0) {
             return data
         }
         return data.filter((trip) => trip.tripOrigin.trim().toLowerCase().includes(phrase) || trip.tripDestination.trim().toLowerCase().includes(phrase))
@@ -102,7 +112,7 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
             </div>
         </div>
 
-        <div>
+        <div className="min-h-[400px]">
             <NetworkRequestContainer isLoading={isLoading} error={error}>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {trips.map((trip) => <div onClick={() => handleOnTripItemClicked(trip)} key={trip._id}>
@@ -110,8 +120,26 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
                     </div>)}
                 </div>
             </NetworkRequestContainer>
-            
+
         </div>
 
+
+        <div className="flex justify-center">
+            <TablePagination
+                breakLabel="..."
+                nextLabel=">"
+                onPageChange={onPageChange}
+                pageRangeDisplayed={5}
+                currentPage={page}
+                pageCount={50}
+                className="flex gap-4"
+                nextClassName="text-gray-500"
+                previousClassName="text-gray-500"
+                pageClassName="flex w-8 h-7 bg-white justify-center items-center text-sm text-gray-500 rounded-sm outline outline-2 outline-gray-100 text-center"
+                activeClassName="!bg-primary text-white !outline-none"
+                previousLabel="<"
+                renderOnZeroPageCount={null}
+            />
+        </div>
     </div>
 }

@@ -34,12 +34,14 @@ export const useApi = () => {
                 const parsedError = errorHandler(error)
                 const token = AuthToken().retrieveToken()
                 if (parsedError.status == 401 && token) {
-                    showSnackBar({severity: 'error', message: "Not Authorized"})
+                    showSnackBar({ severity: 'error', message: "Not Authorized" })
                     // Router.push("/login")
                     // AuthToken().clearToken()
-                    
-                }else{
-                     Router.push("/login")
+
+                } else if (parsedError.status == 401 && !token) {
+                    setError(parsedError.message)
+                } else {
+                    Router.push("/login")
                     AuthToken().clearToken()
                 }
                 setError(parsedError.message)

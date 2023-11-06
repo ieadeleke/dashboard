@@ -7,6 +7,7 @@ import SEO from "@/components/SEO";
 import { InitiateTripModal, InitiateTripModalRef } from "@/components/dashboard/trips/InitiateTripModal";
 import { io } from 'socket.io-client'
 import { Trip } from "@/models/trips";
+import ReactPaginate from "react-paginate";
 
 const tabs = [
   {

@@ -36,6 +36,7 @@ import { useFleetsSelector } from "@/redux/selectors/fleets.selector";
 import { BoatDetailModal, BoatDetailModalRef } from "@/components/dashboard/fleet/FleetDetail";
 import { Trip } from "@/models/trips";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import ReactPaginate from 'react-paginate';
 
 type TableDataListProps = {
     data: Fleet,
@@ -322,6 +323,12 @@ export default function Fleets() {
         router.push(`/fleets?tab=${fleet.status}`)
     }
 
+    function onPageChange(selectedItem: {
+        selected: number;
+    }) {
+        alert(selectedItem.selected)
+    }
+
     return (
         <DashboardLayout>
             <Tabs value={activeTab} onValueChange={onTabValueChanged} className="flex flex-col py-8">
@@ -356,6 +363,21 @@ export default function Fleets() {
                             <TabBody addFleet={addFleet} tab="pending" updateSize={setSize} />
                         </TabsContent>
                     </div>
+
+                    <ReactPaginate
+                        breakLabel="..."
+                        nextLabel=">"
+                        onPageChange={onPageChange}
+                        pageRangeDisplayed={1}
+                        pageCount={500}
+                        className="flex gap-4"
+                        nextClassName="text-gray-500"
+                        previousClassName="text-gray-500"
+                        pageClassName="flex w-8 h-7 bg-white justify-center items-center text-sm text-gray-500 rounded-sm outline outline-2 outline-gray-100 text-center"
+                        activeClassName="!bg-primary text-white !outline-none"
+                        previousLabel="<"
+                        renderOnZeroPageCount={null}
+                    />
 
                 </div>
 

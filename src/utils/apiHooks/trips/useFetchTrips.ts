@@ -1,39 +1,39 @@
 import { useState } from "react"
 import { useApi } from "../index"
 import { Trip } from "@/models/trips"
-import { TripService } from "@/utils/services/trips"
+import { GetTripsRequestParams, TripService } from "@/utils/services/trips"
 
 export const useFetchTrips = () => {
     const [data, setData] = useState<Trip[]>([])
     const { isLoading, error, execute } = useApi()
 
-    async function fetchCompleteTrips() {
+    async function fetchCompleteTrips(params?: GetTripsRequestParams) {
         setData([])
-        const response = await execute(async () => await TripService().getCompletedTrips())
+        const response = await execute(async () => await TripService().getCompletedTrips(params))
         if (response) {
             setData(response.Trips)
         }
     }
 
-    async function fetchCancelledTrips() {
+    async function fetchCancelledTrips(params?: GetTripsRequestParams) {
         setData([])
-        const response = await execute(async () => await TripService().getCancelledTrips())
+        const response = await execute(async () => await TripService().getCancelledTrips(params))
         if (response) {
             setData(response.Trips)
         }
     }
 
-    async function fetchAllTrips() {
+    async function fetchAllTrips(params?: GetTripsRequestParams) {
         setData([])
-        const response = await execute(async () => await TripService().getAllTrips())
+        const response = await execute(async () => await TripService().getAllTrips(params))
         if (response) {
             setData(response.Trips)
         }
     }
 
-    async function fetchActiveTrips() {
+    async function fetchActiveTrips(params?: GetTripsRequestParams) {
         setData([])
-        const response = await execute(async () => await TripService().getActiveTrips())
+        const response = await execute(async () => await TripService().getActiveTrips(params))
         if (response) {
             setData(response.Trips)
         }
