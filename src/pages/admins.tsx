@@ -24,9 +24,11 @@ import { useSuspendAdmin } from "@/utils/apiHooks/admins/useSuspendAdmins";
 import { useUnSuspendAdmin } from "@/utils/apiHooks/admins/useUnSuspendAdmin";
 import { GlobalActionContext } from "@/context/GlobalActionContext";
 import { LoadingModal } from "@/components/states/LoadingModal";
+import { TablePagination } from "@/components/pagination/TablePagination";
 
 export default function AdminsPage() {
-  const { isLoading: isFetchLoading, error: isFetchError, data, fetchAdmins } = useFetchAdmins()
+  const { isLoading: isFetchLoading, count, error: isFetchError, data, fetchAdmins } = useFetchAdmins()
+  const [page, setPage] = useState(0)
   const addAdminsRef = useRef<AddAdminsModalRef>(null)
   const addRoleRef = useRef<CreateRoleModalRef>(null)
   const confirmationDialogRef = useRef<ConfirmationAlertDialogRef>(null)
@@ -115,9 +117,15 @@ export default function AdminsPage() {
     })
   }
 
+  function onPageChange(selectedItem: {
+    selected: number;
+  }) {
+    setPage(selectedItem.selected)
+  }
+
   useEffect(() => {
-    fetchAdmins()
-  }, [])
+    fetchAdmins({ page })
+  }, [page])
 
   return (
     <DashboardLayout>
@@ -174,6 +182,25 @@ export default function AdminsPage() {
             </div>
           </div>
           {isFetchLoading ? <Loading /> : isFetchError ? <Error /> : null}
+        </div>
+
+        <div className="flex mt-8 justify-center">
+          <TablePagination
+            breakLabel="..."
+            nextLabel=">"
+            onPageChange={onPageChange}
+            pageRangeDisplayed={5}
+            currentPage={page}
+            pageCount={Math.max(0, count / 20)}
+            // pageCount={1}
+            className="flex gap-4"
+            nextClassName="text-gray-500"
+            previousClassName="text-gray-500"
+            pageClassName="flex w-8 h-7 bg-white justify-center items-center text-sm text-gray-500 rounded-sm outline outline-2 outline-gray-100 text-center"
+            activeClassName="!bg-primary text-white !outline-none"
+            previousLabel="<"
+            renderOnZeroPageCount={null}
+          />
         </div>
 
       </div>

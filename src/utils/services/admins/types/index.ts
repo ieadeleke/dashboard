@@ -21,3 +21,7 @@ export type AddAdminParams = {
     phoneNumber: string,
     roleId: string
 }
+
+export type GetAdminsRequestParams = {
+    page?: number
+}

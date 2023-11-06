@@ -1,12 +1,12 @@
 import { ApiResponse } from "@/models"
 import { request, RequestConfig } from "../../request"
-import { AddAdminParams, GetAdminResponse, SuspendAdminParams, SuspendAdminResponse } from "./types"
+import { AddAdminParams, GetAdminResponse, GetAdminsRequestParams, SuspendAdminParams, SuspendAdminResponse } from "./types"
 
 
 export function AdminService(config?: RequestConfig) {
 
-    async function getAllAdmins() {
-        const { data } = await request(`api/v1/admin/GetAllAdmins`, "GET")
+    async function getAllAdmins(params?: GetAdminsRequestParams) {
+        const { data } = await request(`api/v1/admin/GetAllAdmins?page=${params?.page || 1}`, "GET")
         const _data = data as GetAdminResponse
         return _data
     }
