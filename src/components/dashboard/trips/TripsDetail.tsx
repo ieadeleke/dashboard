@@ -63,11 +63,11 @@ export const TripDetailModal = forwardRef<TripDetailModalRef, TripDetailModalPro
                     <div className="flex items-center">
                         <div className="flex flex-col gap-2">
                             <p className="font-bold">Ship ID</p>
-                            <p className="text-sm">{"asdasddsa"}</p>
+                            <p className="text-sm">{trip._id}</p>
                         </div>
                         <div className="flex-1" />
 
-                        <TripHistoryStatusChip status={"active"} />
+                        {/* <TripHistoryStatusChip status={"active"} /> */}
                     </div>
 
                     <div className="flex gap-4">
@@ -75,14 +75,35 @@ export const TripDetailModal = forwardRef<TripDetailModalRef, TripDetailModalPro
 
                         <div className="flex flex-1 flex-col gap-4">
                             <div className="flex gap-2">
-                                {Array(3).fill(0).map((_, index) => <div key={index} className="flex-1 h-6 bg-gray-500 rounded-sm" />)}
+                                <p className="flex-1 px-2 py-1 bg-gray-100 rounded-sm">
+                                    Origin: {trip.tripOrigin}
+                                </p>
+
+                                <p className="flex-1 px-2 py-1 bg-gray-100 rounded-sm">
+                                    Destination: {trip.tripDestination}
+                                </p>
+
+                                <p className="flex-1 px-2 py-1 bg-gray-100 rounded-sm">
+                                    {trip.status}
+                                </p>
                             </div>
 
-                            <div className="bg-gray-500 h-32 rounded-md" />
+                            <div className="flex flex-col gap-2 bg-gray-100 rounded-md px-2 py-2">
 
-                            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                                <h1 className="font-bold">Passengers</h1>
+
+                                <div className="flex flex-col gap-4">
+                                    {trip.passengers.map((item) => <div className="border rounded-lg p-2">
+                                        <h3 className="font-semibold text-sm">{item.fullName}</h3>
+                                        <p className="text-sm text-gray-500">{item.phoneNumber}</p>
+                                    </div>)}
+                                </div>
+
+                            </div>
+
+                            {/* <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                                 {allTrips.map((item) => <TripHistoryItem data={item} key={"item.id"} />)}
-                            </div>
+                            </div> */}
                         </div>
 
                     </div>
