@@ -8,7 +8,15 @@ export type GetDashboardStatistics = ApiResponse & {
     Trips: Record<string, number>
 }
 
+export type RecentActivity = {
+    _id: string,
+    tripId: string,
+    event: string,
+    boatNo: string,
+    createdAt: string
+}
+
 export type RecentActivities = {
-    Activities: string[],
+    Activities: RecentActivity[],
     count: number
 }

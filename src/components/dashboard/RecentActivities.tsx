@@ -1,10 +1,13 @@
 import Button from "@/components/buttons"
 import { Divider } from "@/components/Divider"
+import { RecentActivity } from "@/models/activities/ActivitiesResponse"
 import { useRecentActivities } from "@/utils/apiHooks/activities/useRecentActivities"
 import { LucideMoreHorizontal } from "lucide-react"
+import { useRef } from "react"
 import { useEffect } from "react"
 import Empty from "../states/Empty"
 import { NetworkRequestContainer } from "../states/NetworkRequestContainer"
+import { RecentActvityDetailModal, RecentActvityDetailModalRef } from "./activities/RecentActivityDetail"
 
 export const ActivityItem = () => {
 
@@ -24,12 +27,20 @@ export const ActivityItem = () => {
 
 export const RecentActivities = () => {
     const { isLoading, data, error, getRecentActivities } = useRecentActivities()
+    const recentActivityDetailRef = useRef<RecentActvityDetailModalRef>(null)
 
     useEffect(() => {
         getRecentActivities()
     }, [])
 
+    function handleOpenActivityModal(activity: RecentActivity) {
+        recentActivityDetailRef.current?.open({
+            data: activity
+        })
+    }
+
     return <div className="flex flex-col min-h-[300px] bg-white px-4 py-2 rounded-lg">
+        <RecentActvityDetailModal ref={recentActivityDetailRef} />
         <div className="flex px-2 py-4">
             <p className="text-base font-bold">Recent Activities</p>
             <div className="flex-1" />
@@ -40,7 +51,9 @@ export const RecentActivities = () => {
 
         <NetworkRequestContainer isLoading={isLoading} error={error}>
             <div className="h-full">
-                {data?.Activities.length == 0 ? <Empty title="Nothing to show" message="List is empty   " /> : data?.Activities.map((item, index) => <ActivityItem key={index} />)}
+                {data.length == 0 ? <Empty title="Nothing to show" message="List is empty   " /> : data.slice(0, 5).map((item) => <div key={item._id} onClick={() => handleOpenActivityModal(item)}>
+                    <ActivityItem />
+                </div>)}
             </div>
         </NetworkRequestContainer>
     </div>
