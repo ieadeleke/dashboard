@@ -15,7 +15,6 @@ import { Trip } from "@/models/trips";
 import { useFetchTrips } from "@/utils/apiHooks/trips/useFetchTrips";
 import { NetworkRequestContainer } from "@/components/states/NetworkRequestContainer";
 import { TripStatus } from "@/utils/data/trip";
-import ReactPaginate from "react-paginate";
 import { TablePagination } from "@/components/pagination/TablePagination";
 
 type TripHistoryTab = {
@@ -29,7 +28,7 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
     const { type } = props
     const [page, setPage] = useState(0)
     const [searchPhrase, setSearchPhrase] = useState('')
-    const { isLoading, data, fetchActiveTrips, fetchAllTrips, fetchCancelledTrips, fetchCompleteTrips, error } = useFetchTrips()
+    const { isLoading, data, count, fetchActiveTrips, fetchAllTrips, fetchCancelledTrips, fetchCompleteTrips, error } = useFetchTrips()
 
     const tripDetailModalRef = useRef<TripDetailModalRef>(null)
 
@@ -131,7 +130,8 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
                 onPageChange={onPageChange}
                 pageRangeDisplayed={5}
                 currentPage={page}
-                pageCount={50}
+                pageCount={Math.max(0, count / 20)}
+                // pageCount={1}
                 className="flex gap-4"
                 nextClassName="text-gray-500"
                 previousClassName="text-gray-500"
