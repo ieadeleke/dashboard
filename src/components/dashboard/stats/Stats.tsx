@@ -25,12 +25,12 @@ export const Stats = (props: StatsProps) => {
             </div>
         </div> */}
 
-        <div className="w-full grid grid-cols-1 gap-2 px-2 lg:grid-cols-4">
+        <div className="w-full grid grid-cols-1 gap-2 px-2 lg:grid-cols-3">
 
             <StatItem icon={ShipLine} name="Boats" count={data.totalBoat.toString()} colorAccent={'#EAFFE1'} color={`#00BD09`} />
             <StatItem icon={CautionIcon} name="Incidents" count={data.totalIncident.toString()} colorAccent={'#FFFBED'} color={`#FF5C00`} />
             <StatItem icon={HistoryIcon} name="Total Trips" count={data.totalTrip.toString()} colorAccent={'#F3F9FF'} color={`#428BC1`} />
-            <StatItem icon={UsersIcon} name="Passengers" count={data.totalUser.toString()} colorAccent={'#FCF3FF'} color={`#9300D9`} />
+            {/* <StatItem icon={UsersIcon} name="Passengers" count={data.totalUser.toString()} colorAccent={'#FCF3FF'} color={`#9300D9`} /> */}
         </div>
     </div>
 }
