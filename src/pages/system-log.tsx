@@ -33,7 +33,7 @@ export default function PassengersPage() {
         <div className="mt-4 flex flex-col gap-4">
         <h1 className="text-2xl font-bold">Activities</h1>
 
-          <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
+          {/* <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
             <TextField.Container className="flex-1 border border-gray-200">
               <TextField.Input placeholder="Search" />
 
@@ -58,7 +58,7 @@ export default function PassengersPage() {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-          </div>
+          </div> */}
 
           <div>
             <Table>
