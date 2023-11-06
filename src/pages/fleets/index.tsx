@@ -37,6 +37,7 @@ import { BoatDetailModal, BoatDetailModalRef } from "@/components/dashboard/flee
 import { Trip } from "@/models/trips";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import ReactPaginate from 'react-paginate';
+import { TablePagination } from "@/components/pagination/TablePagination";
 
 type TableDataListProps = {
     data: Fleet,
@@ -194,8 +195,9 @@ export const FleetTableDataList = (props: TableDataListProps) => {
 }
 
 const TabBody = (props: TabBodyProps) => {
-    const { isLoading, error, fetchAllFleets } = useFetchAllFleets()
+    const { isLoading, error, count, fetchAllFleets } = useFetchAllFleets()
     const _data = useFleetsSelector()
+    const [page, setPage] = useState(0)
     const { showSnackBar } = useContext(GlobalActionContext)
     const { tab } = props
     const BoatDetailModalRef = useRef<BoatDetailModalRef>(null)
@@ -211,8 +213,15 @@ const TabBody = (props: TabBodyProps) => {
     }), [JSON.stringify(_data)])
 
     useEffect(() => {
-        fetchAllFleets()
-    }, [])
+        fetchAllFleets({ page })
+    }, [page])
+
+    function onPageChange(selectedItem: {
+        selected: number;
+    }) {
+        setPage(selectedItem.selected)
+    }
+
 
     function onViewBoatDetails(fleet: Fleet) {
         BoatDetailModalRef.current?.open({
@@ -273,7 +282,7 @@ const TabBody = (props: TabBodyProps) => {
             </div>
         </div>
 
-        <div>
+        <div className="min-h-[500px]">
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -293,6 +302,25 @@ const TabBody = (props: TabBodyProps) => {
                 {data.map((item, index) => <FleetTableDataList key={index} data={item} onViewBoatDetails={onViewBoatDetails} onVerifyError={onVerifyError} onVerifySuccess={onVerifySuccess} />)}
             </Table>
             {isLoading ? <Loading className="h-[400px]" /> : error ? <Error onRetry={fetchAllFleets} className="h-[400px]" /> : null}
+        </div>
+
+        <div className="flex mt-4 justify-center">
+            <TablePagination
+                breakLabel="..."
+                nextLabel=">"
+                onPageChange={onPageChange}
+                pageRangeDisplayed={5}
+                currentPage={page}
+                pageCount={Math.max(0, data.length / 20)}
+                // pageCount={1}
+                className="flex gap-4"
+                nextClassName="text-gray-500"
+                previousClassName="text-gray-500"
+                pageClassName="flex w-8 h-7 bg-white justify-center items-center text-sm text-gray-500 rounded-sm outline outline-2 outline-gray-100 text-center"
+                activeClassName="!bg-primary text-white !outline-none"
+                previousLabel="<"
+                renderOnZeroPageCount={null}
+            />
         </div>
     </div>
 }
@@ -321,12 +349,6 @@ export default function Fleets() {
     function onNewFleetAdded(fleet: Fleet) {
         addFleetModalRef.current?.close()
         router.push(`/fleets?tab=${fleet.status}`)
-    }
-
-    function onPageChange(selectedItem: {
-        selected: number;
-    }) {
-        alert(selectedItem.selected)
     }
 
     return (
@@ -363,21 +385,6 @@ export default function Fleets() {
                             <TabBody addFleet={addFleet} tab="pending" updateSize={setSize} />
                         </TabsContent>
                     </div>
-
-                    <ReactPaginate
-                        breakLabel="..."
-                        nextLabel=">"
-                        onPageChange={onPageChange}
-                        pageRangeDisplayed={1}
-                        pageCount={500}
-                        className="flex gap-4"
-                        nextClassName="text-gray-500"
-                        previousClassName="text-gray-500"
-                        pageClassName="flex w-8 h-7 bg-white justify-center items-center text-sm text-gray-500 rounded-sm outline outline-2 outline-gray-100 text-center"
-                        activeClassName="!bg-primary text-white !outline-none"
-                        previousLabel="<"
-                        renderOnZeroPageCount={null}
-                    />
 
                 </div>
 
