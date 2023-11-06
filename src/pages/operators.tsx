@@ -190,8 +190,8 @@ export default function Operators() {
                   <TableHead>Name</TableHead>
                   <TableHead>Email</TableHead>
                   <TableHead>{`Owner's Name`}</TableHead>
-                  <TableHead></TableHead>
-                  <TableHead></TableHead>
+                  {/* <TableHead></TableHead>
+                  <TableHead></TableHead> */}
                 </TableRow>
               </TableHeader>
 
@@ -209,7 +209,7 @@ export default function Operators() {
                   <TableCell>
                     {item.lastName}
                   </TableCell>
-                  <TableCell>Lorem</TableCell>
+                  {/* <TableCell>Lorem</TableCell> */}
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger>
