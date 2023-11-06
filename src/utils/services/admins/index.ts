@@ -36,7 +36,7 @@ export function AdminService(config?: RequestConfig) {
     }
 
     async function updateAdminRole(payload: UpdateAdminRoleParams) {
-        const { data } = await request(`api/v1/admin/UpdateRole`, "PUT", {
+        const { data } = await request(`api/v1/admin/UpdateStaffRole`, "PUT", {
             body: payload
         })
         const _data = (data as ApiResponse & { status: string })
