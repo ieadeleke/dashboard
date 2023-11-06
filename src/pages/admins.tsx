@@ -9,7 +9,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useContext, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AdminItem } from "@/components/dashboard/admins/AdminItem";
 import { AddAdminsModal, AddAdminsModalRef } from "@/components/dashboard/admins/AddAdminModal";
 import Button from "@/components/buttons";
@@ -37,6 +37,7 @@ export default function AdminsPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const { showSnackBar } = useContext(GlobalActionContext)
+  const [searchWord, setSearchWord] = useState('')
   const [admins, setAdmins] = useState<Admin[]>([])
 
   useEffect(() => {
@@ -117,6 +118,18 @@ export default function AdminsPage() {
     })
   }
 
+  const adminData = useMemo(() => {
+    const word = searchWord.toLowerCase()
+    if (word.trim().length == 0) {
+      return admins
+    }
+    return admins.filter((item) => item.personalInfo.firstName.toLowerCase().includes(word) || item.personalInfo.lastName.toLowerCase().includes(word) || item.personalInfo.email.toLowerCase().includes(word))
+  }, [searchWord, JSON.stringify(admins)])
+
+  function onSearchWordChanged(event: ChangeEvent<HTMLInputElement>) {
+    setSearchWord(event.target.value)
+  }
+
   function onPageChange(selectedItem: {
     selected: number;
   }) {
@@ -137,12 +150,12 @@ export default function AdminsPage() {
         <CreateRoleModal ref={addRoleRef} />
         <LoadingModal isVisible={isLoading} />
 
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 min-h-[500px]">
           <h1 className="text-2xl font-bold">Admins <span className="text-primary">({data.length})</span></h1>
 
           <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
 
-            <TextField.Container className="flex-1 border border-gray-200">
+            <TextField.Container onChange={onSearchWordChanged} className="flex-1 border border-gray-200">
               <TextField.Input placeholder="Search" />
 
               <IconButton className="text-gray-200">
@@ -160,12 +173,12 @@ export default function AdminsPage() {
 
             <div className="border rounded-md py-2">
               <DropdownMenu>
-                <DropdownMenuTrigger>
+                {/* <DropdownMenuTrigger>
                   <div className="flex items-center gap-3 text-sm text-text-normal font-semibold">
                     <p>Filter</p>
                     <ChevronDown className="text-gray-300" />
                   </div>
-                </DropdownMenuTrigger>
+                </DropdownMenuTrigger> */}
                 <DropdownMenuContent>
                   <DropdownMenuLabel>Action 1</DropdownMenuLabel>
                   <DropdownMenuItem>Action 2</DropdownMenuItem>
@@ -178,7 +191,7 @@ export default function AdminsPage() {
 
           <div>
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-              {admins.map((item) => <AdminItem key={item._id} data={item} onSuspendAdmin={onSuspendAdmin} onUnSuspendAdmin={onUnSuspendAdmin} />)}
+              {adminData.map((item) => <AdminItem key={item._id} data={item} onSuspendAdmin={onSuspendAdmin} onUnSuspendAdmin={onUnSuspendAdmin} />)}
             </div>
           </div>
           {isFetchLoading ? <Loading /> : isFetchError ? <Error /> : null}
