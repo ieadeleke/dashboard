@@ -22,7 +22,8 @@ export const useFetchAdminActivities = () => {
                 firstname: item.staffId?.personalInfo.firstName || "",
                 lastname: item.staffId?.personalInfo.lastName || "",
                 email: item.staffId?.personalInfo.email || "",
-                event: item.event
+                event: item.event,
+                createdAt: item.createdAt
             })))
         }
     }
