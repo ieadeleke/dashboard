@@ -20,6 +20,8 @@ import { Calendar } from "@/components/ui/calendar"
 import { CalendarIcon, PlusIcon } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import moment from "moment";
+import Button from "@/components/buttons";
+import { CalendarRange } from "@/components/calendar/CalendarRange";
 
 type TripHistoryTab = {
     onSizeUpdated?: (size: number) => void,
@@ -37,7 +39,8 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
     const { type } = props
     const [page, setPage] = useState(0)
     const [searchPhrase, setSearchPhrase] = useState('')
-    const [date, setDate] = useState<DateRange>({ from: new Date(), to: new Date() })
+    const [date, setDate] = useState<DateRange>()
+    const [isDateModalOpen, setIsDateModalOpen] = useState(false)
 
     const { isLoading, data, count, fetchActiveTrips, fetchAllTrips, fetchCancelledTrips, fetchCompleteTrips, error } = useFetchTrips()
 
@@ -55,6 +58,7 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
         if (date) {
             setDate(prevDate => Object.assign({}, prevDate, { from: date.from || new Date(), to: date.to || new Date() }))
         }
+        setIsDateModalOpen(false)
     }
 
     function onPageChange(selectedItem: {
@@ -65,8 +69,9 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
     }
 
     const formatDateRange = useMemo(() => {
-        const start = moment(date.from).format("DD MM, YYYY")
-        const end = moment(date.to).format("DD MM, YYYY")
+        if (!date) return 'Tap to filter by date range'
+        const start = moment(date.from).format("MMM D, YYYY")
+        const end = moment(date.to).format("MMM D, YYYY")
         return `From ${start} - ${end}`
     }, [JSON.stringify(date)])
 
@@ -91,18 +96,19 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
     }, [type, page])
 
     const trips = useMemo(() => {
-        const phrase = searchPhrase.trim().toLowerCase()
-        if (phrase.length == 0) {
+        if (!date) {
             return data
         }
-        return data.filter((trip) => trip.tripOrigin.trim().toLowerCase().includes(phrase) || trip.tripDestination.trim().toLowerCase().includes(phrase))
-    }, [searchPhrase, JSON.stringify(data)])
+        return data.filter((item) => {
+            return moment(item.createdAt).isBetween(moment(date.from), moment(date.to))
+        })
+    }, [date, JSON.stringify(data)])
 
     return <div className="flex flex-col gap-8">
         <TripDetailModal ref={tripDetailModalRef} />
         <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
             <div className="flex flex-1">
-                <Popover modal>
+                <Popover modal open={isDateModalOpen} onOpenChange={setIsDateModalOpen}>
                     <PopoverTrigger className="flex-1">
                         <div className="flex flex-1 items-center gap-4 border py-2 px-3 -mx-2">
                             <CalendarIcon className="h-4 w-4 opacity-50 text-gray-500" />
@@ -110,12 +116,7 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
                         </div>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                            mode="range"
-                            selected={date}
-                            onSelect={(date: any) => onDateRangeSelected(date)}
-                            initialFocus
-                        />
+                        <CalendarRange showOutsideDays onNewDateApplied={onDateRangeSelected} />
                     </PopoverContent>
                 </Popover>
             </div>
