@@ -210,7 +210,7 @@ export const AddAdminsModal = forwardRef<AddAdminsModalRef, AddAdminsModalProps>
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h4 className="text-sm font-medium">First Name*</h4>
-                    <AdminInputField value={firstName} defaultValue={firstName} onChange={onFirstNameChanged} />
+                    <AdminInputField value={firstName} defaultValue={firstName} disabled={isEditMode} onChange={onFirstNameChanged} />
                 </div>
 
                 <div className="flex flex-col gap-2">
