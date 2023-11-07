@@ -16,6 +16,10 @@ import { useFetchTrips } from "@/utils/apiHooks/trips/useFetchTrips";
 import { NetworkRequestContainer } from "@/components/states/NetworkRequestContainer";
 import { TripStatus } from "@/utils/data/trip";
 import { TablePagination } from "@/components/pagination/TablePagination";
+import { Calendar } from "@/components/ui/calendar"
+import { CalendarIcon, PlusIcon } from "lucide-react"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import moment from "moment";
 
 type TripHistoryTab = {
     onSizeUpdated?: (size: number) => void,
@@ -24,10 +28,17 @@ type TripHistoryTab = {
     onTripItemClicked?: (data: Trip) => void
 }
 
+type DateRange = {
+    from: Date,
+    to?: Date
+}
+
 export const TripHistoryTab = (props: TripHistoryTab) => {
     const { type } = props
     const [page, setPage] = useState(0)
     const [searchPhrase, setSearchPhrase] = useState('')
+    const [date, setDate] = useState<DateRange>({ from: new Date(), to: new Date() })
+
     const { isLoading, data, count, fetchActiveTrips, fetchAllTrips, fetchCancelledTrips, fetchCompleteTrips, error } = useFetchTrips()
 
     const tripDetailModalRef = useRef<TripDetailModalRef>(null)
@@ -36,8 +47,14 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
         tripDetailModalRef.current?.open({ data })
     }
 
-    function onPhraseChanged(event: ChangeEvent<HTMLInputElement>) {
-        setSearchPhrase(event.target.value)
+    // function onPhraseChanged(event: ChangeEvent<HTMLInputElement>) {
+    //     setSearchPhrase(event.target.value)
+    // }
+
+    function onDateRangeSelected(date: DateRange) {
+        if (date) {
+            setDate(prevDate => Object.assign({}, prevDate, { from: date.from || new Date(), to: date.to || new Date() }))
+        }
     }
 
     function onPageChange(selectedItem: {
@@ -46,6 +63,12 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
         setPage(selectedItem.selected)
         // alert(selectedItem.selected)
     }
+
+    const formatDateRange = useMemo(() => {
+        const start = moment(date.from).format("DD MM, YYYY")
+        const end = moment(date.to).format("DD MM, YYYY")
+        return `From ${start} - ${end}`
+    }, [JSON.stringify(date)])
 
     useEffect(() => {
         props.onSizeUpdated?.(data.length)
@@ -78,13 +101,24 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
     return <div className="flex flex-col gap-8">
         <TripDetailModal ref={tripDetailModalRef} />
         <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
-            <TextField.Container className="flex-1 border border-gray-200">
-                <TextField.Input onChange={onPhraseChanged} placeholder="Search" />
-
-                <IconButton className="text-gray-200">
-                    <SearchIcon />
-                </IconButton>
-            </TextField.Container>
+            <div className="flex flex-1">
+                <Popover modal>
+                    <PopoverTrigger className="flex-1">
+                        <div className="flex flex-1 items-center gap-4 border py-2 px-3 -mx-2">
+                            <CalendarIcon className="h-4 w-4 opacity-50 text-gray-500" />
+                            <p className="text-gray-500 text-sm line-clamp-1">{formatDateRange}</p>
+                        </div>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                            mode="range"
+                            selected={date}
+                            onSelect={(date: any) => onDateRangeSelected(date)}
+                            initialFocus
+                        />
+                    </PopoverContent>
+                </Popover>
+            </div>
 
             <div className="border rounded-md px-2 pr-3 py-2">
                 <div onClick={props.onInitiateTrip} className="flex items-center gap-3 cursor-pointer text-sm text-text-normal font-semibold">
