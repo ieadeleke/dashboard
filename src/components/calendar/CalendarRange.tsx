@@ -2,7 +2,7 @@ import { Calendar, CalendarProps } from "@/components/ui/calendar"
 import { useState } from "react";
 import Button from "../buttons";
 
-type DateRange = {
+export type DateRange = {
     from: Date,
     to?: Date
 }

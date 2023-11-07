@@ -1,5 +1,5 @@
 import DashboardLayout from "@/components/layout/dashboard";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import SEO from "@/components/SEO";
 import { Table, TableHead, TableHeader } from "@/components/ui/table"
 import {
@@ -13,11 +13,24 @@ import Loading from "@/components/states/Loading";
 import Error from "@/components/states/Error";
 import { useState } from "react";
 import { TablePagination } from "@/components/pagination/TablePagination";
-
+import { CalendarIcon, PlusIcon } from "lucide-react"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import moment from "moment";
+import { CalendarRange, DateRange } from "@/components/calendar/CalendarRange";
+import Empty from "@/components/states/Empty";
 
 export default function PassengersPage() {
   const [page, setPage] = useState(0)
-  const { isLoading, error, data, count, fetchAdminActivities } = useFetchAdminActivities()
+  const { isLoading, error, data: adminActivities, count, fetchAdminActivities } = useFetchAdminActivities()
+  const [date, setDate] = useState<DateRange>()
+  const [isDateModalOpen, setIsDateModalOpen] = useState(false)
+
+  const formatDateRange = useMemo(() => {
+    if (!date) return 'Tap to filter by date range'
+    const start = moment(date.from).format("MMM D, YYYY")
+    const end = moment(date.to).format("MMM D, YYYY")
+    return `From ${start} - ${end}`
+  }, [JSON.stringify(date)])
 
   function fectchData() {
     fetchAdminActivities({ page })
@@ -29,9 +42,25 @@ export default function PassengersPage() {
     setPage(selectedItem.selected)
   }
 
+  function onDateRangeSelected(date: DateRange) {
+    if (date) {
+      setDate(prevDate => Object.assign({}, prevDate, { from: date.from || new Date(), to: date.to || new Date() }))
+    }
+    setIsDateModalOpen(false)
+  }
+
   useEffect(() => {
     fectchData()
   }, [page])
+
+  const data = useMemo(() => {
+    if (!date) {
+      return adminActivities
+    }
+    return adminActivities.filter((item) => {
+      return moment(item.createdAt).isBetween(moment(date.from), moment(date.to))
+    })
+  }, [date, JSON.stringify(adminActivities)])
 
   return (
     <DashboardLayout>
@@ -67,6 +96,20 @@ export default function PassengersPage() {
             </div>
           </div> */}
 
+          <div className="flex flex-1">
+            <Popover modal open={isDateModalOpen} onOpenChange={setIsDateModalOpen}>
+              <PopoverTrigger className="flex-1">
+                <div className="flex flex-1 items-center gap-4 border py-2 px-3 -mx-2">
+                  <CalendarIcon className="h-4 w-4 opacity-50 text-gray-500" />
+                  <p className="text-gray-500 text-sm line-clamp-1">{formatDateRange}</p>
+                </div>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <CalendarRange showOutsideDays onNewDateApplied={onDateRangeSelected} />
+              </PopoverContent>
+            </Popover>
+          </div>
+
           <div>
             <Table>
               <TableHeader>
@@ -101,6 +144,8 @@ export default function PassengersPage() {
               </TableBody>
               )}
             </Table>
+
+            {data.length == 0 && <Empty title="Nothing to show" message="No logs found" />}
           </div>
         </div>
 

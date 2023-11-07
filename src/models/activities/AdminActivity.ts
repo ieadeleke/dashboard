@@ -5,5 +5,6 @@ export type AdminActivity = {
     profile_image: string,
     lastname: string,
     email: string
-    event: "Login"
+    event: "Login",
+    createdAt: string
 }

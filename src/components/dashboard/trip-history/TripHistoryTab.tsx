@@ -21,7 +21,7 @@ import { CalendarIcon, PlusIcon } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import moment from "moment";
 import Button from "@/components/buttons";
-import { CalendarRange } from "@/components/calendar/CalendarRange";
+import { CalendarRange, DateRange } from "@/components/calendar/CalendarRange";
 import Empty from "@/components/states/Empty";
 
 type TripHistoryTab = {
@@ -29,11 +29,6 @@ type TripHistoryTab = {
     onInitiateTrip?: () => void,
     type?: TripStatus,
     onTripItemClicked?: (data: Trip) => void
-}
-
-type DateRange = {
-    from: Date,
-    to?: Date
 }
 
 export const TripHistoryTab = (props: TripHistoryTab) => {
