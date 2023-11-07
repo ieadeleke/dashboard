@@ -40,11 +40,13 @@ export const useApi = () => {
 
                 } else if (parsedError.status == 401 && !token) {
                     setError(parsedError.message)
-                } else {
                     Router.push("/login")
                     AuthToken().clearToken()
+                } else {
+                    setError(parsedError.message)
+                    // Router.push("/login")
+                    // AuthToken().clearToken()
                 }
-                setError(parsedError.message)
             } finally {
                 setIsLoading(false)
                 isFetching.current = false
