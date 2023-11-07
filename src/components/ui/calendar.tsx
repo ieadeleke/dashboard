@@ -41,11 +41,11 @@ function Calendar({
         ),
         day_selected:
           "bg-primary !text-white hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-        day_today: "bg-red-500 !text-white",
+        day_today: "bg-transparent text-primary",
         day_outside: "text-muted-foreground text-black opacity-50",
         day_disabled: "text-muted-foreground opacity-50",
         day_range_middle:
-          "aria-selected:bg-primary aria-selected:text-white",
+          "aria-selected:bg-primary !text-white aria-selected:text-white",
         day_hidden: "invisible",
         ...classNames,
       }}
