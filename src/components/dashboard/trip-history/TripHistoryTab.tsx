@@ -22,6 +22,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import moment from "moment";
 import Button from "@/components/buttons";
 import { CalendarRange } from "@/components/calendar/CalendarRange";
+import Empty from "@/components/states/Empty";
 
 type TripHistoryTab = {
     onSizeUpdated?: (size: number) => void,
@@ -148,11 +149,11 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
 
         <div className="min-h-[400px]">
             <NetworkRequestContainer isLoading={isLoading} error={error}>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {trips.length > 0 ? <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {trips.map((trip) => <div onClick={() => handleOnTripItemClicked(trip)} key={trip._id}>
                         <TripHistoryItem data={trip} />
                     </div>)}
-                </div>
+                </div> : <Empty title="Nothing to show" message="No trips found" />}
             </NetworkRequestContainer>
 
         </div>
