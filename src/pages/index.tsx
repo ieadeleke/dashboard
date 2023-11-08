@@ -7,14 +7,22 @@ import SEO from "@/components/SEO";
 import { GetServerSideProps } from "next";
 import { ActivitiesService } from "@/utils/services/activity";
 import { GetDashboardStatistics } from "@/models/activities/ActivitiesResponse";
-import { handleServerSideRedirect } from "@/utils/request/helpers/handleServerSideRedirect";
+import { errorHandler } from "@/utils/errorHandler";
+import Unauthorized from "@/components/states/UnAuthorized";
 
 type HomeProps = {
-  data: GetDashboardStatistics
+  data: GetDashboardStatistics,
+  unauthorized?: boolean
 }
 
 export default function Home(props: HomeProps) {
   const { data } = props
+
+  if (props.unauthorized) {
+    return <DashboardLayout>
+      <Unauthorized />
+    </DashboardLayout>
+  }
 
   return (
     <DashboardLayout>
@@ -40,10 +48,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
       }
     }
   } catch (error) {
-    return handleServerSideRedirect(error, () => {
+    const parsedError = errorHandler(error)
+    if (parsedError.status == 401) {
       return {
-        notFound: true
+        props: {
+          unauthorized: true
+        }
       }
-    })
+    }
+    throw error
   }
 }
