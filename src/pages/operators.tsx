@@ -31,6 +31,7 @@ import { Operator } from "@/models/operators";
 import { GlobalActionContext } from "@/context/GlobalActionContext";
 import { LoadingModal } from "@/components/states/LoadingModal";
 import { TablePagination } from "@/components/pagination/TablePagination";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 export default function Operators() {
   const addOperatorsRef = useRef<AddOperatorsModalRef>(null)
@@ -75,6 +76,13 @@ export default function Operators() {
       setOperators((prevAdmins) => prevAdmins.map((admin) => admin._id == unSuspendData._id ? unSuspendData : admin))
     }
   }, [unSuspendData])
+
+  useEffect(() => {
+    if (suspendData) {
+      showSnackBar({ severity: 'success', message: `${suspendData.firstName} ${suspendData.lastName} has been suspended` })
+      setOperators((prevAdmins) => prevAdmins.map((admin) => admin._id == suspendData._id ? suspendData : admin))
+    }
+  }, [suspendData])
 
   useEffect(() => {
     setError(suspendError || unSuspendError)
@@ -211,19 +219,20 @@ export default function Operators() {
                   </TableCell>
                   {/* <TableCell>Lorem</TableCell> */}
                   <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger>
-                        <div className="flex">
-                          <IconButton className="text-primary border border-primary rounded-sm">
-                            <MoreHorizontalIcon />
-                          </IconButton>
-                        </div>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuItem onClick={() => onSuspendAdmin(item)}>Suspend Operator</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => onUnSuspendOperator(item)}>Unsuspend Operator</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <Popover>
+                      <PopoverTrigger>
+                        <IconButton className="text-primary border border-primary rounded-sm">
+                          <MoreHorizontalIcon />
+                        </IconButton>
+                      </PopoverTrigger>
+
+                      <PopoverContent className="w-auto px-0 py-1">
+                      <p className="text-sm cursor-pointer py-1 hover:bg-gray-50 px-2" onClick={() => onSuspendAdmin(item)}>Suspend Operator</p>
+
+                      <p className="text-sm cursor-pointer py-1 hover:bg-gray-50 px-2" onClick={() => onUnSuspendOperator(item)}>Unsuspend Operator</p>
+                        
+                      </PopoverContent>
+                    </Popover>
                   </TableCell>
                 </TableRow>
 
