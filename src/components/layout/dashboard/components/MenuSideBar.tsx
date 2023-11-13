@@ -23,7 +23,11 @@ export const MenuSideBar = () => {
         confirmationDialogRef.current?.show({
             data: {
                 title: "Are you sure you want to logout?",
-                description: "Your active session will be removed from this device"
+                description: "Your active session will be removed from this device",
+                label: {
+                    confirm: "Yes",
+                    cancel: "No"
+                }
             },
             onCancel: () => {
                 confirmationDialogRef.current?.dismiss()
