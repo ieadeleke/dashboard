@@ -5,6 +5,7 @@ import HistoryIcon from '@/assets/icons/ic_history.svg'
 import { StatItem } from "@/components/dashboard/stats/StatItem";
 import Button from "@/components/buttons";
 import { GetDashboardStatistics } from '@/models/activities/ActivitiesResponse';
+import Link from 'next/link';
 
 type StatsProps = {
     data: GetDashboardStatistics
@@ -27,9 +28,15 @@ export const Stats = (props: StatsProps) => {
 
         <div className="w-full grid grid-cols-1 gap-2 px-2 lg:grid-cols-3">
 
-            <StatItem icon={ShipLine} name="Boats" count={data.totalBoat.toString()} colorAccent={'#EAFFE1'} color={`#00BD09`} />
-            <StatItem icon={CautionIcon} name="Incidents" count={data.totalIncident.toString()} colorAccent={'#FFFBED'} color={`#FF5C00`} />
-            <StatItem icon={HistoryIcon} name="Total Trips" count={data.totalTrip.toString()} colorAccent={'#F3F9FF'} color={`#428BC1`} />
+            <Link href="/fleets">
+                <StatItem icon={ShipLine} name="Boats" count={data.totalBoat.toString()} colorAccent={'#EAFFE1'} color={`#00BD09`} />
+            </Link>
+            <Link href="/incidents">
+                <StatItem icon={CautionIcon} name="Incidents" count={data.totalIncident.toString()} colorAccent={'#FFFBED'} color={`#FF5C00`} />
+            </Link>
+            <Link href="/trip-history">
+                <StatItem icon={HistoryIcon} name="Total Trips" count={data.totalTrip.toString()} colorAccent={'#F3F9FF'} color={`#428BC1`} />
+            </Link>
             {/* <StatItem icon={UsersIcon} name="Passengers" count={data.totalUser.toString()} colorAccent={'#FCF3FF'} color={`#9300D9`} /> */}
         </div>
     </div>
