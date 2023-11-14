@@ -32,9 +32,29 @@ import { GlobalActionContext } from "@/context/GlobalActionContext";
 import { LoadingModal } from "@/components/states/LoadingModal";
 import { TablePagination } from "@/components/pagination/TablePagination";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useRouter } from "next/router";
 
-export default function Operators() {
-  const addOperatorsRef = useRef<AddOperatorsModalRef>(null)
+
+const tabs = [
+  {
+    name: "Captains",
+    value: "captains"
+  },
+  {
+    name: "DeckHands",
+    value: "deckhands"
+  }
+]
+
+type TabBodyProps = {
+  tab: "captains" | "deckhands",
+  addOperator?: () => void,
+  updateSize?: (size: number) => void
+}
+
+
+function TabBody(props: TabBodyProps) {
   const { isLoading: isFetchLoading, count, error: isFetchError, data: _data, fetchOperators } = useFetchOperators()
   const [page, setPage] = useState(0)
   const confirmationDialogRef = useRef<ConfirmationAlertDialogRef>(null)
@@ -64,12 +84,6 @@ export default function Operators() {
     setIsLoading(isUnSuspendLoading || isSuspendLoading)
   }, [isUnSuspendLoading, isSuspendLoading])
 
-  //   useEffect(() => {
-  //     if (isFetchError == 'Unauthorized' || isFetchError == 'Not authenticated') {
-  //         showSnackBar({ severity: 'error', message: isFetchError })
-  //     }
-  // }, [isFetchError])
-
   useEffect(() => {
     if (unSuspendData) {
       showSnackBar({ severity: 'success', message: `${unSuspendData.firstName} ${unSuspendData.lastName} has been unsuspended` })
@@ -87,10 +101,6 @@ export default function Operators() {
   useEffect(() => {
     setError(suspendError || unSuspendError)
   }, [suspendError, unSuspendError])
-
-  function addOperator() {
-    addOperatorsRef.current?.open()
-  }
 
   function onChangeText(event: ChangeEvent<HTMLInputElement>) {
     setSearchWord(event.target.value)
@@ -144,124 +154,176 @@ export default function Operators() {
   }
 
   return (
-    <DashboardLayout>
-      <div className="flex flex-col py-8">
-        <SEO title="Laswa | Operators" />
-        <AddOperatorsModal ref={addOperatorsRef} />
-        <ConfirmationAlertDialog ref={confirmationDialogRef} />
-        <LoadingModal isVisible={isLoading} />
+    <div className="flex flex-col">
+      <ConfirmationAlertDialog ref={confirmationDialogRef} />
+      <LoadingModal isVisible={isLoading} />
 
-        <div className="flex flex-col gap-6">
-          <h1 className="text-2xl font-bold">Operators <span className="text-primary">({operatorData.length})</span></h1>
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
+          <TextField.Container className="flex-1 border border-gray-200">
+            <TextField.Input onChange={onChangeText} placeholder="Search" />
 
-          <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
-            <TextField.Container className="flex-1 border border-gray-200">
-              <TextField.Input onChange={onChangeText} placeholder="Search" />
+            <IconButton className="text-gray-200">
+              <SearchIcon />
+            </IconButton>
+          </TextField.Container>
 
-              <IconButton className="text-gray-200">
-                <SearchIcon />
-              </IconButton>
-            </TextField.Container>
-
-            <div onClick={addOperator} className="border cursor-pointer rounded-md py-2 px-2 pr-3">
-              <div className="flex items-center gap-2 text-sm text-text-normal font-semibold">
-                <PlusIcon className="text-gray-300" />
-                <p>Add Operators</p>
-              </div>
+          {/* <div onClick={props.addOperator} className="border cursor-pointer rounded-md py-2 px-2 pr-3">
+            <div className="flex items-center gap-2 text-sm text-text-normal font-semibold">
+              <PlusIcon className="text-gray-300" />
+              <p>Add Operators</p>
             </div>
+          </div> */}
 
-            <div className="border rounded-md py-2">
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <div className="flex items-center gap-3 text-sm text-text-normal font-semibold">
-                    <p>Filter</p>
-                    <ChevronDown className="text-gray-300" />
-                  </div>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuLabel>Suspend Admin</DropdownMenuLabel>
-                  <DropdownMenuItem>Action 2</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+          <div className="border rounded-md py-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <div className="flex items-center gap-3 text-sm text-text-normal font-semibold">
+                  <p>Filter</p>
+                  <ChevronDown className="text-gray-300" />
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Suspend Admin</DropdownMenuLabel>
+                <DropdownMenuItem>Action 2</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
+        </div>
 
-          <div className="min-h-[500px]">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[100px]">
-                    <div className="flex">
-                      <CheckBox />
-                    </div>
-                  </TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>{`Owner's Name`}</TableHead>
-                  {/* <TableHead></TableHead>
+        <div className="min-h-[500px]">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]">
+                  <div className="flex">
+                    <CheckBox />
+                  </div>
+                </TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>{`Owner's Name`}</TableHead>
+                {/* <TableHead></TableHead>
                   <TableHead></TableHead> */}
-                </TableRow>
-              </TableHeader>
+              </TableRow>
+            </TableHeader>
 
-              {operatorData.map((item) => <TableBody key={item._id} className="bg-white">
-                <TableRow>
-                  <TableCell className="font-medium">
-                    <div className="flex items-center">
-                      <CheckBox />
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {item.firstName}
-                  </TableCell>
-                  <TableCell>{item.email}</TableCell>
-                  <TableCell>
-                    {item.lastName}
-                  </TableCell>
-                  {/* <TableCell>Lorem</TableCell> */}
-                  <TableCell>
-                    <Popover>
-                      <PopoverTrigger>
-                        <IconButton className="text-primary border border-primary rounded-sm">
-                          <MoreHorizontalIcon />
-                        </IconButton>
-                      </PopoverTrigger>
+            {operatorData.map((item) => <TableBody key={item._id} className="bg-white">
+              <TableRow>
+                <TableCell className="font-medium">
+                  <div className="flex items-center">
+                    <CheckBox />
+                  </div>
+                </TableCell>
+                <TableCell>
+                  {item.firstName}
+                </TableCell>
+                <TableCell>{item.email}</TableCell>
+                <TableCell>
+                  {item.lastName}
+                </TableCell>
+                {/* <TableCell>Lorem</TableCell> */}
+                <TableCell>
+                  <Popover>
+                    <PopoverTrigger>
+                      <IconButton className="text-primary border border-primary rounded-sm">
+                        <MoreHorizontalIcon />
+                      </IconButton>
+                    </PopoverTrigger>
 
-                      <PopoverContent className="w-auto px-0 py-1">
+                    <PopoverContent className="w-auto px-0 py-1">
                       <p className="text-sm cursor-pointer py-1 hover:bg-gray-50 px-2" onClick={() => onSuspendAdmin(item)}>Suspend Operator</p>
 
                       <p className="text-sm cursor-pointer py-1 hover:bg-gray-50 px-2" onClick={() => onUnSuspendOperator(item)}>Unsuspend Operator</p>
-                        
-                      </PopoverContent>
-                    </Popover>
-                  </TableCell>
-                </TableRow>
 
-              </TableBody>)}
-            </Table>
-            {isFetchLoading ? <Loading className="h-[400px]" /> : isFetchError ? <Error onRetry={fetchOperators} className="h-[400px]" /> : null}
-          </div>
-        </div>
+                    </PopoverContent>
+                  </Popover>
+                </TableCell>
+              </TableRow>
 
-
-        <div className="flex mt-8 justify-center">
-          <TablePagination
-            breakLabel="..."
-            nextLabel=">"
-            onPageChange={onPageChange}
-            pageRangeDisplayed={5}
-            currentPage={page}
-            pageCount={Math.max(0, count / 20)}
-            // pageCount={1}
-            className="flex gap-4"
-            nextClassName="text-gray-500"
-            previousClassName="text-gray-500"
-            pageClassName="flex w-8 h-7 bg-white justify-center items-center text-sm text-gray-500 rounded-sm outline outline-2 outline-gray-100 text-center"
-            activeClassName="!bg-primary text-white !outline-none"
-            previousLabel="<"
-            renderOnZeroPageCount={null}
-          />
+            </TableBody>)}
+          </Table>
+          {isFetchLoading ? <Loading className="h-[400px]" /> : isFetchError ? <Error onRetry={fetchOperators} className="h-[400px]" /> : null}
         </div>
       </div>
+
+
+      <div className="flex mt-8 justify-center">
+        <TablePagination
+          breakLabel="..."
+          nextLabel=">"
+          onPageChange={onPageChange}
+          pageRangeDisplayed={5}
+          currentPage={page}
+          pageCount={Math.max(0, count / 20)}
+          // pageCount={1}
+          className="flex gap-4"
+          nextClassName="text-gray-500"
+          previousClassName="text-gray-500"
+          pageClassName="flex w-8 h-7 bg-white justify-center items-center text-sm text-gray-500 rounded-sm outline outline-2 outline-gray-100 text-center"
+          activeClassName="!bg-primary text-white !outline-none"
+          previousLabel="<"
+          renderOnZeroPageCount={null}
+        />
+      </div>
+    </div>
+  )
+}
+
+
+export default function Operators() {
+  const addOperatorsRef = useRef<AddOperatorsModalRef>(null)
+  const router = useRouter()
+  const [activeTab, setActiveTab] = useState<string>()
+  const [size, setSize] = useState(0)
+
+  useEffect(() => {
+    const tab = router.query.tab as string | undefined
+    if (!tab) {
+      setActiveTab(`captains`)
+    } else setActiveTab(tab)
+  }, [router.query])
+
+  function addOperator() {
+    addOperatorsRef.current?.open()
+  }
+
+
+  function onTabValueChanged(value: string) {
+    router.push(`/operators?tab=${value}`)
+  }
+
+  return (
+    <DashboardLayout>
+      <Tabs value={activeTab} onValueChange={onTabValueChanged} className="flex flex-col py-8">
+        <SEO title="Laswa | Operators" />
+        <AddOperatorsModal ref={addOperatorsRef} />
+
+        <div className="flex flex-col gap-6">
+
+          <h1 className="text-2xl font-bold">Operators<span className="text-primary">({size})</span></h1>
+
+          <div>
+            <TabsList className="flex flex-wrap justify-start bg-white h-auto py-0 px-0">
+              {tabs.map((item) => <div className={``} key={item.value}>
+                <TabsTrigger className="mx-0 w-36 py-4 data-[state=active]:bg-[#F9F9FE] text-gray-500 rounded-none data-[state=active]:text-primary data-[state=active]:border-b-2 border-b-primary" value={item.value}>{item.name}</TabsTrigger>
+              </div>)}
+            </TabsList>
+          </div>
+
+          <div className="mt-4">
+            <TabsContent value="captains">
+              <TabBody addOperator={addOperator} tab="captains" updateSize={setSize} />
+            </TabsContent>
+
+            <TabsContent value="deckhands">
+              <TabBody addOperator={addOperator} tab="deckhands" updateSize={setSize} />
+            </TabsContent>
+          </div>
+
+
+        </div>
+      </Tabs>
     </DashboardLayout>
   )
 }
