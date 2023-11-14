@@ -2,7 +2,7 @@ import { IconButton } from "@/components/buttons/IconButton";
 import { TextField } from "@/components/input/InputText";
 import DashboardLayout from "@/components/layout/dashboard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ChevronDown, MoreHorizontalIcon, PlusIcon, SearchIcon } from "lucide-react";
+import { ChevronDown, DownloadIcon, MoreHorizontalIcon, PlusIcon, SearchIcon, UploadIcon } from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -38,6 +38,7 @@ import { Trip } from "@/models/trips";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import ReactPaginate from 'react-paginate';
 import { TablePagination } from "@/components/pagination/TablePagination";
+import { FilterFleetModal, FilterFleetModalRef, FilterOption } from "@/components/dashboard/fleet/FilterFleetModal";
 
 type TableDataListProps = {
     data: Fleet,
@@ -178,15 +179,6 @@ export const FleetTableDataList = (props: TableDataListProps) => {
                             <p className="text-sm cursor-pointer py-1 hover:bg-gray-50 px-2" onClick={handleViewBoatDetails}>Fleet Details</p>
                         </PopoverContent>
                     </Popover>
-                    // <DropdownMenu>
-                    //     <DropdownMenuTrigger>
-
-                    //     </DropdownMenuTrigger>
-                    //     <DropdownMenuContent>
-                    //         {data.status != 'active' ? <DropdownMenuItem onClick={handleVerifyFleet}>Approve Fleet</DropdownMenuItem> : <DropdownMenuItem>Suspend Fleet</DropdownMenuItem>}
-                    //         <DropdownMenuItem onClick={handleViewBoatDetails}>Fleet Details</DropdownMenuItem>
-                    //     </DropdownMenuContent>
-                    // </DropdownMenu>
                 }
 
             </TableCell>
@@ -200,6 +192,8 @@ const TabBody = (props: TabBodyProps) => {
     const [page, setPage] = useState(0)
     const { showSnackBar } = useContext(GlobalActionContext)
     const { tab } = props
+    const [filterOption, setFilterOption] = useState<FilterOption>()
+    const filerModalRef = useRef<FilterFleetModalRef>(null)
     const BoatDetailModalRef = useRef<BoatDetailModalRef>(null)
 
     const data = useMemo(() => _data.filter((item) => {
@@ -222,6 +216,15 @@ const TabBody = (props: TabBodyProps) => {
         setPage(selectedItem.selected)
     }
 
+    function openFilterModal() {
+        filerModalRef.current?.open({
+            selectedOption: filterOption,
+            onOptionSelected: (option) => {
+                setFilterOption(option)
+                filerModalRef.current?.close()
+            }
+        })
+    }
 
     function onViewBoatDetails(fleet: Fleet) {
         BoatDetailModalRef.current?.open({
@@ -249,6 +252,7 @@ const TabBody = (props: TabBodyProps) => {
 
     return <div>
         <BoatDetailModal ref={BoatDetailModalRef} />
+        <FilterFleetModal ref={filerModalRef} />
         <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
             <TextField.Container className="flex-1 border border-gray-200">
                 <TextField.Input className="h-10" placeholder="Search" />
@@ -258,27 +262,41 @@ const TabBody = (props: TabBodyProps) => {
                 </IconButton>
             </TextField.Container>
 
-            <div onClick={props.addFleet} className="cursor-pointer flex items-center gap-1 text-text-normal font-semibold border rounded-md py-2 px-2">
-                <PlusIcon className="text-gray-500 w-4 h-4" />
-                <p className="text-sm">Add New Fleet</p>
-            </div>
+            <Popover>
+                <PopoverTrigger>
+                    <div className="cursor-pointer flex items-center gap-1 text-text-normal font-semibold border rounded-md py-2 px-2">
+                        <PlusIcon className="text-gray-500 w-4 h-4" />
+                        <p className="text-sm">Add New Fleet</p>
+                    </div>
+                </PopoverTrigger>
+
+                <PopoverContent className="flex flex-col w-auto px-2 py-1 gap-3">
+                    <div className="flex items-center px-2 gap-2 cursor-pointer py-2 hover:bg-gray-100 rounded-md">
+                        <PlusIcon className="text-primary" />
+                        <p onClick={props.addFleet}>Add Single Fleet</p>
+                    </div>
+
+                    <p className="text-gray-500 text-xs font-medium px-1">Add Multiple</p>
+
+                    <div className="flex items-center px-2 gap-2 cursor-pointer py-2 hover:bg-gray-100 rounded-md">
+                        <UploadIcon className="text-primary" />
+                        <p>Upload (Excel Template)</p>
+                    </div>
+
+                    <div className="flex items-center px-2 gap-2 cursor-pointer py-2 hover:bg-gray-100 rounded-md">
+                        <DownloadIcon className="text-primary" />
+                        <p>Download Excel Template</p>
+                    </div>
+
+                </PopoverContent>
+            </Popover>
 
 
             <div className="border rounded-md">
-                <DropdownMenu>
-                    <DropdownMenuTrigger>
-                        <div className="flex items-center gap-3 text-text-normal font-semibold">
-                            <p className="text-sm">Filter</p>
-                            <ChevronDown className="text-gray-500" />
-                        </div>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        <DropdownMenuLabel>Action 1</DropdownMenuLabel>
-                        <DropdownMenuItem>Action 2</DropdownMenuItem>
-                        <DropdownMenuItem>Action 3</DropdownMenuItem>
-                        <DropdownMenuItem>Action 4</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <div onClick={openFilterModal} className="flex px-2 py-1 items-center gap-3 text-text-normal font-semibold cursor-pointer">
+                    <p className="text-sm">Filter</p>
+                    <ChevronDown className="text-gray-500" />
+                </div>
             </div>
         </div>
 

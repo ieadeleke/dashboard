@@ -1,7 +1,9 @@
 import { Passenger } from "../passengers";
 
+type TripStatus = "Arrived" | "Cancel" | "Onboarding" | "On-Transit"
+
 export type Trip = {
-    status: string,
+    status: TripStatus,
     confirmManifest: boolean,
     _id: string,
     tripOrigin: string,
