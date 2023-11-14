@@ -23,6 +23,7 @@ import moment from "moment";
 import Button from "@/components/buttons";
 import { CalendarRange, DateRange } from "@/components/calendar/CalendarRange";
 import Empty from "@/components/states/Empty";
+import { useCallback } from "react";
 
 type TripHistoryTab = {
     onSizeUpdated?: (size: number) => void,
@@ -38,7 +39,7 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
     const [date, setDate] = useState<DateRange>()
     const [isDateModalOpen, setIsDateModalOpen] = useState(false)
 
-    const { isLoading, data, count, fetchActiveTrips, fetchAllTrips, fetchCancelledTrips, fetchCompleteTrips, error } = useFetchTrips()
+    const { isLoading, data, count, fetchActiveTrips, fetchAllTrips, fetchCancelledTrips, fetchCompleteTrips, fetchPendingTrips, error } = useFetchTrips()
 
     const tripDetailModalRef = useRef<TripDetailModalRef>(null)
 
@@ -75,7 +76,7 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
         props.onSizeUpdated?.(data.length)
     }, [data.length])
 
-    useEffect(() => {
+    const fetchData = useCallback(() => {
         switch (type) {
             case 'active':
                 fetchActiveTrips({ page })
@@ -86,9 +87,16 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
             case 'complete':
                 fetchCompleteTrips({ page })
                 break;
+            case 'pending':
+                fetchPendingTrips({ page })
+                break;
             default:
                 fetchAllTrips({ page })
         }
+    }, [page, type])
+
+    useEffect(() => {
+        fetchData()
     }, [type, page])
 
     const trips = useMemo(() => {
@@ -143,7 +151,7 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
         </div>
 
         <div className="min-h-[400px]">
-            <NetworkRequestContainer isLoading={isLoading} error={error}>
+            <NetworkRequestContainer onRetry={fetchData} isLoading={isLoading} error={error}>
                 {trips.length > 0 ? <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {trips.map((trip) => <div onClick={() => handleOnTripItemClicked(trip)} key={trip._id}>
                         <TripHistoryItem data={trip} />

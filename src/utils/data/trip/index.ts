@@ -6,7 +6,7 @@ export type TripStatus = "active" | "complete" | "canceled" | "pending"
 export function formatTrip(trip: Trip) {
     return {
         ...trip,
-        status: trip.status == 'Active' ? "active" : trip.status == 'Cancelled' ? 'canceled' : trip.status == 'Complete' ? "complete" : "pending"
+        status: trip.status == 'On-Transit' ? "active" : trip.status == 'Cancel' ? 'canceled' : trip.status == 'Arrived' ? "complete" : "pending"
     }
 }
 

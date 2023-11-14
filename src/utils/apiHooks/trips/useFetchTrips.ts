@@ -44,6 +44,15 @@ export const useFetchTrips = () => {
         }
     }
 
+    async function fetchPendingTrips(params?: GetTripsRequestParams) {
+        setData([])
+        const response = await execute(async () => await TripService().getPendingTrips(params))
+        if (response) {
+            setData(response.Trips)
+            setCount(response.count)
+        }
+    }
 
-    return { isLoading, error, data, count, fetchCompleteTrips, fetchCancelledTrips, fetchAllTrips, fetchActiveTrips }
+
+    return { isLoading, error, data, count, fetchCompleteTrips, fetchCancelledTrips, fetchAllTrips, fetchActiveTrips, fetchPendingTrips }
 }

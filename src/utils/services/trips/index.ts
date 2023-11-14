@@ -47,6 +47,14 @@ export function TripService(config?: RequestConfig) {
         })
     }
 
+    async function getPendingTrips(params?: GetTripsRequestParams) {
+        const { data } = await request(`api/v1/trip/admin/GetAllOnbardingTrips?page=${params?.page || 1}`, "GET")
+        const _data = data as GetTripResponse
+        return Object.assign({}, _data, {
+            Trips: formatTrips(_data.Trips)
+        })
+    }
+
     async function getCancelledTrips(params?: GetTripsRequestParams) {
         const { data } = await request(`api/v1/trip/admin/GetAllCancel?page=${params?.page || 1}`, "GET")
         const _data = data as GetTripResponse
@@ -61,6 +69,7 @@ export function TripService(config?: RequestConfig) {
         getCancelledTrips,
         getCompletedTrips,
         getActiveTrips,
+        getPendingTrips,
         getIncidentTrips
     }
 
