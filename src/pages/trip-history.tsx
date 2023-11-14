@@ -23,7 +23,7 @@ const tabs = [
     value: "canceled"
   },
   {
-    name: "Complete",
+    name: "Completed",
     value: "complete"
   }
   // {
