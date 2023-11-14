@@ -35,7 +35,7 @@ export const MenuSideBar = () => {
             onConfirm: () => {
                 confirmationDialogRef.current?.dismiss()
                 logOut()
-                location.href = "/"
+                location.href = "/login"
             }
         })
     }
