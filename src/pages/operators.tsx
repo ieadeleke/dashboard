@@ -34,6 +34,7 @@ import { TablePagination } from "@/components/pagination/TablePagination";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRouter } from "next/router";
+import { FilterOperatorModal, FilterOperatorModalRef, FilterOperatorOption } from "@/components/dashboard/operators/FilterOperatorModal";
 
 
 const tabs = [
@@ -63,8 +64,10 @@ function TabBody(props: TabBodyProps) {
   const { isLoading: isUnSuspendLoading, error: unSuspendError, data: unSuspendData, unSuspendOperator } = useUnSuspendOperator()
   const { showSnackBar } = useContext(GlobalActionContext)
   const [isLoading, setIsLoading] = useState(false)
+  const [filterOption, setFilterOption] = useState<FilterOperatorOption>()
   const [error, setError] = useState<string | null>(null)
   const [operators, setOperators] = useState<Operator[]>([])
+  const filterOperatorRef = useRef<FilterOperatorModalRef>(null)
 
   useEffect(() => {
     setOperators(_data)
@@ -153,9 +156,20 @@ function TabBody(props: TabBodyProps) {
     })
   }
 
+  function openFilterModal() {
+    filterOperatorRef.current?.open({
+      selectedOption: filterOption,
+      onOptionSelected: (option) => {
+        setFilterOption(option)
+        filterOperatorRef.current?.close()
+      }
+    })
+  }
+
   return (
     <div className="flex flex-col">
       <ConfirmationAlertDialog ref={confirmationDialogRef} />
+      <FilterOperatorModal ref={filterOperatorRef} />
       <LoadingModal isVisible={isLoading} />
 
       <div className="flex flex-col gap-6">
@@ -175,19 +189,11 @@ function TabBody(props: TabBodyProps) {
             </div>
           </div> */}
 
-          <div className="border rounded-md py-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <div className="flex items-center gap-3 text-sm text-text-normal font-semibold">
-                  <p>Filter</p>
-                  <ChevronDown className="text-gray-300" />
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>Suspend Admin</DropdownMenuLabel>
-                <DropdownMenuItem>Action 2</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+          <div onClick={openFilterModal} className="cursor-pointer border rounded-md px-2 py-2">
+            <div className="flex items-center gap-3 text-sm text-text-normal font-semibold">
+              <p>Filter</p>
+              <ChevronDown className="text-gray-300" />
+            </div>
           </div>
         </div>
 
