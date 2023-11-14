@@ -48,7 +48,7 @@ type TableDataListProps = {
 }
 
 type TabBodyProps = {
-    tab: "active" | "all" | "suspended" | "pending",
+    tab: "active" | "all" | "suspended" | "pending" | "unapproved",
     addFleet?: () => void,
     updateSize?: (size: number) => void
 }
@@ -65,6 +65,10 @@ const tabs = [
     {
         name: "Suspended",
         value: "suspended"
+    },
+    {
+        name: "Unapproved",
+        value: "unapproved"
     },
     {
         name: "Pending",
@@ -203,6 +207,8 @@ const TabBody = (props: TabBodyProps) => {
             return item.status == 'pending'
         } else if (tab == 'suspended') {
             return item.status == 'suspended'
+        } else if (tab == 'unapproved') {
+            return item.status == 'unapproved'
         } else return true
     }), [JSON.stringify(_data)])
 
@@ -397,6 +403,10 @@ export default function Fleets() {
 
                         <TabsContent value="suspended">
                             <TabBody addFleet={addFleet} tab="suspended" updateSize={setSize} />
+                        </TabsContent>
+
+                        <TabsContent value="unapproved">
+                            <TabBody addFleet={addFleet} tab="unapproved" updateSize={setSize} />
                         </TabsContent>
 
                         <TabsContent value="pending">

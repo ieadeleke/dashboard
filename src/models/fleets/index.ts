@@ -1,6 +1,6 @@
 import { User } from "../users"
 
-export type FleetStatus = "pending" | "suspended" | "active"
+export type FleetStatus = "pending" | "suspended" | "active" | "unapproved"
 
 export type Fleet = {
     status: FleetStatus,
