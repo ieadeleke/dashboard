@@ -39,12 +39,14 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import ReactPaginate from 'react-paginate';
 import { TablePagination } from "@/components/pagination/TablePagination";
 import { FilterFleetModal, FilterFleetModalRef, FilterOption } from "@/components/dashboard/fleet/FilterFleetModal";
+import { useSuspendFleet } from "@/utils/apiHooks/fleets/useSuspendFleet";
 
 type TableDataListProps = {
     data: Fleet,
     onViewBoatDetails?: (data: Fleet) => void,
     onVerifyError?: (error: string) => void,
-    onVerifySuccess?: (fleet: Fleet) => void
+    onVerifySuccess?: (fleet: Fleet) => void,
+    onSuspendSuccess?: (fleet: Fleet) => void
 }
 
 type TabBodyProps = {
@@ -79,9 +81,20 @@ const tabs = [
 
 export const FleetTableDataList = (props: TableDataListProps) => {
     const { data } = props
-    const { isLoading, error, verifyFleet, data: verifyData } = useVerifyFleet()
+    const { isLoading: isVerifyLoading, error: verifyError, verifyFleet, data: verifyData } = useVerifyFleet()
+    const { isLoading: isSuspendLoading, error: suspendError, suspendFleet, data: suspendData } = useSuspendFleet()
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null)
 
     const alertRef = useRef<IncidentAlertDialogRef>(null)
+
+    useEffect(() => {
+        setIsLoading(isSuspendLoading || isVerifyLoading)
+    }, [isSuspendLoading, isVerifyLoading])
+
+    useEffect(() => {
+        setError(suspendError || verifyError)
+    }, [suspendError, verifyError])
 
     useEffect(() => {
         if (error) {
@@ -100,6 +113,17 @@ export const FleetTableDataList = (props: TableDataListProps) => {
         }
     }, [verifyData])
 
+    useEffect(() => {
+        if (suspendData) {
+            const updatedFleet = Object.assign({}, data, { status: "suspended" })
+            fleetActions.updateFleet({
+                fleet_id: data._id,
+                data: updatedFleet
+            })
+            props.onSuspendSuccess?.(updatedFleet)
+        }
+    }, [suspendData])
+
     function handleVerifyFleet() {
         alertRef.current?.show({
             variant: "regular",
@@ -110,6 +134,23 @@ export const FleetTableDataList = (props: TableDataListProps) => {
             onConfirm: () => {
                 alertRef.current?.dismiss()
                 verifyFleet({ boatId: data._id })
+            },
+            onCancel: () => {
+                alertRef.current?.dismiss()
+            }
+        })
+    }
+
+    function handleSuspendFleet() {
+        alertRef.current?.show({
+            variant: "regular",
+            data: {
+                title: "Are you sure you want to suspend this fleet?",
+                description: "",
+            },
+            onConfirm: () => {
+                alertRef.current?.dismiss()
+                suspendFleet({ boatId: data._id })
             },
             onCancel: () => {
                 alertRef.current?.dismiss()
@@ -179,7 +220,7 @@ export const FleetTableDataList = (props: TableDataListProps) => {
                         </PopoverTrigger>
 
                         <PopoverContent className="w-auto px-0 py-1">
-                            {data.status != 'active' ? <p className="text-sm cursor-pointer py-1 hover:bg-gray-50 px-2" onClick={handleVerifyFleet}>Approve Fleet</p> : <p className="text-sm cursor-pointer py-2 hover:bg-gray-50 px-2">Suspend Fleet</p>}
+                            {data.status != 'active' ? <p className="text-sm cursor-pointer py-1 hover:bg-gray-50 px-2" onClick={handleVerifyFleet}>Approve Fleet</p> : <p className="text-sm cursor-pointer py-2 hover:bg-gray-50 px-2" onClick={handleSuspendFleet}>Suspend Fleet</p>}
                             <p className="text-sm cursor-pointer py-1 hover:bg-gray-50 px-2" onClick={handleViewBoatDetails}>Fleet Details</p>
                         </PopoverContent>
                     </Popover>
@@ -256,6 +297,10 @@ const TabBody = (props: TabBodyProps) => {
         showSnackBar({ severity: 'success', message: 'Fleet verified successfully' })
     }
 
+    function onSuspendSuccess(fleet: Fleet) {
+        showSnackBar({ severity: 'success', message: 'Fleet suspended successfully' })
+    }
+
     return <div>
         <BoatDetailModal ref={BoatDetailModalRef} />
         <FilterFleetModal ref={filerModalRef} />
@@ -323,7 +368,7 @@ const TabBody = (props: TabBodyProps) => {
                     </TableRow>
                 </TableHeader>
 
-                {data.map((item, index) => <FleetTableDataList key={index} data={item} onViewBoatDetails={onViewBoatDetails} onVerifyError={onVerifyError} onVerifySuccess={onVerifySuccess} />)}
+                {data.map((item, index) => <FleetTableDataList key={index} data={item} onViewBoatDetails={onViewBoatDetails} onVerifyError={onVerifyError} onVerifySuccess={onVerifySuccess} onSuspendSuccess={onSuspendSuccess} />)}
             </Table>
             {isLoading ? <Loading className="h-[400px]" /> : error ? <Error onRetry={fetchAllFleets} className="h-[400px]" /> : null}
         </div>

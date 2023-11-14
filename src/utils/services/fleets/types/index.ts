@@ -20,7 +20,15 @@ export type VerifyFleetResponse = ApiResponse & {
 
 }
 
+export type SuspendFleetResponse = ApiResponse & {
+
+}
+
 export type VerifyFleetParams = {
+    boatId: string
+}
+
+export type SuspendFleetParams = {
     boatId: string
 }
 
