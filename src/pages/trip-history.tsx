@@ -25,11 +25,11 @@ const tabs = [
   {
     name: "Complete",
     value: "complete"
-  },
-  {
-    name: "Pending",
-    value: "pending"
   }
+  // {
+  //   name: "Pending",
+  //   value: "pending"
+  // }
 ]
 
 const TRIP_ACTIVITIES = "laswa/TripActivities"
@@ -103,9 +103,9 @@ export default function TripHistory() {
             <TripHistoryTab onSizeUpdated={setSize} onInitiateTrip={initiateTrip} type={"complete"} />
           </TabsContent>
 
-          <TabsContent value="pending">
+          {/* <TabsContent value="pending">
             <TripHistoryTab onSizeUpdated={setSize} onInitiateTrip={initiateTrip} type={"pending"} />
-          </TabsContent>
+          </TabsContent> */}
 
         </div>
       </Tabs>
