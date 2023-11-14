@@ -22,8 +22,9 @@ import { FleetTableDataList } from "./fleets";
 import { useEffect, useRef, useState } from "react";
 import SEO from "@/components/SEO";
 import { Fleet } from "@/models/fleets";
-import OperatorsTab from "@/components/dashboard/operators/tabs/OperatorsTab";
+import OperatorsTab from "@/components/dashboard/incidents/tabs/OperatorsTab";
 import { AddIncidentModal, AddIncidentModalRef } from "@/components/dashboard/incidents/AddIncidentModal";
+import OtherIncidents from "@/components/dashboard/incidents/tabs/OtherIncidents";
 
 const tabs = [
   {
@@ -46,7 +47,7 @@ export default function IndidentsPage() {
     // setData(fleets)
   }, [])
 
-  function addNewIncident(){
+  function addNewIncident() {
     addIncidentModalRef.current?.open()
   }
 
@@ -71,7 +72,7 @@ export default function IndidentsPage() {
 
 
         <TabsContent value="others">
-
+          <OtherIncidents addNewIncident={addNewIncident} />
         </TabsContent>
       </Tabs>
     </DashboardLayout>
