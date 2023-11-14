@@ -64,17 +64,17 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     const token = AuthToken().retrieveToken(req)
     if (parsedError.status == 401 && token) {
       return {
-        props: {
-          unauthorized: true
-        }
-      }
-    }else if (parsedError.status == 401) {
-      return {
         redirect: {
           destination: '/login'
         },
         props: {
-          
+
+        }
+      }
+    } else if (parsedError.status == 403) {
+      return {
+        props: {
+          unauthorized: true
         }
       }
     }
