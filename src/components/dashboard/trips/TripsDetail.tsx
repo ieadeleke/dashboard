@@ -62,7 +62,7 @@ export const TripDetailModal = forwardRef<TripDetailModalRef, TripDetailModalPro
                 {trip && <div className="flex flex-col gap-6">
                     <div className="flex items-center">
                         <div className="flex flex-col gap-2">
-                            <p className="font-bold">Ship ID</p>
+                            <p className="font-bold">Trip ID</p>
                             <p className="text-sm">{trip._id}</p>
                         </div>
                         <div className="flex-1" />

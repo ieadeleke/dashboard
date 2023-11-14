@@ -29,7 +29,7 @@ export const TripHistoryItem = (props: TripHistoryProps) => {
             <Divider className="bg-gray-200" />
 
             <div className="flex items-center">
-                <p>Ship ID</p>
+                <p>Trip ID</p>
                 <div className="flex-1" />
                 <TripHistoryStatusChip status={data.status as TripStatus} />
             </div>
