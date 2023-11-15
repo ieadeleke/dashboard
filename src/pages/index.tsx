@@ -50,9 +50,13 @@ export default function Home(props: HomeProps) {
 }
 
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
   try {
+    res.setHeader(
+      'Cache-Control',
+      'public, s-maxage=60, stale-while-revalidate=180'
+    )
     const data = await ActivitiesService({ req }).getDashboardStatistics()
     return {
       props: {
