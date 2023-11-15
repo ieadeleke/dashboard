@@ -3,6 +3,7 @@ import { errorHandler } from "@/utils/errorHandler"
 import Router from "next/router";
 import AuthToken from "../AuthToken";
 import { GlobalActionContext } from "@/context/GlobalActionContext";
+import { logOut } from "../auth/logout";
 
 type ExecuteConfig = {
     onError?: (error: string) => void
@@ -32,11 +33,10 @@ export const useApi = () => {
                     return
                 }
                 const parsedError = errorHandler(error)
-                const token = AuthToken().retrieveToken()
-                if (parsedError.status == 401 && token) {
+                if (parsedError.status == 401) {
                     setError(parsedError.message)
+                    logOut()
                     Router.push("/login")
-                    AuthToken().clearToken()
                     // Router.push("/login")
                     // AuthToken().clearToken()
 
