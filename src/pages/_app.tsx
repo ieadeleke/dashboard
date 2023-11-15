@@ -10,13 +10,30 @@ import { ThemeProvider } from '@mui/material'
 import type { AppProps } from 'next/app'
 import { useEffect, useRef, useState } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
+import { startUserActivityTimer, stopUserActivityTimer } from '@/utils/timeoutActivity';
+import { logOut } from '@/utils/auth/logout';
 
 export default function App({ Component, pageProps }: AppProps) {
   const { store } = storeFactory()
   const snackBarRef = useRef<ControllableSnackBarRef>(null)
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<User | null>(null)
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleTimeout = (): void => {
+      logOut()
+      router.push('/login');
+    };
+
+    // timeout for 10 mins
+    startUserActivityTimer(10 * 60 * 1000, handleTimeout);
+
+    return (): void => {
+      stopUserActivityTimer();
+    };
+  }, [router]);
 
   function showSnackBar(params: ControllableSnackBarStateParams) {
     snackBarRef.current?.open(params)
@@ -33,7 +50,7 @@ export default function App({ Component, pageProps }: AppProps) {
     localStorage.setItem('user', JSON.stringify(user))
     setUser(user)
   }
-  
+
   useEffect(() => {
     Router.events.on('routeChangeStart', () => setIsLoading(true));
     Router.events.on('routeChangeComplete', () => setIsLoading(false));
