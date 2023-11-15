@@ -8,33 +8,45 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-    Table,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
-import { CheckBox } from "@/components/buttons/CheckBox";
 import { TabsContent } from "@/components/ui/tabs"
-import { useEffect, useState } from "react";
-import { Fleet } from "@/models/fleets";
-import { FleetTableDataList } from "@/pages/fleets";
+import { useEffect, useRef, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-
+import { faker } from '@faker-js/faker'
+import { Incident } from "@/models/incidents";
+import { IncidentTable } from "../IncidentTable";
+import { FilterIncidentModal, FilterIncidentModalRef, FilterIncidentOption } from "../FilterIndidentModal";
 
 type OperatorsTabProps = {
     addNewIncident?: () => void
 }
 
 export default function OperatorsTab(props: OperatorsTabProps) {
-    const [data, setData] = useState<Fleet[]>([])
+    const [data, setData] = useState<Incident[]>([])
+    const filterIncidentRef = useRef<FilterIncidentModalRef>(null)
+    const [filterOption, setFilterOption] = useState<FilterIncidentOption>()
+
+    function openFilterModal() {
+        filterIncidentRef.current?.open({
+            selectedOption: filterOption,
+            onOptionSelected: (option) => {
+                setFilterOption(option)
+                filterIncidentRef.current?.close()
+            }
+        })
+    }
 
     useEffect(() => {
-        // setData(fleets)
+        setData(() => Array(50).fill(0).map((item) => {
+            return {
+                fleet_id: faker.number.int({ min: 1000, max: 9999 }).toString(),
+                status: "Approved"
+            }
+        }))
     }, [])
 
     return (
         <div className="flex flex-col">
+            <FilterIncidentModal ref={filterIncidentRef} />
             <div className="flex flex-col gap-8">
                 <h1 className="text-2xl font-bold">Operators Incidents <span className="text-primary">(50)</span></h1>
 
@@ -76,43 +88,14 @@ export default function OperatorsTab(props: OperatorsTabProps) {
                         </PopoverContent>
                     </Popover>
 
-                    <div className="border rounded-md py-2">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger>
-                                <div className="flex items-center gap-3 text-text-normal font-semibold">
-                                    <p>Filter</p>
-                                    <ChevronDown className="text-gray-300" />
-                                </div>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                                <DropdownMenuLabel>Action 1</DropdownMenuLabel>
-                                <DropdownMenuItem>Action 2</DropdownMenuItem>
-                                <DropdownMenuItem>Action 3</DropdownMenuItem>
-                                <DropdownMenuItem>Action 4</DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                    <div onClick={openFilterModal} className="flex items-center gap-3 cursor-pointer text-text-normal font-semibold border rounded-md px-2 py-3">
+                        <p>Filter</p>
+                        <ChevronDown className="text-gray-300" />
                     </div>
                 </div>
 
                 <TabsContent value="operators">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="w-[100px]">
-                                    <div className="flex items-center">
-                                        <CheckBox />
-                                    </div>
-                                </TableHead>
-                                <TableHead>Name</TableHead>
-                                <TableHead>Seats</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead>Title</TableHead>
-                                <TableHead></TableHead>
-                            </TableRow>
-                        </TableHeader>
-
-                        {data.map((item) => <FleetTableDataList key={item._id} data={item} />)}
-                    </Table>
+                    <IncidentTable data={data} />
                 </TabsContent>
             </div>
         </div>
