@@ -7,15 +7,14 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { CheckBox } from "@/components/buttons/CheckBox";
-import { useEffect, useState } from "react";
-import { FleetTableDataList } from "@/pages/fleets";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useEffect, useRef, useState } from "react";
 import { AlertCircleIcon, AlertTriangleIcon, ChevronDown, DownloadIcon, EditIcon, MoreHorizontalIcon, PlusIcon, SearchIcon, UploadIcon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { IconButton } from "@/components/buttons/IconButton";
 import { TextField } from "@/components/input/InputText";
 import { Incident } from "@/models/incidents";
 import { faker } from "@faker-js/faker";
+import { FilterIncidentModal, FilterIncidentModalRef, FilterIncidentOption } from "./FilterIndidentModal";
 
 
 type OtherIncidentTabNames = "active" | "approved" | "rejected" | "all"
@@ -98,10 +97,23 @@ const TabItem = (props: TabItemProps) => {
 }
 
 export default function IncidentTab(props: IncidentTabProps) {
+    const filterIncidentRef = useRef<FilterIncidentModalRef>(null)
+    const [filterOption, setFilterOption] = useState<FilterIncidentOption>()
+
+    function openFilterModal() {
+        filterIncidentRef.current?.open({
+            selectedOption: filterOption,
+            onOptionSelected: (option) => {
+                setFilterOption(option)
+                filterIncidentRef.current?.close()
+            }
+        })
+    }
 
     return (
         <div>
-            <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
+            <FilterIncidentModal ref={filterIncidentRef} />
+            <div className="flex flex-col items-start p-4 bg-white gap-3 md:flex-row md:items-center">
                 <TextField.Container className="flex-1 border border-gray-200">
                     <TextField.Input placeholder="Search" />
 
@@ -139,20 +151,9 @@ export default function IncidentTab(props: IncidentTabProps) {
                     </PopoverContent>
                 </Popover>
 
-                <div className="border rounded-md py-2">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger>
-                            <div className="flex items-center gap-3 text-text-normal font-semibold">
-                                <p>Filter</p>
-                                <ChevronDown className="text-gray-300" />
-                            </div>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <DropdownMenuItem>Action 2</DropdownMenuItem>
-                            <DropdownMenuItem>Action 3</DropdownMenuItem>
-                            <DropdownMenuItem>Action 4</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                <div onClick={openFilterModal} className="flex items-center gap-3 cursor-pointer text-text-normal font-semibold border rounded-md px-2 py-3">
+                    <p>Filter</p>
+                    <ChevronDown className="text-gray-300" />
                 </div>
             </div>
             <TabItem tab={props.tab} />
