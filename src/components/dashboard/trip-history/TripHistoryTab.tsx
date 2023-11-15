@@ -24,6 +24,7 @@ import Button from "@/components/buttons";
 import { CalendarRange, DateRange } from "@/components/calendar/CalendarRange";
 import Empty from "@/components/states/Empty";
 import { useCallback } from "react";
+import { FilterTripHistoryModal, FilterTripHistoryModalRef, FilterTripHistoryOption } from "./FilterTripHistoryModal";
 
 type TripHistoryTab = {
     onSizeUpdated?: (size: number) => void,
@@ -40,6 +41,18 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
     const [isDateModalOpen, setIsDateModalOpen] = useState(false)
 
     const { isLoading, data, count, fetchActiveTrips, fetchAllTrips, fetchCancelledTrips, fetchCompleteTrips, fetchPendingTrips, error } = useFetchTrips()
+    const filterTripHistoryRef = useRef<FilterTripHistoryModalRef>(null)
+    const [filterOption, setFilterOption] = useState<FilterTripHistoryOption>()
+
+    function openFilterModal() {
+        filterTripHistoryRef.current?.open({
+            selectedOption: filterOption,
+            onOptionSelected: (option) => {
+                setFilterOption(option)
+                filterTripHistoryRef.current?.close()
+            }
+        })
+    }
 
     const tripDetailModalRef = useRef<TripDetailModalRef>(null)
 
@@ -109,6 +122,7 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
     }, [date, JSON.stringify(data)])
 
     return <div className="flex flex-col gap-8">
+        <FilterTripHistoryModal ref={filterTripHistoryRef} />
         <TripDetailModal ref={tripDetailModalRef} />
         <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
             <div className="flex flex-1">
@@ -132,21 +146,9 @@ export const TripHistoryTab = (props: TripHistoryTab) => {
                 </div>
             </div>
 
-            <div className="border rounded-md py-2">
-                <DropdownMenu>
-                    <DropdownMenuTrigger>
-                        <div className="flex items-center gap-3 text-text-normal font-semibold">
-                            <p>Filter</p>
-                            <ChevronDown className="text-gray-300" />
-                        </div>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        <DropdownMenuLabel>Action 1</DropdownMenuLabel>
-                        <DropdownMenuItem>Action 2</DropdownMenuItem>
-                        <DropdownMenuItem>Action 3</DropdownMenuItem>
-                        <DropdownMenuItem>Action 4</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+            <div onClick={openFilterModal} className="flex items-center gap-3 cursor-pointer text-text-normal font-semibold border rounded-md px-2 py-[7px]">
+                <p>Filter</p>
+                <ChevronDown className="text-gray-300" />
             </div>
         </div>
 
