@@ -39,7 +39,7 @@ export default function OtherIncidents(props: OtherIncidentsProps) {
             <div className="flex flex-col">
                 <h1 className="text-2xl font-bold">Other Incidents <span className="text-primary">(50)</span></h1>
 
-                <Tabs defaultValue="active" className="flex flex-col py-8">
+                <Tabs defaultValue="active" className="flex flex-col py-8 gap-6">
                     <div className="flex flex-col gap-6">
                         <div className="flex">
                             <TabsList className="bg-white h-auto py-0 px-0">
