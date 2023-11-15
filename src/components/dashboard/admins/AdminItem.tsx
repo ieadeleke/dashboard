@@ -84,12 +84,12 @@ export const AdminItem = (props: AdminItemProps) => {
         </div>
 
         <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-3">
+            {/* <div className="flex items-center gap-3">
                 <div className="p-1 bg-primary-100 rounded-xl text-primary">
                     <PhoneIcon className="w-5 h-5" />
                 </div>
                 <p className="font-semibold text-xs text-[#3F3F3F]">{personalInfo.phoneNumber}</p>
-            </div>
+            </div> */}
 
             <div className="flex flex-nowrap items-center gap-3">
                 <div className="p-2 bg-primary-100 rounded-xl text-primary">
