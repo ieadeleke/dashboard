@@ -66,7 +66,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   } catch (error) {
     const parsedError = errorHandler(error)
     const token = AuthToken().retrieveToken(req)
-    if (parsedError.status == 401 && token) {
+    if (parsedError.status == 401) {
       return {
         redirect: {
           destination: '/login'
