@@ -58,7 +58,7 @@ const TabItem = (props: TabItemProps) => {
             </TableRow>
         </TableHeader>
 
-        {data.map((item) => <TableBody className="bg-white">
+        {data.map((item) => <TableBody key={item.fleet_id} className="bg-white">
             <TableRow>
                 <TableCell className="flex font-medium"><CheckBox /></TableCell>
                 <TableCell>
