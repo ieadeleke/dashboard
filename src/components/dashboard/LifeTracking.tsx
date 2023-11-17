@@ -31,8 +31,8 @@ export const LifeTracking = () => {
             </TextField.Container>
         </div>
 
-        <div className="min-h-[400px] bg-white rounded-lg">
-            <DefaultMap />
+        <div className="h-[500px] bg-white rounded-lg">
+            <DefaultMap className="h-full" />
         </div>
     </div>
 }

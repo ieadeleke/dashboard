@@ -4,7 +4,7 @@ import { forwardRef } from 'react';
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type DefaultMapProps = {
-    className: string
+    className?: string
 }
 
 type DefaultMapRef = {
