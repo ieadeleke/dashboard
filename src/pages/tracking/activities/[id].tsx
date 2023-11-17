@@ -1,7 +1,6 @@
 import { TextField } from "@/components/input/InputText";
 import DashboardLayout from "@/components/layout/dashboard";
 import SearchIcon from '@/assets/icons/ic_search.svg'
-import { ActivityItem } from "@/components/dashboard/RecentActivities";
 import { Divider } from "@/components/Divider";
 import { IconButton } from "@/components/buttons/IconButton";
 import { MoreHorizontalIcon } from "lucide-react";

@@ -13,6 +13,11 @@ export function FleetService(config?: RequestConfig) {
         })
     }
 
+    async function getActiveFleets(params?: GetFleetsRequestParams) {
+        const response = (await getAllFleets(params)).Boats
+        return response.filter((item) => item.status == 'active')
+    }
+
     async function addFleet(payload: AddFleetParams) {
         const { data } = await request(`api/v1/boat/admin/AddBoat`, "POST", {
             body: payload
@@ -43,6 +48,7 @@ export function FleetService(config?: RequestConfig) {
         getAllFleets,
         verifyFleet,
         suspendFleet,
+        getActiveFleets,
         addFleet
     }
 
