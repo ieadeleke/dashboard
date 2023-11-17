@@ -1,6 +1,6 @@
 import { TextField } from "@/components/input/InputText";
 import DashboardLayout from "@/components/layout/dashboard";
-import { useEffect } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import SearchIcon from '@/assets/icons/ic_search.svg'
 import SEO from "@/components/SEO";
 import { Trip } from "@/models/trips";
@@ -18,6 +18,7 @@ const TRIP_STATUS_CHANNEL = "Trip/Admin/LiveTracking"
 export default function Tracking() {
   const { isLoading, data, fetchActiveTrips, error } = useFetchActiveTrips()
   const tripDetailsRef = useRef<TripDetailModalRef>(null)
+  const [searchWord, setSearchWord] = useState('')
 
   useEffect(() => {
     fetchActiveTrips()
@@ -27,9 +28,21 @@ export default function Tracking() {
     transports: ['websocket']
   });
 
+  function onChangeText(event: ChangeEvent<HTMLInputElement>) {
+    setSearchWord(event.target.value)
+  }
+
   function onTripStatusChanged(data: Trip) {
     console.log({ data })
   }
+
+  const trips = useMemo(() => {
+    const word = searchWord.toLowerCase()
+    if (word.trim().length == 0) {
+      return data
+    }
+    return data.filter((item) => item._id.toLowerCase().includes(word))
+  }, [searchWord, JSON.stringify(data)])
 
   useEffect(() => {
     socket.on('disconnect', () => {
@@ -68,7 +81,7 @@ export default function Tracking() {
           <h1 className="font-bold text-lg">Life Tracking</h1>
           <div className="flex-1" />
 
-          <TextField.Container className="bg-white rounded-xl border border-gray-100">
+          <TextField.Container onChange={onChangeText} className="bg-white rounded-xl border border-gray-100">
             <SearchIcon className="text-gray-200" />
             <TextField.Input placeholder="Search by Trip ID" />
           </TextField.Container>
@@ -78,7 +91,7 @@ export default function Tracking() {
           <DefaultMap className="h-full" />
 
           <div className="grid grid-cols-1 w-[30%] left-0 top-0 z-10 gap-4 h-full md:grid-cols-2 lg:absolute lg:flex flex-col lg:overflow-y-scroll lg:no-scrollbar lg:p-2">
-            {data.map((item) => <div key={item._id} onClick={() => viewTripDetails(item)}>
+            {trips.map((item) => <div key={item._id} onClick={() => viewTripDetails(item)}>
               <TripHistoryItem data={item} />
             </div>)}
           </div>
