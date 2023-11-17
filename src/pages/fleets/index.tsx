@@ -203,7 +203,7 @@ export const FleetTableDataList = (props: TableDataListProps) => {
                     <p>{data.model}</p>
                 </div>
             </TableCell>
-            <TableCell>{data.capacity}</TableCell>
+            <TableCell>{data.capacity ?? 0}</TableCell>
             <TableCell className="flex">
                 <div className={`${statusStyles.container} p-2 rounded-md`}>
                     <p className={`${statusStyles.label} text-sm`}>{statusLabel}</p>
