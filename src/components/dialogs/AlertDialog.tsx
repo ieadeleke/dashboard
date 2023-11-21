@@ -20,7 +20,7 @@ export type IncidentAlertDialogRef = {
 type FleetDialogVariant = "regular" | "warning"
 
 type ShowIncidentAlertDialogParams = {
-    variant: FleetDialogVariant
+    variant?: FleetDialogVariant
     data: {
         title: string,
         description?: string
@@ -30,13 +30,13 @@ type ShowIncidentAlertDialogParams = {
 }
 
 type IncidentAlertDialogProps = {
-    
+
 }
 
 
 export const IncidentAlertDialog = forwardRef<IncidentAlertDialogRef, IncidentAlertDialogProps>((props, ref) => {
     const [isVisible, setIsVisible] = useState(false)
-    const [variant, setVariant] = useState<FleetDialogVariant>("regular")
+    const [variant, setVariant] = useState<FleetDialogVariant>()
     const [content, setContent] = useState({
         title: "",
         description: ""
@@ -60,9 +60,9 @@ export const IncidentAlertDialog = forwardRef<IncidentAlertDialogRef, IncidentAl
         }
     }))
 
-    function dismissDialog(){
+    function dismissDialog() {
         setIsVisible(false)
-        setContent({title: "", description: ""})
+        setContent({ title: "", description: "" })
         onConfirm.current = undefined
         onCancel.current = undefined
     }
@@ -70,18 +70,18 @@ export const IncidentAlertDialog = forwardRef<IncidentAlertDialogRef, IncidentAl
     return <BaseAlertDialog open={isVisible}>
         <AlertDialogContent>
             <AlertDialogHeader>
-                {/* {variant == 'warning' ? <div className="flex justify-center self-center bg-red-50 text-red-500 rounded-full p-2">
+                {variant == 'warning' ? <div className="flex justify-center self-center bg-red-50 text-red-500 rounded-full p-2">
                     <AbortIcon className="w-9 h-9" />
-                </div> : <div className="flex justify-center self-center bg-primary-20 text-primary rounded-full p-2"><NotificationIcon className="w-9 h-9" /></div>} */}
+                </div> : variant == 'regular' ? <div className="flex justify-center self-center bg-primary-20 text-primary rounded-full p-2"><NotificationIcon className="w-9 h-9" /></div> : null}
                 <AlertDialogTitle className="text-center font-medium text-2xl text-[#3F3F3F]">{content.title || ""}</AlertDialogTitle>
                 <AlertDialogDescription className="text-center">
                     {content.description || ""}
                 </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-                <AlertDialogCancel className={`flex-1 py-6 ${variant == 'warning' ? 'text-red-500' : 'text-primary'}`} onClick={onCancel.current}>{"No"}</AlertDialogCancel>
-                
-                <AlertDialogAction className={`flex-1 py-6 ${variant == 'warning' ? 'bg-red-500' : 'bg-primary'}`} onClick={onConfirm.current}>{"Yes"}</AlertDialogAction>
+                <AlertDialogCancel className={`flex-1 py-6 border-none bg-gray-100 text-black`} onClick={onCancel.current}>{"No"}</AlertDialogCancel>
+
+                <AlertDialogAction className={`flex-1 border-none py-6 ${variant == 'warning' ? 'bg-red-500' : 'bg-primary'}`} onClick={onConfirm.current}>{"Yes"}</AlertDialogAction>
             </AlertDialogFooter>
         </AlertDialogContent>
     </BaseAlertDialog>

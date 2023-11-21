@@ -25,13 +25,14 @@ import { GlobalActionContext } from "@/context/GlobalActionContext";
 import { LoadingModal } from "@/components/states/LoadingModal";
 import { TablePagination } from "@/components/pagination/TablePagination";
 import { AdminActivitiesModal, AdminActivitiesModalRef } from "@/components/dashboard/admins/AdminActivities";
+import { IncidentAlertDialog, IncidentAlertDialogRef } from "@/components/dialogs/AlertDialog";
 
 export default function AdminsPage() {
   const { isLoading: isFetchLoading, count, error: isFetchError, data, fetchAdmins } = useFetchAdmins()
   const [page, setPage] = useState(0)
   const addAdminsRef = useRef<AddAdminsModalRef>(null)
   const addRoleRef = useRef<CreateRoleModalRef>(null)
-  const confirmationDialogRef = useRef<ConfirmationAlertDialogRef>(null)
+  const confirmationDialogRef = useRef<IncidentAlertDialogRef>(null)
   const { isLoading: isSuspendLoading, error: suspendError, data: suspendData, suspendAdmin } = useSuspendAdmin()
   const { isLoading: isUnSuspendLoading, error: unSuspendError, data: unSuspendData, unSuspendAdmin } = useUnSuspendAdmin()
   const [isLoading, setIsLoading] = useState(false)
@@ -106,9 +107,10 @@ export default function AdminsPage() {
   function onSuspendAdmin(admin: Admin) {
     confirmationDialogRef.current?.show({
       data: {
-        title: "Are you sure you want to suspend this admin?",
+        title: "Do you want to remove this admin?",
         description: "They won't have access to the admin dashboard once it is complete"
       },
+      variant: 'warning',
       onConfirm: () => {
         confirmationDialogRef.current?.dismiss()
         suspendAdmin({ userId: admin._id })
@@ -125,6 +127,7 @@ export default function AdminsPage() {
         title: "Are you sure you want to unsuspend this admin?",
         description: "They will have access to the admin dashboard once it is complete"
       },
+      variant: 'regular',
       onConfirm: () => {
         confirmationDialogRef.current?.dismiss()
         unSuspendAdmin({ userId: admin._id })
@@ -166,7 +169,7 @@ export default function AdminsPage() {
   return (
     <DashboardLayout>
       <div className="flex flex-col py-8">
-        <ConfirmationAlertDialog ref={confirmationDialogRef} />
+        <IncidentAlertDialog ref={confirmationDialogRef} />
         <AdminActivitiesModal ref={adminActivitiesModalRef} />
         <SEO title="Laswa | Admin" />
 
