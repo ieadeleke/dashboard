@@ -2,7 +2,7 @@ import { IconButton } from "@/components/buttons/IconButton";
 import { TextField } from "@/components/input/InputText";
 import DashboardLayout from "@/components/layout/dashboard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ChevronDown, DownloadIcon, MoreHorizontalIcon, PlusIcon, SearchIcon, UploadIcon } from "lucide-react";
+import { ChevronDown, DownloadIcon, EyeIcon, MoreHorizontalIcon, PlusIcon, SearchIcon, UploadIcon } from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -144,11 +144,20 @@ export const FleetTableDataList = (props: TableDataListProps) => {
             </TableCell>
             <TableCell>{data.User.firstName} {data.User.lastName}</TableCell>
             <TableCell>
-                <div className="flex">
-                    <IconButton onClick={() => handleFleetOptions(data)} className="text-primary border border-primary rounded-sm self-start">
-                        <MoreHorizontalIcon />
-                    </IconButton>
-                </div>
+                <Popover>
+                    <PopoverTrigger>
+                        <IconButton className="text-primary border border-primary rounded-sm">
+                            <MoreHorizontalIcon />
+                        </IconButton>
+                    </PopoverTrigger>
+
+                    <PopoverContent className="w-auto px-0 py-1">
+                        <div className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleFleetOptions(data)}>
+                            <EyeIcon />
+                            <p>View</p>
+                        </div>
+                    </PopoverContent>
+                </Popover>
 
             </TableCell>
         </TableRow>
