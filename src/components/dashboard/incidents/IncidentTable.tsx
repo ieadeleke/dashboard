@@ -11,6 +11,7 @@ import { CheckBox } from "@/components/buttons/CheckBox";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { AlertTriangleIcon, EditIcon, MoreHorizontalIcon } from "lucide-react";
 import { IconButton } from "@/components/buttons/IconButton";
+import { TripHistoryStatusChip } from "../trip-history/TripHistoryStatusChip";
 
 type IncidentTableProps = {
     data: Incident[]
@@ -44,9 +45,11 @@ export const IncidentTable = (props: IncidentTableProps) => {
                         <p>{item.fleet_id}</p>
                     </div>
                 </TableCell>
-                <TableCell>{item.status}</TableCell>
+                {/* <TableCell>{item.status}</TableCell> */}
                 <TableCell>Lorem</TableCell>
-                <TableCell>Lorem</TableCell>
+                <TableCell>
+                    <div className="flex"><TripHistoryStatusChip status="complete" /></div>
+                </TableCell>
                 <TableCell>Lorem</TableCell>
                 <TableCell>
                     <Popover>
