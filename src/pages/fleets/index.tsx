@@ -4,13 +4,6 @@ import DashboardLayout from "@/components/layout/dashboard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ChevronDown, DownloadIcon, EyeIcon, MoreHorizontalIcon, PlusIcon, SearchIcon, UploadIcon } from "lucide-react";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {
     Table,
     TableBody,
     TableCell,
@@ -21,25 +14,18 @@ import {
 import { CheckBox } from "@/components/buttons/CheckBox";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import SEO from "@/components/SEO";
-import { IncidentAlertDialog, IncidentAlertDialogRef } from "@/components/dialogs/AlertDialog";
 import { useFetchAllFleets } from "@/utils/apiHooks/fleets/useFetchAllFleets";
 import { Fleet } from "@/models/fleets";
 import Loading from "@/components/states/Loading";
 import Error from "@/components/states/Error";
 import { AddFleetModal, AddFleetModalRef } from "@/components/dashboard/fleet/AddFleetModal";
 import { useRouter } from "next/router";
-import { useVerifyFleet } from "@/utils/apiHooks/fleets/useVerifyFleet";
-import CircularProgress from "@mui/material/CircularProgress";
 import { GlobalActionContext } from "@/context/GlobalActionContext";
-import { fleetActions } from "@/redux/reducers/fleets";
 import { useFleetsSelector } from "@/redux/selectors/fleets.selector";
 import { BoatDetailModal, BoatDetailModalRef } from "@/components/dashboard/fleet/FleetDetail";
-import { Trip } from "@/models/trips";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import ReactPaginate from 'react-paginate';
 import { TablePagination } from "@/components/pagination/TablePagination";
 import { FilterFleetModal, FilterFleetModalRef, FilterOption } from "@/components/dashboard/fleet/FilterFleetModal";
-import { useSuspendFleet } from "@/utils/apiHooks/fleets/useSuspendFleet";
 import { FleetOptionModal, FleetOptionModalRef } from "@/components/dashboard/fleet/FleetOptionModal";
 
 type TableDataListProps = {
