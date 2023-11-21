@@ -2,6 +2,7 @@ import LogoIcon from '@/assets/icons/ic_logo.svg'
 import HomeIcon from '@/assets/icons/ic_home.svg'
 import FleetIcon from '@/assets/icons/ic_fleet.svg'
 import StaffIcon from '@/assets/icons/ic_staff.svg'
+import SystemLogIcon from '@/assets/icons/ic_system_log.svg'
 import HistoryIcon from '@/assets/icons/ic_history.svg'
 import TrackingIcon from '@/assets/icons/ic_tracking.svg'
 import PassengersIcon from '@/assets/icons/ic_passengers.svg'
@@ -58,7 +59,7 @@ export const MenuSideBar = () => {
                 <ListItem startIcon={<TrackingIcon />} name="Tracking" href="/tracking" />
                 <Divider />
                 <ListItem startIcon={<MessagesIcon />} name="Admins" href="/admins" />
-                <ListItem startIcon={<TimerIcon />} name="System Log" href="/system-log" />
+                <ListItem startIcon={<SystemLogIcon />} name="System Log" href="/system-log" />
                 <div
                     onClick={handleLogout}
                     className={`flex cursor-pointer rounded-md items-center gap-4 px-3 py-3 hover:bg-primary-20`}>
