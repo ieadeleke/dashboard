@@ -1,13 +1,12 @@
 import { IconButton } from "@/components/buttons/IconButton";
 import { TextField } from "@/components/input/InputText";
 import DashboardLayout from "@/components/layout/dashboard";
-import { ChevronDown, PlusIcon, SearchIcon } from "lucide-react";
+import {  SearchIcon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { ChangeEvent, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AdminItem } from "@/components/dashboard/admins/AdminItem";
@@ -25,6 +24,7 @@ import { useUnSuspendAdmin } from "@/utils/apiHooks/admins/useUnSuspendAdmin";
 import { GlobalActionContext } from "@/context/GlobalActionContext";
 import { LoadingModal } from "@/components/states/LoadingModal";
 import { TablePagination } from "@/components/pagination/TablePagination";
+import { AdminActivitiesModal, AdminActivitiesModalRef } from "@/components/dashboard/admins/AdminActivities";
 
 export default function AdminsPage() {
   const { isLoading: isFetchLoading, count, error: isFetchError, data, fetchAdmins } = useFetchAdmins()
@@ -39,6 +39,7 @@ export default function AdminsPage() {
   const { showSnackBar } = useContext(GlobalActionContext)
   const [searchWord, setSearchWord] = useState('')
   const [admins, setAdmins] = useState<Admin[]>([])
+  const adminActivitiesModalRef = useRef<AdminActivitiesModalRef>(null)
 
   useEffect(() => {
     if (error) {
@@ -96,7 +97,7 @@ export default function AdminsPage() {
             return newAdmin
           } else return admin
         }))
-        
+
         showSnackBar({ severity: 'success', message: `${newAdmin.personalInfo.firstName}'s role has been updated successfully` })
       }
     })
@@ -146,6 +147,12 @@ export default function AdminsPage() {
     setSearchWord(event.target.value)
   }
 
+  function onViewAdminActivities(admin: Admin) {
+    adminActivitiesModalRef.current?.open({
+      data: admin
+    })
+  }
+
   function onPageChange(selectedItem: {
     selected: number;
   }) {
@@ -160,6 +167,7 @@ export default function AdminsPage() {
     <DashboardLayout>
       <div className="flex flex-col py-8">
         <ConfirmationAlertDialog ref={confirmationDialogRef} />
+        <AdminActivitiesModal ref={adminActivitiesModalRef} />
         <SEO title="Laswa | Admin" />
 
         <AddAdminsModal ref={addAdminsRef} />
@@ -207,7 +215,7 @@ export default function AdminsPage() {
 
           <div>
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-              {adminData.map((item) => <AdminItem key={item._id} data={item} onSuspendAdmin={onSuspendAdmin} updateAccess={onUpdateAccess} onUnSuspendAdmin={onUnSuspendAdmin} />)}
+              {adminData.map((item) => <AdminItem key={item._id} data={item} onSuspendAdmin={onSuspendAdmin} updateAccess={onUpdateAccess} onViewAdminActivities={onViewAdminActivities} onUnSuspendAdmin={onUnSuspendAdmin} />)}
             </div>
           </div>
           {isFetchLoading ? <Loading /> : isFetchError ? <Error /> : null}

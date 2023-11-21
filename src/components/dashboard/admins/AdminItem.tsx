@@ -18,6 +18,7 @@ type AdminItemProps = {
     data: Admin,
     updateAccess?: (admin: Admin) => void,
     onSuspendAdmin?: (admin: Admin) => void,
+    onViewAdminActivities?: (admin: Admin) => void,
     onUnSuspendAdmin?: (admin: Admin) => void
 }
 
@@ -37,6 +38,10 @@ export const AdminItem = (props: AdminItemProps) => {
 
     function handleSuspendAdmin() {
         props.onSuspendAdmin?.(data)
+    }
+
+    function handleViewAdminActivities() {
+        props.onViewAdminActivities?.(data)
     }
 
     function handleUpdateAccess() {
@@ -62,9 +67,14 @@ export const AdminItem = (props: AdminItemProps) => {
                         <p className="text-[#444444]">Update Access</p>
                     </div>
 
+                    <div onClick={handleViewAdminActivities} className="flex items-center gap-4 py-3 px-2 cursor-pointer hover:bg-gray-50">
+                        <LockAccessIcon className="text-gray-300 w-6 h-6" />
+                        <p className="text-[#444444]">User Activity</p>
+                    </div>
+
                     {isActive ? <div onClick={handleSuspendAdmin} className="flex items-center gap-4 py-3 px-2 text-red-500 cursor-pointer hover:bg-gray-50">
                         <CautionIcon className="w-6 h-6" />
-                        <p>Suspend Admin</p>
+                        <p>Remove Admin</p>
                     </div> : <div onClick={handleUnSuspendAdmin} className="flex items-center gap-4 py-3 px-2 text-primary cursor-pointer hover:bg-gray-50">
                         <CheckIcon className="w-6 h-6" />
                         <p>Unsuspend Admin</p>
