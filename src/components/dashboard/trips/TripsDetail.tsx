@@ -7,6 +7,7 @@ import { forwardRef, useEffect, useImperativeHandle, useState } from "react"
 import { TripHistoryStatusChip } from "../trip-history/TripHistoryStatusChip"
 import { TripHistoryItem } from "../trip-history/TripHistoryItem"
 import { Trip } from "@/models/trips"
+import { DefaultMap } from "@/components/map/DefaultMap"
 
 type TripDetailModalProps = {
 
@@ -104,6 +105,11 @@ export const TripDetailModal = forwardRef<TripDetailModalRef, TripDetailModalPro
                             {/* <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                                 {allTrips.map((item) => <TripHistoryItem data={item} key={"item.id"} />)}
                             </div> */}
+
+                            <div className="flex flex-col gap-4">
+                                <h1 className="font-bold">Live Location</h1>
+                                <DefaultMap className="h-[500px]" />
+                            </div>
                         </div>
 
                     </div>
