@@ -40,6 +40,7 @@ import ReactPaginate from 'react-paginate';
 import { TablePagination } from "@/components/pagination/TablePagination";
 import { FilterFleetModal, FilterFleetModalRef, FilterOption } from "@/components/dashboard/fleet/FilterFleetModal";
 import { useSuspendFleet } from "@/utils/apiHooks/fleets/useSuspendFleet";
+import { FleetOptionModal, FleetOptionModalRef } from "@/components/dashboard/fleet/FleetOptionModal";
 
 type TableDataListProps = {
     data: Fleet,
@@ -81,85 +82,17 @@ const tabs = [
 
 export const FleetTableDataList = (props: TableDataListProps) => {
     const { data } = props
-    const { isLoading: isVerifyLoading, error: verifyError, verifyFleet, data: verifyData } = useVerifyFleet()
-    const { isLoading: isSuspendLoading, error: suspendError, suspendFleet, data: suspendData } = useSuspendFleet()
-    const [isLoading, setIsLoading] = useState(false)
-    const [error, setError] = useState<string | null>(null)
 
-    const alertRef = useRef<IncidentAlertDialogRef>(null)
-
-    useEffect(() => {
-        setIsLoading(isSuspendLoading || isVerifyLoading)
-    }, [isSuspendLoading, isVerifyLoading])
-
-    useEffect(() => {
-        setError(suspendError || verifyError)
-    }, [suspendError, verifyError])
-
-    useEffect(() => {
-        if (error) {
-            props.onVerifyError?.(error)
-        }
-    }, [error])
-
-    useEffect(() => {
-        if (verifyData) {
-            const updatedFleet = Object.assign({}, data, { status: "active" })
-            fleetActions.updateFleet({
-                fleet_id: data._id,
-                data: updatedFleet
-            })
-            props.onVerifySuccess?.(updatedFleet)
-        }
-    }, [verifyData])
-
-    useEffect(() => {
-        if (suspendData) {
-            const updatedFleet = Object.assign({}, data, { status: "suspended" })
-            fleetActions.updateFleet({
-                fleet_id: data._id,
-                data: updatedFleet
-            })
-            props.onSuspendSuccess?.(updatedFleet)
-        }
-    }, [suspendData])
-
-    function handleVerifyFleet() {
-        alertRef.current?.show({
-            variant: "regular",
-            data: {
-                title: "Are you sure you want to verify this fleet?",
-                description: "",
-            },
-            onConfirm: () => {
-                alertRef.current?.dismiss()
-                verifyFleet({ boatId: data._id })
-            },
-            onCancel: () => {
-                alertRef.current?.dismiss()
-            }
-        })
-    }
-
-    function handleSuspendFleet() {
-        alertRef.current?.show({
-            variant: "regular",
-            data: {
-                title: "Are you sure you want to suspend this fleet?",
-                description: "",
-            },
-            onConfirm: () => {
-                alertRef.current?.dismiss()
-                suspendFleet({ boatId: data._id })
-            },
-            onCancel: () => {
-                alertRef.current?.dismiss()
-            }
-        })
-    }
+    const fleetOptionRef = useRef<FleetOptionModalRef>(null)
 
     function handleViewBoatDetails() {
         props.onViewBoatDetails?.(data)
+    }
+
+    function handleFleetOptions(fleet: Fleet) {
+        fleetOptionRef.current?.open({
+            data: fleet
+        })
     }
 
     const statusLabel = useMemo(() => {
@@ -194,7 +127,7 @@ export const FleetTableDataList = (props: TableDataListProps) => {
     }, [data.status])
 
     return <TableBody className="bg-white">
-        <IncidentAlertDialog ref={alertRef} />
+        <FleetOptionModal ref={fleetOptionRef} />
         <TableRow>
             <TableCell className="flex font-medium"><CheckBox /></TableCell>
             <TableCell>
@@ -211,20 +144,11 @@ export const FleetTableDataList = (props: TableDataListProps) => {
             </TableCell>
             <TableCell>{data.User.firstName} {data.User.lastName}</TableCell>
             <TableCell>
-                {isLoading ? <CircularProgress size={24} /> :
-                    <Popover>
-                        <PopoverTrigger>
-                            <IconButton className="text-primary border border-primary rounded-sm">
-                                <MoreHorizontalIcon />
-                            </IconButton>
-                        </PopoverTrigger>
-
-                        <PopoverContent className="w-auto px-0 py-1">
-                            {data.status != 'active' ? <p className="text-sm cursor-pointer py-1 hover:bg-gray-50 px-2" onClick={handleVerifyFleet}>Approve Fleet</p> : <p className="text-sm cursor-pointer py-2 hover:bg-gray-50 px-2" onClick={handleSuspendFleet}>Suspend Fleet</p>}
-                            <p className="text-sm cursor-pointer py-1 hover:bg-gray-50 px-2" onClick={handleViewBoatDetails}>Fleet Details</p>
-                        </PopoverContent>
-                    </Popover>
-                }
+                <div className="flex">
+                    <IconButton onClick={() => handleFleetOptions(data)} className="text-primary border border-primary rounded-sm self-start">
+                        <MoreHorizontalIcon />
+                    </IconButton>
+                </div>
 
             </TableCell>
         </TableRow>

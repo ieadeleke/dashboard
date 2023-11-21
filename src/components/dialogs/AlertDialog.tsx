@@ -70,11 +70,11 @@ export const IncidentAlertDialog = forwardRef<IncidentAlertDialogRef, IncidentAl
     return <BaseAlertDialog open={isVisible}>
         <AlertDialogContent>
             <AlertDialogHeader>
-                {variant == 'warning' ? <div className="flex justify-center self-center bg-red-50 text-red-500 rounded-full p-2">
+                {/* {variant == 'warning' ? <div className="flex justify-center self-center bg-red-50 text-red-500 rounded-full p-2">
                     <AbortIcon className="w-9 h-9" />
-                </div> : <div className="flex justify-center self-center bg-primary-20 text-primary rounded-full p-2"><NotificationIcon className="w-9 h-9" /></div>}
+                </div> : <div className="flex justify-center self-center bg-primary-20 text-primary rounded-full p-2"><NotificationIcon className="w-9 h-9" /></div>} */}
                 <AlertDialogTitle className="text-center font-medium text-2xl text-[#3F3F3F]">{content.title || ""}</AlertDialogTitle>
-                <AlertDialogDescription>
+                <AlertDialogDescription className="text-center">
                     {content.description || ""}
                 </AlertDialogDescription>
             </AlertDialogHeader>
