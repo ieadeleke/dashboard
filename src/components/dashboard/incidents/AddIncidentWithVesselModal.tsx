@@ -142,7 +142,7 @@ export const AddIncidentWithVesselModal = forwardRef<AddIncidentWithVesselModalR
         setTimeOfDay(time)
     }
 
-    return <Dialog open={true} onOpenChange={onOpenChange}>
+    return <Dialog open={isVisible} onOpenChange={onOpenChange}>
         <DialogContent className="max-h-[90vh] overflow-y-scroll no-scrollbar">
             <div className="flex flex-col">
                 <h2 className="font-semibold text-2xl text-center">Add Incident With Vessel</h2>

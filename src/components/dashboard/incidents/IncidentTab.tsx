@@ -1,19 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, DownloadIcon, PlusIcon, SearchIcon, UploadIcon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import FleetIcon from '@/assets/icons/ic_fleet_on_water.svg'
+import PersonStandingIcon from '@/assets/icons/ic_person_standing.svg'
 import { IconButton } from "@/components/buttons/IconButton";
 import { TextField } from "@/components/input/InputText";
 import { Incident } from "@/models/incidents";
 import { faker } from "@faker-js/faker";
 import { FilterIncidentModal, FilterIncidentModalRef, FilterIncidentOption } from "./FilterIndidentModal";
 import { IncidentTable } from "./IncidentTable";
+import { GeneralIncidentProps } from "./tabs/OperatorsTab";
 
 
 type OtherIncidentTabNames = "active" | "approved" | "rejected" | "all"
 
-type IncidentTabProps = {
-    tab: OtherIncidentTabNames,
-    addNewIncident?: () => void
+type IncidentTabProps = GeneralIncidentProps & {
+    tab: OtherIncidentTabNames
 }
 
 type TabItemProps = {
@@ -70,21 +72,19 @@ export default function IncidentTab(props: IncidentTabProps) {
                     </PopoverTrigger>
 
                     <PopoverContent className="flex flex-col w-auto px-2 py-1 gap-3">
-                        <div onClick={props.addNewIncident} className="flex items-center px-2 gap-2 cursor-pointer py-2 hover:bg-gray-100 rounded-md">
-                            <PlusIcon className="text-primary" />
-                            <p>Add Single Incident</p>
+                        <div onClick={props.addNewVesselIncident} className="flex items-center px-2 gap-2 cursor-pointer py-2 hover:bg-gray-100 rounded-md">
+                            <FleetIcon className="text-primary" />
+                            <p>Incident with Vessel</p>
                         </div>
 
-                        <p className="text-gray-500 text-xs font-medium px-1">Add Multiple</p>
-
-                        <div className="flex items-center px-2 gap-2 cursor-pointer py-2 hover:bg-gray-100 rounded-md">
-                            <UploadIcon className="text-primary" />
-                            <p>Upload (Excel Template)</p>
+                        <div onClick={props.addNewIndividualIncident} className="flex items-center px-2 gap-2 cursor-pointer py-2 hover:bg-gray-100 rounded-md">
+                            <PersonStandingIcon className="text-primary" />
+                            <p>Incident with Individual</p>
                         </div>
 
-                        <div className="flex items-center px-2 gap-2 cursor-pointer py-2 hover:bg-gray-100 rounded-md">
-                            <DownloadIcon className="text-primary" />
-                            <p>Download Excel Template</p>
+                        <div onClick={props.addNewObjectIncident} className="flex items-center px-2 gap-2 cursor-pointer py-2 hover:bg-gray-100 rounded-md">
+                            <PersonStandingIcon className="text-primary" />
+                            <p>Incident with Object</p>
                         </div>
 
                     </PopoverContent>

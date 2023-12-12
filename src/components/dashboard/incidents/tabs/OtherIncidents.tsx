@@ -2,10 +2,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useEffect, useState } from "react";
 import { Fleet } from "@/models/fleets";
 import IncidentTab from "../IncidentTab";
+import { GeneralIncidentProps } from "./OperatorsTab";
 
 
-type OtherIncidentsProps = {
-    addNewIncident?: () => void
+type OtherIncidentsProps = GeneralIncidentProps & {
+
 }
 
 const tabs = [
@@ -50,21 +51,21 @@ export default function OtherIncidents(props: OtherIncidentsProps) {
                         </div>
 
                         <TabsContent value="active">
-                            <IncidentTab tab="active" addNewIncident={props.addNewIncident} />
+                            <IncidentTab tab="active" addNewVesselIncident={props.addNewVesselIncident} addNewIndividualIncident={props.addNewIndividualIncident} addNewObjectIncident={props.addNewObjectIncident} />
                         </TabsContent>
                     </div>
 
 
                     <TabsContent value="approved">
-                        <IncidentTab tab="approved" addNewIncident={props.addNewIncident} />
+                        <IncidentTab tab="approved" addNewVesselIncident={props.addNewVesselIncident} addNewIndividualIncident={props.addNewIndividualIncident} addNewObjectIncident={props.addNewObjectIncident} />
                     </TabsContent>
 
                     <TabsContent value="rejected">
-                        <IncidentTab tab="rejected" addNewIncident={props.addNewIncident} />
+                        <IncidentTab tab="rejected" addNewVesselIncident={props.addNewVesselIncident} addNewIndividualIncident={props.addNewIndividualIncident} addNewObjectIncident={props.addNewObjectIncident} />
                     </TabsContent>
 
                     <TabsContent value="all">
-                        <IncidentTab tab="all" addNewIncident={props.addNewIncident} />
+                        <IncidentTab tab="all" addNewVesselIncident={props.addNewVesselIncident} addNewIndividualIncident={props.addNewIndividualIncident} addNewObjectIncident={props.addNewObjectIncident} />
                     </TabsContent>
                 </Tabs>
             </div>

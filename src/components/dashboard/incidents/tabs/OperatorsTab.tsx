@@ -1,24 +1,23 @@
 import { IconButton } from "@/components/buttons/IconButton";
 import { TextField } from "@/components/input/InputText";
-import { ChevronDown, DownloadIcon, PlusIcon, SearchIcon, UploadIcon } from "lucide-react";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { ChevronDown, PlusIcon, SearchIcon } from "lucide-react";
 import { TabsContent } from "@/components/ui/tabs"
 import { useEffect, useRef, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import FleetIcon from '@/assets/icons/ic_fleet_on_water.svg'
+import PersonStandingIcon from '@/assets/icons/ic_person_standing.svg'
 import { faker } from '@faker-js/faker'
 import { Incident } from "@/models/incidents";
 import { IncidentTable } from "../IncidentTable";
 import { FilterIncidentModal, FilterIncidentModalRef, FilterIncidentOption } from "../FilterIndidentModal";
 
-type OperatorsTabProps = {
-    addNewIncident?: () => void
+export type GeneralIncidentProps = {
+    addNewVesselIncident?: () => void,
+    addNewIndividualIncident?: () => void,
+    addNewObjectIncident?: () => void
 }
+
+type OperatorsTabProps = GeneralIncidentProps
 
 export default function OperatorsTab(props: OperatorsTabProps) {
     const [data, setData] = useState<Incident[]>([])
@@ -59,39 +58,38 @@ export default function OperatorsTab(props: OperatorsTabProps) {
                         </IconButton>
                     </TextField.Container>
 
+                    <div onClick={openFilterModal} className="flex items-center gap-3 cursor-pointer text-text-normal font-semibold border rounded-md px-2 py-3">
+                        <p>Filter</p>
+                        <ChevronDown className="text-gray-300" />
+                    </div>
+
                     <Popover>
                         <PopoverTrigger>
-                            <div className="cursor-pointer flex items-center gap-1 text-text-normal font-semibold border rounded-md py-4 px-2">
-                                <PlusIcon className="text-gray-500 w-4 h-4" />
+                            <div className="cursor-pointer flex items-center gap-1 text-text-normal font-semibold border rounded-md py-4 px-2 bg-primary text-white">
+                                <PlusIcon className="w-6 h-6" />
                                 <p className="text-sm">Add New Incident</p>
                             </div>
                         </PopoverTrigger>
 
                         <PopoverContent className="flex flex-col w-auto px-2 py-1 gap-3">
-                            <div onClick={props.addNewIncident} className="flex items-center px-2 gap-2 cursor-pointer py-2 hover:bg-gray-100 rounded-md">
-                                <PlusIcon className="text-primary" />
-                                <p>Add Single Incident</p>
+                            <div onClick={props.addNewVesselIncident} className="flex items-center px-2 gap-2 cursor-pointer py-2 hover:bg-gray-100 rounded-md">
+                                <FleetIcon className="text-primary" />
+                                <p>Incident with Vessel</p>
                             </div>
 
-                            <p className="text-gray-500 text-xs font-medium px-1">Add Multiple</p>
-
-                            <div className="flex items-center px-2 gap-2 cursor-pointer py-2 hover:bg-gray-100 rounded-md">
-                                <UploadIcon className="text-primary" />
-                                <p>Upload (Excel Template)</p>
+                            <div onClick={props.addNewIndividualIncident}  className="flex items-center px-2 gap-2 cursor-pointer py-2 hover:bg-gray-100 rounded-md">
+                                <PersonStandingIcon className="text-primary" />
+                                <p>Incident with Individual</p>
                             </div>
 
-                            <div className="flex items-center px-2 gap-2 cursor-pointer py-2 hover:bg-gray-100 rounded-md">
-                                <DownloadIcon className="text-primary" />
-                                <p>Download Excel Template</p>
+                            <div onClick={props.addNewObjectIncident}  className="flex items-center px-2 gap-2 cursor-pointer py-2 hover:bg-gray-100 rounded-md">
+                                <PersonStandingIcon className="text-primary" />
+                                <p>Incident with Object</p>
                             </div>
 
                         </PopoverContent>
                     </Popover>
 
-                    <div onClick={openFilterModal} className="flex items-center gap-3 cursor-pointer text-text-normal font-semibold border rounded-md px-2 py-3">
-                        <p>Filter</p>
-                        <ChevronDown className="text-gray-300" />
-                    </div>
                 </div>
 
                 <TabsContent value="operators">

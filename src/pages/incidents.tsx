@@ -1,30 +1,13 @@
-import { IconButton } from "@/components/buttons/IconButton";
-import { TextField } from "@/components/input/InputText";
 import DashboardLayout from "@/components/layout/dashboard";
-import { ChevronDown, PlusIcon, SearchIcon } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {
-  Table,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import { CheckBox } from "@/components/buttons/CheckBox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { FleetTableDataList } from "./fleets";
-// import { Fleet, getFleetData } from "@/utils/data/fleets";
 import { useEffect, useRef, useState } from "react";
 import SEO from "@/components/SEO";
 import { Fleet } from "@/models/fleets";
 import OperatorsTab from "@/components/dashboard/incidents/tabs/OperatorsTab";
-import { AddIncidentModal, AddIncidentModalRef } from "@/components/dashboard/incidents/AddIncidentModal";
 import OtherIncidents from "@/components/dashboard/incidents/tabs/OtherIncidents";
+import { AddIncidentWithVesselModal, AddIncidentWithVesselModalRef } from "@/components/dashboard/incidents/AddIncidentWithVesselModal";
+import { AddIncidentWithObjectModal, AddIncidentWithObjectModalRef } from "@/components/dashboard/incidents/AddIncidentWithObject";
+import { AddIncidentWithPeopleModal, AddIncidentWithPeopleModalRef } from "@/components/dashboard/incidents/AddIncidentWithPeople";
 
 const tabs = [
   {
@@ -40,21 +23,36 @@ const tabs = [
 
 export default function IndidentsPage() {
   // const fleets = getFleetData(50)
-  const addIncidentModalRef = useRef<AddIncidentModalRef>(null)
+  const addVesselIncidentModalRef = useRef<AddIncidentWithVesselModalRef>(null)
+  const addIndividualIncidentModalRef = useRef<AddIncidentWithPeopleModalRef>(null)
+  const addObjectIncidentModalRef = useRef<AddIncidentWithObjectModalRef>(null)
+
   const [data, setData] = useState<Fleet[]>([])
 
   useEffect(() => {
     // setData(fleets)
   }, [])
 
-  function addNewIncident() {
-    addIncidentModalRef.current?.open()
+  function addNewVesselIncident() {
+    addVesselIncidentModalRef.current?.open()
+  }
+
+  function addNewINdividualIncident() {
+    addIndividualIncidentModalRef.current?.open()
+  }
+
+  function addNewObjectIncident() {
+    addObjectIncidentModalRef.current?.open()
   }
 
   return (
     <DashboardLayout>
       <Tabs defaultValue="operators" className="flex flex-col py-8">
-        <AddIncidentModal ref={addIncidentModalRef} />
+        {/* <AddIncidentModal ref={addIncidentModalRef} /> */}
+        <AddIncidentWithVesselModal ref={addVesselIncidentModalRef} />
+        <AddIncidentWithPeopleModal ref={addIndividualIncidentModalRef} />
+        <AddIncidentWithObjectModal ref={addObjectIncidentModalRef} />
+
         <div className="flex flex-col gap-6">
           <SEO title="Laswa | Incidents" />
           <div className="flex justify-center">
@@ -66,13 +64,13 @@ export default function IndidentsPage() {
           </div>
 
           <TabsContent value="operators">
-            <OperatorsTab addNewIncident={addNewIncident} />
+            <OperatorsTab addNewIndividualIncident={addNewINdividualIncident} addNewObjectIncident={addNewObjectIncident} addNewVesselIncident={addNewVesselIncident} />
           </TabsContent>
         </div>
 
 
         <TabsContent value="others">
-          <OtherIncidents addNewIncident={addNewIncident} />
+          <OtherIncidents addNewIndividualIncident={addNewINdividualIncident} addNewObjectIncident={addNewObjectIncident} addNewVesselIncident={addNewVesselIncident} />
         </TabsContent>
       </Tabs>
     </DashboardLayout>
