@@ -11,9 +11,11 @@ import { Fleet } from "@/models/fleets"
 import { CalendarIcon } from "lucide-react"
 import moment from "moment"
 import { useReducer } from "react"
-import { ChangeEvent, forwardRef, useContext, useEffect, useImperativeHandle, useState } from "react"
+import { ChangeEvent, forwardRef, useContext, useImperativeHandle, useState } from "react"
 import Button from "../../buttons"
 import { InputProps, TextAreaProps, TextField } from "../../input/InputText"
+import { z } from 'zod';
+import { useEffect } from "react"
 
 type AddIncidentWithVesselModalProps = {
     onNewFleetAdded?: (fleet: Fleet) => void,
@@ -40,9 +42,26 @@ const AdminInputField = ({ className, renderInputType, ...props }: InputProps & 
     </TextField.Container>
 }
 
+const schema = z
+    .object({
+        time: z.string({ required_error: "Invalid time" }).regex(/^(1[0-2]|0?[1-9]):([0-5][0-9]) ([APap][mM])$/, "Invalid time"),
+        date: z.string({ required_error: "Invalid date" }).regex(/^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/, "Invalid date"),
+        accident_location: z.string({ required_error: "Insert a valid location" }).min(3, "Location must be at least 3 characters").max(500),
+        boat_name: z.string({ required_error: "Invalid boat name" }).min(3, "Boat name must be at least 3 characters").max(20, "Boat name should not be more than 20 characters"),
+        boat_type: z.string().optional(),
+        no_of_passengers_onboard: z.number({ required_error: "Invalid onboard passengers value. Must be between 1-99" }).min(1, "No of passengers onboard should be at least 1").max(99, "No of passengers onboard should be a maximum of 99"),
+        no_of_passengers_rescued: z.number({ required_error: "Invalid rescued passengers value. Must be between 1-99" }).min(1, "No of passengers rescued should be at least 1").max(99, "No of passengers rescued should be a maximum of 99"),
+        no_of_passengers_missing: z.number({ required_error: "Invalid missing passengers value. Must be between 1-99" }).min(1, "No of missing passengers should be at least 1").max(99, "No of missing passengers should be a maximum of 99"),
+        no_of_injured_passengers: z.number({ required_error: "Invalid injured passengers value. Must be between 1-99" }).min(1, "No of injured passengers should be at least 1").max(99, "No of injured passengers should be a maximum of 99"),
+        cause_of_accident: z.string({ required_error: "Cause of accident must be 3 characters and above" }).min(1, "Cause of accident must be 3 characters and above").max(99, "Cause of accident must be 3 characters and above"),
+        comments: z.string()
+    }).required();
+
 type FormState = {
     accident_location: string,
     boat_name: string,
+    time: string,
+    date: string,
     boat_type?: string,
     no_of_passengers_onboard?: number,
     no_of_passengers_rescued?: number,
@@ -57,6 +76,8 @@ type FormAction = Partial<FormState>
 const default_state: FormState = {
     boat_name: "",
     boat_type: "",
+    time: "12:00",
+    date: "12/12/12",
     accident_location: "",
     cause_of_accident: "",
     comments: ""
@@ -73,11 +94,32 @@ export const AddIncidentWithVesselModal = forwardRef<AddIncidentWithVesselModalR
     const [isVisible, setIsVisible] = useState(false)
     const [isDateModalOpen, setIsDateModalOpen] = useState(false)
     const [date, setDate] = useState<Date>()
+    const [hour, setHour] = useState(12)
+    const [minute, setMinute] = useState(30)
     const [timeOfDay, setTimeOfDay] = useState<"am" | "pm">("am")
 
     function closeModal() {
         setIsVisible(false)
     }
+
+    function submit() {
+        try {
+            const response = schema.parse(state)
+        } catch (error) {
+            if (error.issues && error.issues.length > 0) {
+                showSnackBar({ severity: 'error', message: error.issues[0].message })
+            }
+        }
+    }
+
+    useEffect(() => {
+        dispatch({ time: `${hour}:${minute} ${timeOfDay == 'am' ? "AM" : "PM"}` })
+    }, [timeOfDay, hour, minute])
+
+
+    useEffect(() => {
+        dispatch({ date: moment(date).format("DD/MM/YYYY") })
+    }, [date])
 
     function onBoatNameChanged(event: ChangeEvent<HTMLInputElement>) {
         dispatch({ boat_name: event.target.value })
@@ -119,8 +161,14 @@ export const AddIncidentWithVesselModal = forwardRef<AddIncidentWithVesselModalR
         dispatch({ accident_location: event.target.value })
     }
 
-    function submit() {
+    function updateHour(event: ChangeEvent<HTMLInputElement>) {
+        const value = parseInt(event.target.value)
+        setHour(isNaN(value) ? 12 : value)
+    }
 
+    function updateMinute(event: ChangeEvent<HTMLInputElement>) {
+        const value = parseInt(event.target.value)
+        setMinute(isNaN(value) ? 12 : value)
     }
 
     useImperativeHandle(ref, () => ({
@@ -156,7 +204,7 @@ export const AddIncidentWithVesselModal = forwardRef<AddIncidentWithVesselModalR
                     <Popover modal open={isDateModalOpen} onOpenChange={setIsDateModalOpen}>
                         <PopoverTrigger className="flex-1">
                             <div className="flex flex-1 items-center gap-4 border py-2 px-3 -mx-2">
-                                <p className="text-black text-start text-sm line-clamp-1 flex-1">{moment(date).format("DD/MM/YYYY")}</p>
+                                <p className="text-black text-start text-sm line-clamp-1 flex-1">{state.date}</p>
 
                                 <CalendarIcon className="h-8 w-8 opacity-50 text-gray-600 bg-gray-300 p-2 rounded-full" />
                             </div>
@@ -173,14 +221,14 @@ export const AddIncidentWithVesselModal = forwardRef<AddIncidentWithVesselModalR
                     <div className={`border border-gray-100 p-2`}>
                         <div className="flex gap-2">
                             <div>
-                                <input inputMode="numeric" maxLength={2} placeholder="00" className="border p-2 w-12 text-center" />
+                                <input inputMode="numeric" maxLength={2} value={hour} onChange={updateHour} placeholder="00" className="border p-2 w-12 text-center" />
                                 <p className="text-xs">Hour</p>
                             </div>
 
                             <h1 className="text-lg font-bold mt-2">:</h1>
 
                             <div >
-                                <input inputMode="numeric" maxLength={2} placeholder="00" className="border p-2 w-12 text-center" />
+                                <input inputMode="numeric" maxLength={2} onChange={updateMinute} value={minute} placeholder="00" className="border p-2 w-12 text-center" />
                                 <p className="text-xs">Minute</p>
                             </div>
 
