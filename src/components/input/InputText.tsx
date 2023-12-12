@@ -1,12 +1,18 @@
 import { cn } from "@/lib/utils";
-import { forwardRef } from "react";
+import { forwardRef, TextareaHTMLAttributes } from "react";
 import { HTMLAttributes, InputHTMLAttributes } from "react";
 
 export type InputProps = InputHTMLAttributes<HTMLInputElement>
+export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement>
 
 const Input = forwardRef<HTMLInputElement, InputProps>(({ className, ...props }: InputProps, ref) => {
 
     return <input ref={ref} className={cn("bg-transparent outline-none border-none px-0 py-3 w-full", className)} {...props} />
+})
+
+const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(({ className, ...props }: TextAreaProps, ref) => {
+
+    return <textarea ref={ref} className={cn("bg-transparent outline-none border-none px-0 py-3 w-full", className)} {...props} />
 })
 
 const TextFieldContainer = (containerProps: HTMLAttributes<HTMLDivElement>) => {
@@ -17,8 +23,10 @@ const TextFieldContainer = (containerProps: HTMLAttributes<HTMLDivElement>) => {
 
 export const TextField = {
     Container: TextFieldContainer,
+    TextArea,
     Input: Input
 }
 
 Input.displayName = "TextFieldInput"
+TextArea.displayName = "TextArea"
 TextFieldContainer.displayName = "TextFieldContainer"
