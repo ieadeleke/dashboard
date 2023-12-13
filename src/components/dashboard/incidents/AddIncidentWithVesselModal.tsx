@@ -44,7 +44,7 @@ const AdminInputField = ({ className, renderInputType, ...props }: InputProps & 
 
 const schema = z
     .object({
-        time: z.string({ required_error: "Invalid time" }).regex(/^(1[0-2]|0?[1-9]):([0-5][0-9]) ([APap][mM])$/, "Invalid time"),
+        time: z.string({ required_error: "Invalid time" }).regex(/^\d{2}\/\d{2}\/\d{4}$/, "Invalid time"),
         date: z.string({ required_error: "Invalid date" }).regex(/^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/, "Invalid date"),
         accident_location: z.string({ required_error: "Insert a valid location" }).min(3, "Location must be at least 3 characters").max(500),
         boat_name: z.string({ required_error: "Invalid boat name" }).min(3, "Boat name must be at least 3 characters").max(20, "Boat name should not be more than 20 characters"),

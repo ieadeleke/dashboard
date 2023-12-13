@@ -15,6 +15,8 @@ import { useReducer } from "react"
 import { ChangeEvent, forwardRef, useContext, useEffect, useImperativeHandle, useState } from "react"
 import Button from "../../buttons"
 import { InputProps, TextAreaProps, TextField } from "../../input/InputText"
+import { z } from 'zod';
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
 
 type AddIncidentWithPeopleModalProps = {
     onNewFleetAdded?: (fleet: Fleet) => void,
@@ -41,25 +43,46 @@ const AdminInputField = ({ className, renderInputType, ...props }: InputProps & 
     </TextField.Container>
 }
 
+const schema = z
+    .object({
+        date: z.string({ required_error: "Invalid date" }).regex(/^\d{2}\/\d{2}\/\d{4}$/, "Invalid date"),
+        gender: z.boolean(),
+        rescued: z.boolean(),
+        missing: z.boolean(),
+        injury: z.boolean(),
+        death: z.boolean(),
+        accident_location: z.string({ required_error: "Insert a valid location" }).min(3, "Location must be at least 3 characters").max(500),
+        possible_cause: z.string({ required_error: "Insert a valid location" }).min(3, "Possible cause must be at least 3 characters"),
+        accident_cause: z.string({ required_error: "Insert a valid accident cause" }).min(3, "Accident cause must be at least 3 characters"),
+        no_of_casualties: z.number().min(0, "Number of casualties must be at least 0"),
+        comments: z.string()
+    }).required();
+
+
 type FormState = {
+    date: string,
     accident_location: string,
-    boat_name: string,
-    boat_type?: string,
-    no_of_passengers_onboard?: number,
-    no_of_passengers_rescued?: number,
-    no_of_passengers_missing?: number,
-    no_of_injured_passengers?: number,
-    cause_of_accident: string,
+    gender: boolean,
+    rescued: boolean,
+    missing: boolean,
+    injury: boolean,
+    death: boolean,
+    no_of_casualties?: number,
+    possible_cause?: string,
+    accident_cause?: string,
     comments: string
 }
 
 type FormAction = Partial<FormState>
 
 const default_state: FormState = {
-    boat_name: "",
-    boat_type: "",
+    gender: false,
+    injury: false,
+    missing: false,
+    rescued: false,
+    death: false,
+    date: "",
     accident_location: "",
-    cause_of_accident: "",
     comments: ""
 }
 
@@ -74,54 +97,69 @@ export const AddIncidentWithPeopleModal = forwardRef<AddIncidentWithPeopleModalR
     const [isVisible, setIsVisible] = useState(false)
     const [isDateModalOpen, setIsDateModalOpen] = useState(false)
     const [date, setDate] = useState<Date>()
-    const [timeOfDay, setTimeOfDay] = useState<"am" | "pm">("am")
+
+    useEffect(() => {
+        dispatch({ date: moment(date).format("DD/MM/YYYY") })
+    }, [date])
 
     function closeModal() {
         setIsVisible(false)
     }
 
-    function onBoatNameChanged(event: ChangeEvent<HTMLInputElement>) {
-        dispatch({ boat_name: event.target.value })
+    function onPossibleCauseChanged(value: string) {
+        dispatch({ possible_cause: value })
     }
 
-    function onBoatTypeChanged(event: ChangeEvent<HTMLInputElement>) {
-        dispatch({ boat_type: event.target.value })
+    function onNumberOfCasualties(event: ChangeEvent<HTMLInputElement>) {
+        const value = parseInt(event.target.value)
+        dispatch({ no_of_casualties: isNaN(value) ? 0 : value })
     }
 
-    function onCauseOfAccidentChanged(event: ChangeEvent<HTMLInputElement>) {
-        dispatch({ cause_of_accident: event.target.value })
+    function toggleMaleGender() {
+        dispatch({ gender: true })
+    }
+
+    function toggleFemaleGender() {
+        dispatch({ gender: false })
+    }
+
+    function toggleInjury(value: boolean) {
+        dispatch({ injury: value })
+    }
+
+    function toggleMissing(value: boolean) {
+        dispatch({ missing: value })
+    }
+
+    function toggleRescued(value: boolean) {
+        dispatch({ rescued: value })
+    }
+
+    function toggleDeath(value: boolean) {
+        dispatch({ death: value })
+    }
+
+    function onCauseOfAccidentChanged(value: string) {
+        dispatch({ accident_cause: value })
     }
 
     function onCommentsChanged(event: ChangeEvent<HTMLInputElement>) {
         dispatch({ comments: event.target.value })
     }
 
-    function onNumberOfInjuredPassesngersChanged(event: ChangeEvent<HTMLInputElement>) {
-        const value = parseInt(event.target.value)
-        dispatch({ no_of_injured_passengers: isNaN(value) ? 0 : Math.min(value, 100) })
-    }
-
-    function onNumberOfPassesngersOnboardChanged(event: ChangeEvent<HTMLInputElement>) {
-        const value = parseInt(event.target.value)
-        dispatch({ no_of_passengers_onboard: isNaN(value) ? 0 : Math.min(value, 100) })
-    }
-
-    function onNumberOfPassesngersMissingChanged(event: ChangeEvent<HTMLInputElement>) {
-        const value = parseInt(event.target.value)
-        dispatch({ no_of_passengers_missing: isNaN(value) ? 0 : Math.min(value, 100) })
-    }
-
-    function onNumberOfPassesngersRescuedChanged(event: ChangeEvent<HTMLInputElement>) {
-        const value = parseInt(event.target.value)
-        dispatch({ no_of_passengers_rescued: isNaN(value) ? 0 : Math.min(value, 100) })
-    }
 
     function oAccidentLocationChanged(event: ChangeEvent<HTMLInputElement>) {
         dispatch({ accident_location: event.target.value })
     }
 
     function submit() {
-
+        try {
+            const response = schema.parse(state)
+        } catch (error) {
+            if (error.issues && error.issues.length > 0) {
+                showSnackBar({ severity: 'error', message: error.issues[0].message })
+            }
+        }
     }
 
     useImperativeHandle(ref, () => ({
@@ -137,10 +175,6 @@ export const AddIncidentWithPeopleModal = forwardRef<AddIncidentWithPeopleModalR
         if (!value) {
             closeModal()
         }
-    }
-
-    function updateTimeOfDay(time: "am" | "pm") {
-        setTimeOfDay(time)
     }
 
     return <Dialog open={isVisible} onOpenChange={onOpenChange}>
@@ -180,19 +214,19 @@ export const AddIncidentWithPeopleModal = forwardRef<AddIncidentWithPeopleModalR
                     <div className="flex items-center gap-2">
                         <div className="flex items-center gap-2">
                             <p className="text-sm">Male</p>
-                            <CheckBox checkIconClassName="w-2 h-2" />
+                            <CheckBox onValueChange={(value) => toggleMaleGender()} isChecked={state.gender} checkIconClassName="w-2 h-2" />
                         </div>
 
                         <div className="flex items-center gap-2">
                             <p className="text-sm">Female</p>
-                            <CheckBox checkIconClassName="w-2 h-2" />
+                            <CheckBox onValueChange={(value) => toggleFemaleGender()} isChecked={!state.gender} checkIconClassName="w-2 h-2" />
                         </div>
                     </div>
                 </div>
 
                 <div className="flex flex-col gap-2">
                     <h4 className="text-sm font-medium">Number of Casualties</h4>
-                    <AdminInputField inputMode="numeric" value={state.no_of_passengers_onboard} onChange={onNumberOfPassesngersOnboardChanged} />
+                    <AdminInputField inputMode="numeric" value={state.no_of_casualties} onChange={onNumberOfCasualties} />
                 </div>
 
                 <div className="p-2 flex flex-col gap-2 bg-gray-100">
@@ -201,12 +235,12 @@ export const AddIncidentWithPeopleModal = forwardRef<AddIncidentWithPeopleModalR
                     <div className="flex items-center gap-2">
                         <div className="flex items-center gap-2">
                             <p className="text-sm">No</p>
-                            <CheckBox checkIconClassName="w-2 h-2" />
+                            <CheckBox isChecked={!state.rescued} onValueChange={() => toggleRescued(false)} checkIconClassName="w-2 h-2" />
                         </div>
 
                         <div className="flex items-center gap-2">
                             <p className="text-sm">Yes</p>
-                            <CheckBox checkIconClassName="w-2 h-2" />
+                            <CheckBox isChecked={state.rescued} onValueChange={() => toggleRescued(true)} checkIconClassName="w-2 h-2" />
                         </div>
                     </div>
                 </div>
@@ -219,12 +253,12 @@ export const AddIncidentWithPeopleModal = forwardRef<AddIncidentWithPeopleModalR
                             <div className="flex items-center gap-2">
                                 <div className="flex items-center gap-2">
                                     <p className="text-sm">No</p>
-                                    <CheckBox checkIconClassName="w-2 h-2" />
+                                    <CheckBox isChecked={!state.missing} onValueChange={() => toggleMissing(false)} checkIconClassName="w-2 h-2" />
                                 </div>
 
                                 <div className="flex items-center gap-2">
                                     <p className="text-sm">Yes</p>
-                                    <CheckBox checkIconClassName="w-2 h-2" />
+                                    <CheckBox isChecked={state.missing} onValueChange={() => toggleMissing(true)} checkIconClassName="w-2 h-2" />
                                 </div>
                             </div>
                         </div>
@@ -235,12 +269,12 @@ export const AddIncidentWithPeopleModal = forwardRef<AddIncidentWithPeopleModalR
                             <div className="flex items-center gap-2">
                                 <div className="flex items-center gap-2">
                                     <p className="text-sm">No</p>
-                                    <CheckBox checkIconClassName="w-2 h-2" />
+                                    <CheckBox isChecked={!state.injury} onValueChange={() => toggleInjury(false)} checkIconClassName="w-2 h-2" />
                                 </div>
 
                                 <div className="flex items-center gap-2">
                                     <p className="text-sm">Yes</p>
-                                    <CheckBox checkIconClassName="w-2 h-2" />
+                                    <CheckBox isChecked={state.injury} onValueChange={() => toggleInjury(true)} checkIconClassName="w-2 h-2" />
                                 </div>
                             </div>
                         </div>
@@ -251,12 +285,12 @@ export const AddIncidentWithPeopleModal = forwardRef<AddIncidentWithPeopleModalR
                             <div className="flex items-center gap-2">
                                 <div className="flex items-center gap-2">
                                     <p className="text-sm">No</p>
-                                    <CheckBox checkIconClassName="w-2 h-2" />
+                                    <CheckBox isChecked={!state.death} onValueChange={() => toggleDeath(false)} checkIconClassName="w-2 h-2" />
                                 </div>
 
                                 <div className="flex items-center gap-2">
                                     <p className="text-sm">Yes</p>
-                                    <CheckBox checkIconClassName="w-2 h-2" />
+                                    <CheckBox isChecked={state.death} onValueChange={() => toggleDeath(true)} checkIconClassName="w-2 h-2" />
                                 </div>
                             </div>
                         </div>
@@ -267,25 +301,41 @@ export const AddIncidentWithPeopleModal = forwardRef<AddIncidentWithPeopleModalR
                     <div className="flex items-center gap-4">
                         <div className="flex-1">
                             <h4 className="text-sm font-medium">Possible Cause</h4>
-                            <div className="flex items-center border rounded-lg h-10">
-                                <div className="flex-1" />
-                                <ChevronDown className="text-gray-500" />
-                            </div>
+
+                            <Select onValueChange={onPossibleCauseChanged}>
+                                <SelectTrigger className="flex items-center border rounded-lg h-10 w-full">
+                                    <p className="text-gray-500">{state.possible_cause}</p>
+                                    <ChevronDown className="text-gray-500" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value='fire'>Fire</SelectItem>
+                                    <SelectItem value='water'>Water</SelectItem>
+                                    <SelectItem value='earth'>Earth</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
 
                         <div className="flex-1">
                             <h4 className="text-sm font-medium">Accident Cause</h4>
-                            <div className="flex items-center border rounded-lg h-10">
-                                <div className="flex-1" />
-                                <ChevronDown className="text-gray-500" />
-                            </div>
+
+                            <Select onValueChange={onCauseOfAccidentChanged}>
+                                <SelectTrigger className="flex items-center border rounded-lg h-10 w-full">
+                                    <p className="text-gray-500">{state.accident_cause}</p>
+                                    <ChevronDown className="text-gray-500" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value='fire'>Fire</SelectItem>
+                                    <SelectItem value='water'>Water</SelectItem>
+                                    <SelectItem value='earth'>Earth</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
                     </div>
                 </div>
 
                 <div className="flex flex-col gap-2">
                     <h4 className="text-sm font-medium">Comments</h4>
-                    <AdminInputField renderInputType="text-area" />
+                    <AdminInputField onChange={onCommentsChanged} renderInputType="text-area" />
                 </div>
 
                 <div className="flex gap-8">

@@ -22,6 +22,8 @@ export const CheckBox = ({checkIconClassName, ...props}: CheckBoxProps) => {
     function toggleState(){
         setIsChecked((checked) => !checked)
     }
+
+    return <input type="checkbox" checked={props.isChecked} onChange={(event) => props.onValueChange?.(event.target.checked)} />
     
     return <div onClick={toggleState} className={`border border-gray-200 rounded-sm p-[2px] cursor-pointer ${className}`}>
         <CheckIcon className={cn(`w-4 h-4`, checkIconClassName)} />
