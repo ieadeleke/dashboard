@@ -52,7 +52,7 @@ const schema = z
         injury: z.boolean(),
         death: z.boolean(),
         accident_location: z.string({ required_error: "Insert a valid location" }).min(3, "Location must be at least 3 characters").max(500),
-        possible_cause: z.string({ required_error: "Insert a valid location" }).min(3, "Possible cause must be at least 3 characters"),
+        possible_cause: z.string({ required_error: "Insert a valid possible cause" }).min(3, "Possible cause must be at least 3 characters"),
         accident_cause: z.string({ required_error: "Insert a valid accident cause" }).min(3, "Accident cause must be at least 3 characters"),
         no_of_casualties: z.number().min(0, "Number of casualties must be at least 0"),
         comments: z.string()
