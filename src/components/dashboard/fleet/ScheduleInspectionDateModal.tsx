@@ -6,14 +6,12 @@ import {
 } from "@/components/ui/dialog"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { GlobalActionContext } from "@/context/GlobalActionContext"
-import { cn } from "@/lib/utils"
 import { Fleet } from "@/models/fleets"
 import { CalendarIcon, ChevronDown } from "lucide-react"
 import moment from "moment"
 import { useReducer } from "react"
-import { ChangeEvent, forwardRef, useContext, useImperativeHandle, useState } from "react"
+import { forwardRef, useContext, useImperativeHandle, useState } from "react"
 import Button from "../../buttons"
-import { InputProps, TextAreaProps, TextField } from "../../input/InputText"
 import { z } from 'zod';
 import { useEffect } from "react"
 import {
@@ -21,8 +19,8 @@ import {
     SelectContent,
     SelectItem,
     SelectTrigger,
-    SelectValue,
 } from "@/components/ui/select"
+import { TimeSelector } from "@/components/time/TimeSelector"
 
 type ScheduleInspectionDateModalProps = {
     onNewFleetAdded?: (fleet: Fleet) => void,
@@ -31,22 +29,6 @@ type ScheduleInspectionDateModalProps = {
 export type ScheduleInspectionDateModalRef = {
     open: () => void,
     close: () => void
-}
-
-const AdminInputField = ({ className, renderInputType, ...props }: InputProps & { renderInputType?: "input" | "text-area" }) => {
-    const [isFocused, setIsFocused] = useState(false)
-
-    function onBlur() {
-        setIsFocused(false)
-    }
-
-    function onFocus() {
-        setIsFocused(true)
-    }
-
-    return <TextField.Container className={cn(`border ${isFocused ? 'border-[#6BC3FF]' : 'border-gray-100'}`)}>
-        {renderInputType == 'text-area' ? <TextField.TextArea onBlur={onBlur as any} onFocus={onFocus as any} {...props as TextAreaProps} /> : <TextField.Input onBlur={onBlur} onFocus={onFocus} {...props} />}
-    </TextField.Container>
 }
 
 const schema = z
@@ -89,9 +71,6 @@ export const ScheduleInspectionDateModal = forwardRef<ScheduleInspectionDateModa
     const [isVisible, setIsVisible] = useState(true)
     const [isDateModalOpen, setIsDateModalOpen] = useState(false)
     const [date, setDate] = useState<Date>()
-    const [hour, setHour] = useState(12)
-    const [minute, setMinute] = useState(30)
-    const [timeOfDay, setTimeOfDay] = useState<"am" | "pm">("am")
 
     function closeModal() {
         setIsVisible(false)
@@ -108,22 +87,11 @@ export const ScheduleInspectionDateModal = forwardRef<ScheduleInspectionDateModa
     }
 
     useEffect(() => {
-        dispatch({ time: `${hour}:${minute} ${timeOfDay == 'am' ? "AM" : "PM"}` })
-    }, [timeOfDay, hour, minute])
-
-
-    useEffect(() => {
         dispatch({ date: moment(date).format("DD/MM/YYYY") })
     }, [date])
 
-    function updateHour(event: ChangeEvent<HTMLInputElement>) {
-        const value = parseInt(event.target.value)
-        setHour(isNaN(value) ? 12 : value)
-    }
-
-    function updateMinute(event: ChangeEvent<HTMLInputElement>) {
-        const value = parseInt(event.target.value)
-        setMinute(isNaN(value) ? 12 : value)
+    function onTimeChanged(time: string){
+        dispatch({time: time})
     }
 
     function onLocationChanged(value: string) {
@@ -147,10 +115,6 @@ export const ScheduleInspectionDateModal = forwardRef<ScheduleInspectionDateModa
         if (!value) {
             closeModal()
         }
-    }
-
-    function updateTimeOfDay(time: "am" | "pm") {
-        setTimeOfDay(time)
     }
 
     return <Dialog open={isVisible} onOpenChange={onOpenChange}>
@@ -182,24 +146,7 @@ export const ScheduleInspectionDateModal = forwardRef<ScheduleInspectionDateModa
                 <div className="flex flex-col gap-2">
                     <h4 className="text-sm font-medium">Time</h4>
                     <div className={`border border-gray-100 p-2`}>
-                        <div className="flex gap-2">
-                            <div>
-                                <input inputMode="numeric" maxLength={2} value={hour} onChange={updateHour} placeholder="00" className="border p-2 w-12 text-center" />
-                                <p className="text-xs">Hour</p>
-                            </div>
-
-                            <h1 className="text-lg font-bold mt-2">:</h1>
-
-                            <div >
-                                <input inputMode="numeric" maxLength={2} onChange={updateMinute} value={minute} placeholder="00" className="border p-2 w-12 text-center" />
-                                <p className="text-xs">Minute</p>
-                            </div>
-
-                            <div className="flex flex-col border">
-                                <p onClick={() => updateTimeOfDay("am")} className={`${timeOfDay == 'am' ? 'bg-gray-200' : 'bg-transparent'} px-2 text-sm flex-1 text-center pt-1 cursor-pointer`}>AM</p>
-                                <p onClick={() => updateTimeOfDay("pm")} className={`${timeOfDay == 'pm' ? 'bg-gray-200' : 'bg-transparent'} flex-1 px-2 text-sm text-center pt-1 cursor-pointer`}>PM</p>
-                            </div>
-                        </div>
+                        <TimeSelector onValueChanged={onTimeChanged} />
                     </div>
                 </div>
 
