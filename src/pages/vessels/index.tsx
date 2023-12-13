@@ -346,7 +346,7 @@ export default function Fleets() {
                 <div className="flex flex-col gap-6">
                     <SEO title="Laswa | Fleets" />
                     <AddFleetModal ref={addFleetModalRef} onNewFleetAdded={onNewFleetAdded} />
-                    <h1 className="text-2xl font-bold">All Fleets <span className="text-primary">({size})</span></h1>
+                    <h1 className="text-2xl font-bold">All Vessels <span className="text-primary">({size})</span></h1>
 
                     <div>
                         <TabsList className="flex flex-wrap justify-start bg-white h-auto py-0 px-0">

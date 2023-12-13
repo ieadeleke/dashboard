@@ -52,8 +52,8 @@ export const MenuSideBar = () => {
 
             <div className="flex flex-col gap-5 mt-4 lg:w-full">
                 <ListItem isActive startIcon={<HomeIcon />} name="Dashboard" href="/" />
-                <ListItem startIcon={<FleetIcon />} name="Fleets" href="/fleets" />
-                <ListItem startIcon={<StaffIcon />} name="Operators" href="/operators" />
+                <ListItem startIcon={<FleetIcon />} name="Vessels" href="/vessels" />
+                <ListItem startIcon={<StaffIcon />} name="Users" href="/users" />
                 <ListItem startIcon={<HistoryIcon />} name="Trip History" href="/trip-history" />
                 <ListItem startIcon={<PassengersIcon />} name="Incidents" href="/incidents" />
                 <ListItem startIcon={<TrackingIcon />} name="Tracking" href="/tracking" />
