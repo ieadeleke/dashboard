@@ -32,6 +32,11 @@ import { VesselDisapprovalModal, VesselDisapprovalModalRef } from "@/components/
 import BlockIcon from '@/assets/icons/ic_block.svg'
 import { ScheduleInspectionDateModal } from "@/components/dashboard/fleet/ScheduleInspectionDateModal";
 import { FleetGalleryModal } from "@/components/dashboard/fleet/FleetGalleryModal";
+import { ConfirmationAlertDialogRef } from "@/components/dialogs/ConfirmationAlertDialog";
+import { useSuspendFleet } from "@/utils/apiHooks/fleets/useSuspendFleet";
+import { useVerifyFleet } from "@/utils/apiHooks/fleets/useVerifyFleet";
+import { fleetActions } from "@/redux/reducers/fleets";
+import { LoadingModal } from "@/components/states/LoadingModal";
 
 type TableDataListProps = {
     data: Fleet,
@@ -77,6 +82,38 @@ export const FleetTableDataList = (props: TableDataListProps) => {
     const vesselDisapprovalRef = useRef<VesselDisapprovalModalRef>(null)
     const fleetOptionRef = useRef<FleetOptionModalRef>(null)
     const vesselInfoModalRef = useRef<VesselInfoModalRef>(null)
+    const confirmationDialogRef = useRef<ConfirmationAlertDialogRef>(null)
+    const { isLoading: isSuspendLoading, data: suspendData, suspendFleet, error: suspendError } = useSuspendFleet()
+    const { isLoading: isUnSuspendLoading, data: unSuspendData, verifyFleet, error: unsuspendError } = useVerifyFleet()
+    const { showSnackBar } = useContext(GlobalActionContext)
+
+    const isLoading = useMemo(() => isUnSuspendLoading || isSuspendLoading, [isUnSuspendLoading, isSuspendLoading])
+
+    const error = useMemo(() => suspendError || unsuspendError, [suspendError, unsuspendError])
+
+    useEffect(() => {
+        if (suspendData) {
+            showSnackBar({ severity: 'success', message: 'Vessel suspended' })
+            if (data) {
+                fleetActions.updateFleet({ fleet_id: data._id, data: { status: "suspended" } })
+            }
+        }
+    }, [suspendData])
+
+    useEffect(() => {
+        if (unSuspendData) {
+            showSnackBar({ severity: 'success', message: 'Vessel unsuspended' })
+            if (data) {
+                fleetActions.updateFleet({ fleet_id: data._id, data: { status: "active" } })
+            }
+        }
+    }, [unSuspendData])
+
+    useEffect(() => {
+        if (error) {
+            showSnackBar({ severity: 'error', message: error })
+        }
+    }, [error])
 
     function handleViewBoatDetails() {
         props.onViewBoatDetails?.(data)
@@ -92,9 +129,23 @@ export const FleetTableDataList = (props: TableDataListProps) => {
         vesselDisapprovalRef.current?.open()
     }
 
-    function handleViewVesselInfo(fleet: Fleet){
+    function handleViewVesselInfo(fleet: Fleet) {
         vesselInfoModalRef.current?.open({
             data: fleet
+        })
+    }
+
+    function handleRemoveSuspension(fleet: Fleet) {
+        confirmationDialogRef.current?.show({
+            data: {
+                title: "Are you sure you want to unsuspend this fleet?"
+            },
+            onConfirm: () => {
+                verifyFleet({ boatId: fleet._id })
+            },
+            onCancel: () => {
+                confirmationDialogRef.current?.dismiss()
+            }
         })
     }
 
@@ -133,6 +184,7 @@ export const FleetTableDataList = (props: TableDataListProps) => {
         <FleetOptionModal ref={fleetOptionRef} />
         <VesselDisapprovalModal ref={vesselDisapprovalRef} />
         <VesselInfoModal ref={vesselInfoModalRef} />
+        <LoadingModal isVisible={isLoading} />
         <TableRow>
             <TableCell className="flex font-medium"><CheckBox /></TableCell>
             <TableCell>
@@ -167,10 +219,13 @@ export const FleetTableDataList = (props: TableDataListProps) => {
                             <p className="text-sm">Review</p>
                         </div>
 
-                        <div className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleDisapproveVessel(data)}>
+                        {data.status == 'suspended' ? <div className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleDisapproveVessel(data)}>
+                            <BlockIcon className="text-red-500" />
+                            <p className="text-sm text-red-500">Remove Suspension</p>
+                        </div> : <div className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleRemoveSuspension(data)}>
                             <BlockIcon className="text-gray-400" />
                             <p className="text-sm">Suspend Vessel</p>
-                        </div>
+                        </div>}
 
                         <div className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleDisapproveVessel(data)}>
                             <AlertTriangleIcon className="text-primary" />
