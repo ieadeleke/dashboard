@@ -6,12 +6,17 @@ import {
 import { GlobalActionContext } from "@/context/GlobalActionContext"
 import { Fleet } from "@/models/fleets"
 import { useAddFleet } from "@/utils/apiHooks/fleets/useAddFleet"
-import { MoreHorizontal } from "lucide-react"
+import { HistoryIcon, MoreHorizontal } from "lucide-react"
 import { forwardRef, useContext, useImperativeHandle, useMemo, useState } from "react"
 import FleetIcon from '@/assets/icons/ic_fleet_on_water.svg'
 import Button from "@/components/buttons"
 import { FleetStatusChip } from "./FleetStatusChip"
 import { Avatar } from "@/components/image/Avatar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import BlockIcon from '@/assets/icons/ic_block.svg'
+import { FleetGalleryModal, FleetGalleryModalRef } from "./FleetGalleryModal"
+import { useRef } from "react"
+import { Select, SelectContent, SelectTrigger } from "@/components/ui/select"
 
 type VesselInfoModalProps = {
 
@@ -48,6 +53,7 @@ export const VesselInfoModal = forwardRef<VesselInfoModalRef, VesselInfoModalPro
     const { showSnackBar } = useContext(GlobalActionContext)
     const [data, setData] = useState<Fleet>()
     const [isVisible, setIsVisible] = useState(false)
+    const fleetGalleryModal = useRef<FleetGalleryModalRef>(null)
 
     function closeModal() {
         setIsVisible(false)
@@ -70,8 +76,19 @@ export const VesselInfoModal = forwardRef<VesselInfoModalRef, VesselInfoModalPro
         }
     }
 
+    function handleViewVesselPhotos() {
+        fleetGalleryModal.current?.open({
+            data: data?.imgUrl.map((item) => item.url) ?? []
+        })
+    }
+
+    function handleSuspendVessel() {
+
+    }
+
     return <Dialog open={isVisible} onOpenChange={onOpenChange}>
         <DialogContent className="max-h-[90vh] max-w-[60vw] overflow-y-scroll no-scrollbar px-0 py-0">
+            <FleetGalleryModal ref={fleetGalleryModal} />
             {data && <div className="flex flex-col">
                 <div className="h-28 bg-primary" />
                 <div className="px-8 flex flex-col gap-4 pb-8">
@@ -85,9 +102,26 @@ export const VesselInfoModal = forwardRef<VesselInfoModalRef, VesselInfoModalPro
                             <div className='flex-1' />
                             <FleetStatusChip status={data.status} />
 
-                            <IconButton>
-                                <MoreHorizontal />
-                            </IconButton>
+                            <Select>
+                                <SelectTrigger className="w-auto border-none">
+                                    <IconButton>
+                                        <MoreHorizontal className="text-gray-500" />
+                                    </IconButton>
+                                </SelectTrigger>
+
+                                <SelectContent className="w-auto px-0 py-1">
+                                    <div className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleViewVesselPhotos()}>
+                                        <HistoryIcon className="text-gray-400" />
+                                        <p className="text-sm">View</p>
+                                    </div>
+
+
+                                    <div className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleSuspendVessel()}>
+                                        <BlockIcon className="text-gray-400" />
+                                        <p className="text-sm">Suspend Vessel</p>
+                                    </div>
+                                </SelectContent>
+                            </Select>
                         </div>
 
                     </div>
@@ -119,7 +153,7 @@ export const VesselInfoModal = forwardRef<VesselInfoModalRef, VesselInfoModalPro
                     </div>
 
                     <div className="flex gap-16 items-center mt-4">
-                        <Button variant="outlined" className="flex-1 rounded-lg bg-gray-100 border border-primary text-primary">Cancel</Button>
+                        <Button onClick={closeModal} variant="outlined" className="flex-1 rounded-lg bg-gray-100 border border-primary text-primary">Cancel</Button>
                         <Button variant="contained" className="flex-1 rounded-lg">Confirm</Button>
                     </div>
                 </div>
