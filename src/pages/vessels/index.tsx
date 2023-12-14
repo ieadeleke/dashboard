@@ -2,7 +2,7 @@ import { IconButton } from "@/components/buttons/IconButton";
 import { TextField } from "@/components/input/InputText";
 import DashboardLayout from "@/components/layout/dashboard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { AlertTriangleIcon, ChevronDown, DownloadIcon, EyeIcon, MoreHorizontalIcon, PenIcon, PlusIcon, SearchIcon, UploadIcon } from "lucide-react";
+import { AlertTriangleIcon, ChevronDown, DownloadIcon, EyeIcon, HistoryIcon, MoreHorizontalIcon, PenIcon, PlusIcon, SearchIcon, UploadIcon } from "lucide-react";
 import {
     Table,
     TableBody,
@@ -27,8 +27,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { TablePagination } from "@/components/pagination/TablePagination";
 import { FilterFleetModal, FilterFleetModalRef, FilterOption } from "@/components/dashboard/fleet/FilterFleetModal";
 import { FleetOptionModal, FleetOptionModalRef } from "@/components/dashboard/fleet/FleetOptionModal";
-import { VesselInfoModal } from "@/components/dashboard/fleet/VesselInfo";
-import { VesselDisapprovalModal } from "@/components/dashboard/fleet/VesselDisapprovalModal";
+import { VesselInfoModal, VesselInfoModalRef } from "@/components/dashboard/fleet/VesselInfo";
+import { VesselDisapprovalModal, VesselDisapprovalModalRef } from "@/components/dashboard/fleet/VesselDisapprovalModal";
+import BlockIcon from '@/assets/icons/ic_block.svg'
 import { ScheduleInspectionDateModal } from "@/components/dashboard/fleet/ScheduleInspectionDateModal";
 import { FleetGalleryModal } from "@/components/dashboard/fleet/FleetGalleryModal";
 
@@ -73,7 +74,9 @@ const tabs = [
 export const FleetTableDataList = (props: TableDataListProps) => {
     const { data } = props
 
+    const vesselDisapprovalRef = useRef<VesselDisapprovalModalRef>(null)
     const fleetOptionRef = useRef<FleetOptionModalRef>(null)
+    const vesselInfoModalRef = useRef<VesselInfoModalRef>(null)
 
     function handleViewBoatDetails() {
         props.onViewBoatDetails?.(data)
@@ -81,6 +84,16 @@ export const FleetTableDataList = (props: TableDataListProps) => {
 
     function handleFleetOptions(fleet: Fleet) {
         fleetOptionRef.current?.open({
+            data: fleet
+        })
+    }
+
+    function handleDisapproveVessel(fleet: Fleet) {
+        vesselDisapprovalRef.current?.open()
+    }
+
+    function handleViewVesselInfo(fleet: Fleet){
+        vesselInfoModalRef.current?.open({
             data: fleet
         })
     }
@@ -118,11 +131,13 @@ export const FleetTableDataList = (props: TableDataListProps) => {
 
     return <TableBody className="bg-white">
         <FleetOptionModal ref={fleetOptionRef} />
+        <VesselDisapprovalModal ref={vesselDisapprovalRef} />
+        <VesselInfoModal ref={vesselInfoModalRef} />
         <TableRow>
             <TableCell className="flex font-medium"><CheckBox /></TableCell>
             <TableCell>
                 <div className="flex items-center gap-4">
-                    <img src={data.imgUrl} className="bg-gray-200 h-10 w-10 object-cover object-center" />
+                    <img src={data.imgUrl.length > 0 ? data.imgUrl[0].url : undefined} className="bg-gray-200 h-10 w-10 object-cover object-center" />
                     <p>{data.model}</p>
                 </div>
             </TableCell>
@@ -142,14 +157,29 @@ export const FleetTableDataList = (props: TableDataListProps) => {
                     </PopoverTrigger>
 
                     <PopoverContent className="w-auto px-0 py-1">
-                        <div className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleFleetOptions(data)}>
-                            <PenIcon className="text-gray-400" />
-                            <p>Review</p>
+                        <div className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleViewVesselInfo(data)}>
+                            <HistoryIcon className="text-gray-400" />
+                            <p className="text-sm">View</p>
                         </div>
 
-                        <div className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleFleetOptions(data)}>
+                        <div className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleViewVesselInfo(data)}>
+                            <PenIcon className="text-gray-400" />
+                            <p className="text-sm">Review</p>
+                        </div>
+
+                        <div className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleDisapproveVessel(data)}>
+                            <BlockIcon className="text-gray-400" />
+                            <p className="text-sm">Suspend Vessel</p>
+                        </div>
+
+                        <div className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleDisapproveVessel(data)}>
                             <AlertTriangleIcon className="text-primary" />
-                            <p className="text-primary">Approve</p>
+                            <p className="text-primary text-sm">Approve</p>
+                        </div>
+
+                        <div className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleViewVesselInfo(data)}>
+                            <HistoryIcon className="text-gray-400" />
+                            <p className="text-sm">View Inspection Recrod</p>
                         </div>
                     </PopoverContent>
                 </Popover>
