@@ -21,13 +21,15 @@ import { useSuspendFleet } from "@/utils/apiHooks/fleets/useSuspendFleet"
 import { ConfirmationAlertDialog, ConfirmationAlertDialogRef } from "@/components/dialogs/ConfirmationAlertDialog"
 import { useVerifyFleet } from "@/utils/apiHooks/fleets/useVerifyFleet"
 import { fleetActions } from "@/redux/reducers/fleets"
+import { useActivateFleet } from "@/utils/apiHooks/fleets/useActivateFleet"
 
 type VesselInfoModalProps = {
 
 }
 
 type VesselInfoOpenPayload = {
-    data: Fleet
+    data: Fleet,
+    isForApproval?: boolean
 }
 
 export type VesselInfoModalRef = {
@@ -56,10 +58,11 @@ const VesselInfoChip = (props: VesselInfoChipProps) => {
 export const VesselInfoModal = forwardRef<VesselInfoModalRef, VesselInfoModalProps>((props, ref) => {
     const { showSnackBar } = useContext(GlobalActionContext)
     const [data, setData] = useState<Fleet>()
+    const [isForApproval, setIsForApproval] = useState(false)
     const [isVisible, setIsVisible] = useState(false)
     const fleetGalleryModal = useRef<FleetGalleryModalRef>(null)
     const { isLoading: isSuspendLoading, data: suspendData, suspendFleet, error: suspendError } = useSuspendFleet()
-    const { isLoading: isUnSuspendLoading, data: unSuspendData, verifyFleet, error: unsuspendError } = useVerifyFleet()
+    const { isLoading: isUnSuspendLoading, data: unSuspendData, activateFleet, error: unsuspendError } = useActivateFleet()
     const confirmationDialogRef = useRef<ConfirmationAlertDialogRef>(null)
 
     const isLoading = useMemo(() => isUnSuspendLoading || isSuspendLoading, [isUnSuspendLoading, isSuspendLoading])
@@ -80,7 +83,7 @@ export const VesselInfoModal = forwardRef<VesselInfoModalRef, VesselInfoModalPro
 
     useEffect(() => {
         if (unSuspendData) {
-            showSnackBar({ severity: 'success', message: 'Vessel unsuspended' })
+            showSnackBar({ severity: 'success', message: 'Vessel approved' })
             setData((prevData) => {
                 return Object.assign({}, prevData, { status: "active" })
             })
@@ -104,6 +107,7 @@ export const VesselInfoModal = forwardRef<VesselInfoModalRef, VesselInfoModalPro
     useImperativeHandle(ref, () => ({
         open(payload) {
             setData(payload.data)
+            setIsForApproval(payload.isForApproval ?? false)
             setIsVisible(true)
         },
         close() {
@@ -115,6 +119,10 @@ export const VesselInfoModal = forwardRef<VesselInfoModalRef, VesselInfoModalPro
         if (!value) {
             closeModal()
         }
+    }
+
+    function handleApproveFleet(){
+        handleUnsuspendVessel()
     }
 
     function handleViewVesselPhotos() {
@@ -143,13 +151,13 @@ export const VesselInfoModal = forwardRef<VesselInfoModalRef, VesselInfoModalPro
         if (data) {
             confirmationDialogRef.current?.show({
                 data: {
-                    title: `Are you sure you want to unsuspend this vessel?`,
+                    title: `Are you sure you want to approve this vessel?`,
                     description: ""
                 },
                 onCancel: () => confirmationDialogRef.current?.dismiss(),
                 onConfirm: () => {
                     confirmationDialogRef.current?.dismiss()
-                    verifyFleet({ boatId: data._id })
+                    activateFleet({ boatId: data._id })
                 }
             })
         }
@@ -225,10 +233,10 @@ export const VesselInfoModal = forwardRef<VesselInfoModalRef, VesselInfoModalPro
                         </div>
                     </div>
 
-                    <div className="flex gap-16 items-center mt-4">
+                    {isForApproval ? <div className="flex gap-16 items-center mt-4">
                         <Button isLoading={isLoading} disabled={isLoading} onClick={closeModal} variant="outlined" className="flex-1 rounded-lg bg-gray-100 border border-primary text-primary">Cancel</Button>
-                        <Button isLoading={isLoading} disabled={isLoading} variant="contained" className="flex-1 rounded-lg">Confirm</Button>
-                    </div>
+                        <Button onClick={handleApproveFleet} isLoading={isLoading} disabled={isLoading} variant="contained" className="flex-1 rounded-lg">Confirm</Button>
+                    </div> : <Button onClick={closeModal} isLoading={isLoading} disabled={isLoading} variant="contained" className="flex-1 rounded-lg min-h-[50px]">Close</Button>}
                 </div>
             </div>
             }

@@ -182,17 +182,21 @@ export const FleetTableDataList = (props: TableDataListProps) => {
   }
 
   function handleApproveVessel(fleet: Fleet) {
-    confirmationDialogRef.current?.show({
-        data: {
-          title: "Are you sure you want to approve this fleet?",
-        },
-        onConfirm: () => {
-          activateFleet({ boatId: fleet._id });
-        },
-        onCancel: () => {
-          confirmationDialogRef.current?.dismiss();
-        },
-      });
+    vesselInfoModalRef.current?.open({
+        data: fleet,
+        isForApproval: true
+    })
+    // confirmationDialogRef.current?.show({
+    //     data: {
+    //       title: "Are you sure you want to approve this fleet?",
+    //     },
+    //     onConfirm: () => {
+    //       activateFleet({ boatId: fleet._id });
+    //     },
+    //     onCancel: () => {
+    //       confirmationDialogRef.current?.dismiss();
+    //     },
+    //   });
   }
 
   function handleViewVesselInfo(fleet: Fleet) {
@@ -204,7 +208,8 @@ export const FleetTableDataList = (props: TableDataListProps) => {
   function handleRemoveSuspension(fleet: Fleet) {
     confirmationDialogRef.current?.show({
       data: {
-        title: "Are you sure you want to unsuspend this fleet?",
+        title: "Are you sure you want to remove the suspension on this fleet?",
+        description: "This can't be undone"
       },
       onConfirm: () => {
         activateFleet({ boatId: fleet._id });
