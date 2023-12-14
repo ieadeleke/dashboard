@@ -30,6 +30,7 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
+import { useReportIncident } from "@/utils/apiHooks/incidents/useReportIncident";
 
 type AddIncidentWithPeopleModalProps = {
   onNewFleetAdded?: (fleet: Fleet) => void;
@@ -142,9 +143,10 @@ export const AddIncidentWithPeopleModal = forwardRef<
   const [isVisible, setIsVisible] = useState(false);
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [date, setDate] = useState<Date>();
+  const { isLoading, error, reportIncident, isComplete } = useReportIncident();
 
   useEffect(() => {
-    dispatch({ date: moment(date).format("DD/MM/YYYY") });
+    dispatch({ date: moment(date).format("YYYY/MM/DD") });
   }, [date]);
 
   function closeModal() {
@@ -199,12 +201,41 @@ export const AddIncidentWithPeopleModal = forwardRef<
   function submit() {
     try {
       const response = schema.parse(state);
+      reportIncident({
+        AccidentCause: response.accident_cause,
+        BoatCapacity: 0,
+        BoatName: "",
+        Comment: response.comments,
+        IncidentLocation: response.accident_location,
+        IncidentTime: response.date,
+        MissingPerson: 0,
+        NumberOfInjury: 0,
+        RescuedNumber: 0,
+        BoatType: "N/A",
+        IncidentType: "Vessel",
+      });
     } catch (error: any) {
       if (error.issues && error.issues.length > 0) {
         showSnackBar({ severity: "error", message: error.issues[0].message });
       }
     }
   }
+
+  useEffect(() => {
+    if (error) {
+      showSnackBar({ severity: "error", message: error });
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (isComplete) {
+      showSnackBar({
+        severity: "success",
+        message: `Incident added successfully`,
+      });
+      closeModal();
+    }
+  }, [isComplete]);
 
   useImperativeHandle(ref, () => ({
     open() {
@@ -442,6 +473,8 @@ export const AddIncidentWithPeopleModal = forwardRef<
 
           <div className="flex gap-8">
             <Button
+              isLoading={isLoading}
+              disabled={isLoading}
               onClick={closeModal}
               variant="outlined"
               className="flex-1 py-3 bg-gray-100"
@@ -450,6 +483,8 @@ export const AddIncidentWithPeopleModal = forwardRef<
             </Button>
 
             <Button
+              isLoading={isLoading}
+              disabled={isLoading}
               onClick={submit}
               variant="contained"
               className="flex-1 py-3"

@@ -39,11 +39,11 @@ export default function OtherIncidents(props: OtherIncidentsProps) {
           </div>
 
           <TabsContent value="unapproved">
-            <OperatorsTab tab="unapproved" />
+            <OperatorsTab addNewIndividualIncident={props.addNewIndividualIncident} addNewObjectIncident={props.addNewObjectIncident} addNewVesselIncident={props.addNewVesselIncident} tab="unapproved" />
           </TabsContent>
 
           <TabsContent value="all">
-            <OperatorsTab tab="all" />
+            <OperatorsTab addNewIndividualIncident={props.addNewIndividualIncident} addNewObjectIncident={props.addNewObjectIncident} addNewVesselIncident={props.addNewVesselIncident} tab="all" />
           </TabsContent>
         </Tabs>
       </div>
