@@ -20,7 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/u
 
 const schema = z
     .object({
-        date: z.string({ required_error: "Invalid date" }).regex(/^\d{2}\/\d{2}\/\d{4}$/, "Invalid date"),
+        date: z.string({ required_error: "Invalid date" }).regex(/^\d{4}\/\d{2}\/\d{2}$/, "Invalid date"),
         gender: z.boolean(),
         rescued: z.boolean(),
         missing: z.boolean(),
@@ -156,7 +156,7 @@ export const AddIncidentWithObjectModal = forwardRef<AddIncidentWithObjectModalR
     function submit() {
         try {
             const response = schema.parse(state)
-        } catch (error) {
+        } catch (error: any) {
             if (error.issues && error.issues.length > 0) {
                 showSnackBar({ severity: 'error', message: error.issues[0].message })
             }

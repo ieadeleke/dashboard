@@ -10,6 +10,7 @@ import { faker } from '@faker-js/faker'
 import { Incident } from "@/models/incidents";
 import { IncidentTable } from "../IncidentTable";
 import { FilterIncidentModal, FilterIncidentModalRef, FilterIncidentOption } from "../FilterIndidentModal";
+import { useFetchIncidents } from "@/utils/apiHooks/incidents/useFetchIncidents";
 
 export type GeneralIncidentProps = {
     addNewVesselIncident?: () => void,
@@ -20,9 +21,10 @@ export type GeneralIncidentProps = {
 type OperatorsTabProps = GeneralIncidentProps
 
 export default function OperatorsTab(props: OperatorsTabProps) {
-    const [data, setData] = useState<Incident[]>([])
+    // const [data, setData] = useState<Incident[]>([])
     const filterIncidentRef = useRef<FilterIncidentModalRef>(null)
     const [filterOption, setFilterOption] = useState<FilterIncidentOption>()
+    const { fetchIncidents, isLoading, error, data, count } = useFetchIncidents();
 
     function openFilterModal() {
         filterIncidentRef.current?.open({
@@ -35,12 +37,16 @@ export default function OperatorsTab(props: OperatorsTabProps) {
     }
 
     useEffect(() => {
-        setData(() => Array(50).fill(0).map((item) => {
-            return {
-                fleet_id: faker.number.int({ min: 1000, max: 9999 }).toString(),
-                status: "Approved"
-            }
-        }))
+        fetchIncidents()
+    }, [])
+
+    useEffect(() => {
+        // setData(() => Array(50).fill(0).map((item) => {
+        //     return {
+        //         fleet_id: faker.number.int({ min: 1000, max: 9999 }).toString(),
+        //         status: "Approved"
+        //     }
+        // }))
     }, [])
 
     return (
