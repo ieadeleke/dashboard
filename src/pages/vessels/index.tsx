@@ -1,16 +1,27 @@
 import { IconButton } from "@/components/buttons/IconButton";
 import { TextField } from "@/components/input/InputText";
 import DashboardLayout from "@/components/layout/dashboard";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { AlertTriangleIcon, ChevronDown, DownloadIcon, EyeIcon, HistoryIcon, MoreHorizontalIcon, PenIcon, PlusIcon, SearchIcon, UploadIcon } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
+  AlertTriangleIcon,
+  ChevronDown,
+  DownloadIcon,
+  EyeIcon,
+  HistoryIcon,
+  MoreHorizontalIcon,
+  PenIcon,
+  PlusIcon,
+  SearchIcon,
+  UploadIcon,
+} from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { CheckBox } from "@/components/buttons/CheckBox";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import SEO from "@/components/SEO";
@@ -18,467 +29,617 @@ import { useFetchAllFleets } from "@/utils/apiHooks/fleets/useFetchAllFleets";
 import { Fleet } from "@/models/fleets";
 import Loading from "@/components/states/Loading";
 import Error from "@/components/states/Error";
-import { AddFleetModal, AddFleetModalRef } from "@/components/dashboard/fleet/AddFleetModal";
+import {
+  AddFleetModal,
+  AddFleetModalRef,
+} from "@/components/dashboard/fleet/AddFleetModal";
 import { useRouter } from "next/router";
 import { GlobalActionContext } from "@/context/GlobalActionContext";
 import { useFleetsSelector } from "@/redux/selectors/fleets.selector";
-import { BoatDetailModal, BoatDetailModalRef } from "@/components/dashboard/fleet/FleetDetail";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  BoatDetailModal,
+  BoatDetailModalRef,
+} from "@/components/dashboard/fleet/FleetDetail";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { TablePagination } from "@/components/pagination/TablePagination";
-import { FilterFleetModal, FilterFleetModalRef, FilterOption } from "@/components/dashboard/fleet/FilterFleetModal";
-import { FleetOptionModal, FleetOptionModalRef } from "@/components/dashboard/fleet/FleetOptionModal";
-import { VesselInfoModal, VesselInfoModalRef } from "@/components/dashboard/fleet/VesselInfo";
-import { VesselDisapprovalModal, VesselDisapprovalModalRef } from "@/components/dashboard/fleet/VesselDisapprovalModal";
-import BlockIcon from '@/assets/icons/ic_block.svg'
+import {
+  FilterFleetModal,
+  FilterFleetModalRef,
+  FilterOption,
+} from "@/components/dashboard/fleet/FilterFleetModal";
+import {
+  FleetOptionModal,
+  FleetOptionModalRef,
+} from "@/components/dashboard/fleet/FleetOptionModal";
+import {
+  VesselInfoModal,
+  VesselInfoModalRef,
+} from "@/components/dashboard/fleet/VesselInfo";
+import {
+  VesselDisapprovalModal,
+  VesselDisapprovalModalRef,
+} from "@/components/dashboard/fleet/VesselDisapprovalModal";
+import BlockIcon from "@/assets/icons/ic_block.svg";
 import { ScheduleInspectionDateModal } from "@/components/dashboard/fleet/ScheduleInspectionDateModal";
 import { FleetGalleryModal } from "@/components/dashboard/fleet/FleetGalleryModal";
-import { ConfirmationAlertDialogRef } from "@/components/dialogs/ConfirmationAlertDialog";
+import { ConfirmationAlertDialog, ConfirmationAlertDialogRef } from "@/components/dialogs/ConfirmationAlertDialog";
 import { useSuspendFleet } from "@/utils/apiHooks/fleets/useSuspendFleet";
 import { useVerifyFleet } from "@/utils/apiHooks/fleets/useVerifyFleet";
 import { fleetActions } from "@/redux/reducers/fleets";
 import { LoadingModal } from "@/components/states/LoadingModal";
+import { useActivateFleet } from "@/utils/apiHooks/fleets/useActivateFleet";
 
 type TableDataListProps = {
-    data: Fleet,
-    onViewBoatDetails?: (data: Fleet) => void,
-    onVerifyError?: (error: string) => void,
-    onVerifySuccess?: (fleet: Fleet) => void,
-    onSuspendSuccess?: (fleet: Fleet) => void
-}
+  data: Fleet;
+  onViewBoatDetails?: (data: Fleet) => void;
+  onVerifyError?: (error: string) => void;
+  onVerifySuccess?: (fleet: Fleet) => void;
+  onSuspendSuccess?: (fleet: Fleet) => void;
+};
 
 type TabBodyProps = {
-    tab: "active" | "all" | "suspended" | "pending" | "unapproved",
-    addFleet?: () => void,
-    updateSize?: (size: number) => void
-}
+  tab: "active" | "all" | "suspended" | "pending" | "unapproved";
+  addFleet?: () => void;
+  updateSize?: (size: number) => void;
+};
 
 const tabs = [
-    {
-        name: "All",
-        value: "all"
-    },
-    {
-        name: "Active",
-        value: "active"
-    },
-    {
-        name: "Suspended",
-        value: "suspended"
-    },
-    {
-        name: "Unapproved",
-        value: "unapproved"
-    },
-    {
-        name: "Pending",
-        value: "pending"
-    }
-]
-
+  {
+    name: "All",
+    value: "all",
+  },
+  {
+    name: "Active",
+    value: "active",
+  },
+  {
+    name: "Suspended",
+    value: "suspended",
+  },
+  {
+    name: "Unapproved",
+    value: "unapproved",
+  },
+  {
+    name: "Pending",
+    value: "pending",
+  },
+];
 
 export const FleetTableDataList = (props: TableDataListProps) => {
-    const { data } = props
+  const { data } = props;
 
-    const vesselDisapprovalRef = useRef<VesselDisapprovalModalRef>(null)
-    const fleetOptionRef = useRef<FleetOptionModalRef>(null)
-    const vesselInfoModalRef = useRef<VesselInfoModalRef>(null)
-    const confirmationDialogRef = useRef<ConfirmationAlertDialogRef>(null)
-    const { isLoading: isSuspendLoading, data: suspendData, suspendFleet, error: suspendError } = useSuspendFleet()
-    const { isLoading: isUnSuspendLoading, data: unSuspendData, verifyFleet, error: unsuspendError } = useVerifyFleet()
-    const { showSnackBar } = useContext(GlobalActionContext)
+  const vesselDisapprovalRef = useRef<VesselDisapprovalModalRef>(null);
+  const fleetOptionRef = useRef<FleetOptionModalRef>(null);
+  const vesselInfoModalRef = useRef<VesselInfoModalRef>(null);
+  const confirmationDialogRef = useRef<ConfirmationAlertDialogRef>(null);
+  const {
+    isLoading: isSuspendLoading,
+    data: suspendData,
+    suspendFleet,
+    error: suspendError,
+  } = useSuspendFleet();
+  const {
+    isLoading: isUnSuspendLoading,
+    data: unSuspendData,
+    activateFleet,
+    error: unsuspendError,
+  } = useActivateFleet();
+  const { showSnackBar } = useContext(GlobalActionContext);
 
-    const isLoading = useMemo(() => isUnSuspendLoading || isSuspendLoading, [isUnSuspendLoading, isSuspendLoading])
+  const isLoading = useMemo(
+    () => isUnSuspendLoading || isSuspendLoading,
+    [isUnSuspendLoading, isSuspendLoading]
+  );
 
-    const error = useMemo(() => suspendError || unsuspendError, [suspendError, unsuspendError])
+  const error = useMemo(
+    () => suspendError || unsuspendError,
+    [suspendError, unsuspendError]
+  );
 
-    useEffect(() => {
-        if (suspendData) {
-            showSnackBar({ severity: 'success', message: 'Vessel suspended' })
-            if (data) {
-                fleetActions.updateFleet({ fleet_id: data._id, data: { status: "suspended" } })
-            }
-        }
-    }, [suspendData])
-
-    useEffect(() => {
-        if (unSuspendData) {
-            showSnackBar({ severity: 'success', message: 'Vessel unsuspended' })
-            if (data) {
-                fleetActions.updateFleet({ fleet_id: data._id, data: { status: "active" } })
-            }
-        }
-    }, [unSuspendData])
-
-    useEffect(() => {
-        if (error) {
-            showSnackBar({ severity: 'error', message: error })
-        }
-    }, [error])
-
-    function handleViewBoatDetails() {
-        props.onViewBoatDetails?.(data)
+  useEffect(() => {
+    if (suspendData) {
+      showSnackBar({ severity: "success", message: "Vessel suspended" });
+      if (data) {
+        fleetActions.updateFleet({
+          fleet_id: data._id,
+          data: { status: "suspended" },
+        });
+      }
     }
+  }, [suspendData]);
 
-    function handleFleetOptions(fleet: Fleet) {
-        fleetOptionRef.current?.open({
-            data: fleet
-        })
+  useEffect(() => {
+    if (unSuspendData) {
+      showSnackBar({ severity: "success", message: "Vessel approved" });
+      if (data) {
+        fleetActions.updateFleet({
+          fleet_id: data._id,
+          data: { status: "active" },
+        });
+      }
     }
+  }, [unSuspendData]);
 
-    function handleDisapproveVessel(fleet: Fleet) {
-        vesselDisapprovalRef.current?.open()
+  useEffect(() => {
+    if (error) {
+      showSnackBar({ severity: "error", message: error });
     }
+  }, [error]);
 
-    function handleViewVesselInfo(fleet: Fleet) {
-        vesselInfoModalRef.current?.open({
-            data: fleet
-        })
+  function handleViewBoatDetails() {
+    props.onViewBoatDetails?.(data);
+  }
+
+  function handleFleetOptions(fleet: Fleet) {
+    fleetOptionRef.current?.open({
+      data: fleet,
+    });
+  }
+
+  function handleApproveVessel(fleet: Fleet) {
+    confirmationDialogRef.current?.show({
+        data: {
+          title: "Are you sure you want to approve this fleet?",
+        },
+        onConfirm: () => {
+          activateFleet({ boatId: fleet._id });
+        },
+        onCancel: () => {
+          confirmationDialogRef.current?.dismiss();
+        },
+      });
+  }
+
+  function handleViewVesselInfo(fleet: Fleet) {
+    vesselInfoModalRef.current?.open({
+      data: fleet,
+    });
+  }
+
+  function handleRemoveSuspension(fleet: Fleet) {
+    confirmationDialogRef.current?.show({
+      data: {
+        title: "Are you sure you want to unsuspend this fleet?",
+      },
+      onConfirm: () => {
+        activateFleet({ boatId: fleet._id });
+      },
+      onCancel: () => {
+        confirmationDialogRef.current?.dismiss();
+      },
+    });
+  }
+
+  function handleSuspension(fleet: Fleet) {
+    confirmationDialogRef.current?.show({
+      data: {
+        title: "Are you sure you want to suspend this fleet?",
+      },
+      onConfirm: () => {
+        confirmationDialogRef.current?.dismiss()
+        suspendFleet({ boatId: fleet._id });
+      },
+      onCancel: () => {
+        confirmationDialogRef.current?.dismiss();
+      },
+    });
+  }
+
+  const statusLabel = useMemo(() => {
+    switch (data.status) {
+      case "active":
+        return "Active";
+      case "pending":
+        return "Pending";
+      default:
+        return "Suspended";
     }
+  }, [data.status]);
 
-    function handleRemoveSuspension(fleet: Fleet) {
-        confirmationDialogRef.current?.show({
-            data: {
-                title: "Are you sure you want to unsuspend this fleet?"
-            },
-            onConfirm: () => {
-                verifyFleet({ boatId: fleet._id })
-            },
-            onCancel: () => {
-                confirmationDialogRef.current?.dismiss()
-            }
-        })
+  const statusStyles = useMemo(() => {
+    switch (data.status) {
+      case "active":
+        return {
+          container: "bg-pattens-blue-100",
+          label: "text-pattens-blue-950",
+        };
+      case "pending":
+        return {
+          container: "bg-barley-white-100",
+          label: "text-barley-white-900",
+        };
+      default:
+        return {
+          container: "bg-we-peep-200",
+          label: "text-we-peep-900",
+        };
     }
+  }, [data.status]);
 
-    const statusLabel = useMemo(() => {
-        switch (data.status) {
-            case "active":
-                return "Active"
-            case "pending":
-                return "Pending"
-            default:
-                return "Suspended"
-        }
-    }, [data.status])
+  return (
+    <TableBody className="bg-white">
+      <FleetOptionModal ref={fleetOptionRef} />
+      <VesselDisapprovalModal ref={vesselDisapprovalRef} />
+      <VesselInfoModal ref={vesselInfoModalRef} />
+      <ConfirmationAlertDialog ref={confirmationDialogRef} />
+      <LoadingModal isVisible={isLoading} />
+      <TableRow>
+        <TableCell className="flex font-medium">
+          <CheckBox />
+        </TableCell>
+        <TableCell>
+          <div className="flex items-center gap-4">
+            <img
+              src={data.imgUrl.length > 0 ? data.imgUrl[0].url : undefined}
+              className="bg-gray-200 h-10 w-10 object-cover object-center"
+            />
+            <p>{data.boatName}</p>
+          </div>
+        </TableCell>
+        <TableCell>{data.capacity ?? 0}</TableCell>
+        <TableCell className="flex">
+          <div className={`${statusStyles.container} p-2 rounded-md`}>
+            <p className={`${statusStyles.label} text-sm`}>{statusLabel}</p>
+          </div>
+        </TableCell>
+        <TableCell>
+          {data.User.firstName} {data.User.lastName}
+        </TableCell>
+        <TableCell>
+          <Popover>
+            <PopoverTrigger>
+              <IconButton className="text-primary border border-primary rounded-sm">
+                <MoreHorizontalIcon />
+              </IconButton>
+            </PopoverTrigger>
 
-    const statusStyles = useMemo(() => {
-        switch (data.status) {
-            case "active":
-                return {
-                    container: 'bg-pattens-blue-100',
-                    label: 'text-pattens-blue-950'
-                }
-            case "pending":
-                return {
-                    container: 'bg-barley-white-100',
-                    label: 'text-barley-white-900'
-                }
-            default:
-                return {
-                    container: 'bg-we-peep-200',
-                    label: 'text-we-peep-900'
-                }
-        }
-    }, [data.status])
+            <PopoverContent className="w-auto px-0 py-1">
+              <div
+                className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100"
+                onClick={() => handleViewVesselInfo(data)}
+              >
+                <HistoryIcon className="text-gray-400" />
+                <p className="text-sm">View</p>
+              </div>
 
-    return <TableBody className="bg-white">
-        <FleetOptionModal ref={fleetOptionRef} />
-        <VesselDisapprovalModal ref={vesselDisapprovalRef} />
-        <VesselInfoModal ref={vesselInfoModalRef} />
-        <LoadingModal isVisible={isLoading} />
-        <TableRow>
-            <TableCell className="flex font-medium"><CheckBox /></TableCell>
-            <TableCell>
-                <div className="flex items-center gap-4">
-                    <img src={data.imgUrl.length > 0 ? data.imgUrl[0].url : undefined} className="bg-gray-200 h-10 w-10 object-cover object-center" />
-                    <p>{data.model}</p>
+              <div
+                className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100"
+                onClick={() => handleViewVesselInfo(data)}
+              >
+                <PenIcon className="text-gray-400" />
+                <p className="text-sm">Review</p>
+              </div>
+
+              {data.status == "suspended" ? (
+                <div
+                  className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100"
+                  onClick={() => handleRemoveSuspension(data)}
+                >
+                  <BlockIcon className="text-red-500" />
+                  <p className="text-sm text-red-500">Remove Suspension</p>
                 </div>
-            </TableCell>
-            <TableCell>{data.capacity ?? 0}</TableCell>
-            <TableCell className="flex">
-                <div className={`${statusStyles.container} p-2 rounded-md`}>
-                    <p className={`${statusStyles.label} text-sm`}>{statusLabel}</p>
+              ) : (
+                <div
+                  className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100"
+                  onClick={() => handleSuspension(data)}
+                >
+                  <BlockIcon className="text-gray-400" />
+                  <p className="text-sm">Suspend Vessel</p>
                 </div>
-            </TableCell>
-            <TableCell>{data.User.firstName} {data.User.lastName}</TableCell>
-            <TableCell>
-                <Popover>
-                    <PopoverTrigger>
-                        <IconButton className="text-primary border border-primary rounded-sm">
-                            <MoreHorizontalIcon />
-                        </IconButton>
-                    </PopoverTrigger>
+              )}
 
-                    <PopoverContent className="w-auto px-0 py-1">
-                        <div className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleViewVesselInfo(data)}>
-                            <HistoryIcon className="text-gray-400" />
-                            <p className="text-sm">View</p>
-                        </div>
+              {data.status != "active" && (
+                <div
+                  className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100"
+                  onClick={() => handleApproveVessel(data)}
+                >
+                  <AlertTriangleIcon className="text-primary" />
+                  <p className="text-primary text-sm">Approve</p>
+                </div>
+              )}
 
-                        <div className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleViewVesselInfo(data)}>
-                            <PenIcon className="text-gray-400" />
-                            <p className="text-sm">Review</p>
-                        </div>
-
-                        {data.status == 'suspended' ? <div className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleDisapproveVessel(data)}>
-                            <BlockIcon className="text-red-500" />
-                            <p className="text-sm text-red-500">Remove Suspension</p>
-                        </div> : <div className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleRemoveSuspension(data)}>
-                            <BlockIcon className="text-gray-400" />
-                            <p className="text-sm">Suspend Vessel</p>
-                        </div>}
-
-                        <div className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleDisapproveVessel(data)}>
-                            <AlertTriangleIcon className="text-primary" />
-                            <p className="text-primary text-sm">Approve</p>
-                        </div>
-
-                        <div className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleViewVesselInfo(data)}>
-                            <HistoryIcon className="text-gray-400" />
-                            <p className="text-sm">View Inspection Recrod</p>
-                        </div>
-                    </PopoverContent>
-                </Popover>
-
-            </TableCell>
-        </TableRow>
+              <div
+                className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100"
+                onClick={() => handleViewVesselInfo(data)}
+              >
+                <HistoryIcon className="text-gray-400" />
+                <p className="text-sm">View Inspection Recrod</p>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </TableCell>
+      </TableRow>
     </TableBody>
-}
+  );
+};
 
 const TabBody = (props: TabBodyProps) => {
-    const { isLoading, error, count, fetchAllFleets } = useFetchAllFleets()
-    const _data = useFleetsSelector()
-    const [page, setPage] = useState(0)
-    const { showSnackBar } = useContext(GlobalActionContext)
-    const { tab } = props
-    const [filterOption, setFilterOption] = useState<FilterOption>()
-    const filerModalRef = useRef<FilterFleetModalRef>(null)
-    const BoatDetailModalRef = useRef<BoatDetailModalRef>(null)
+  const { isLoading, error, count, fetchAllFleets } = useFetchAllFleets();
+  const _data = useFleetsSelector();
+  const [page, setPage] = useState(0);
+  const { showSnackBar } = useContext(GlobalActionContext);
+  const { tab } = props;
+  const [filterOption, setFilterOption] = useState<FilterOption>();
+  const filerModalRef = useRef<FilterFleetModalRef>(null);
+  const BoatDetailModalRef = useRef<BoatDetailModalRef>(null);
 
-    const data = useMemo(() => _data.filter((item) => {
-        if (tab == 'active') {
-            return item.status == 'active'
-        } else if (tab == 'pending') {
-            return item.status == 'pending'
-        } else if (tab == 'suspended') {
-            return item.status == 'suspended'
-        } else if (tab == 'unapproved') {
-            return item.status == 'unapproved'
-        } else return true
-    }), [JSON.stringify(_data)])
+  const data = useMemo(
+    () =>
+      _data.filter((item) => {
+        if (tab == "active") {
+          return item.status == "active";
+        } else if (tab == "pending") {
+          return item.status == "pending";
+        } else if (tab == "suspended") {
+          return item.status == "suspended";
+        } else if (tab == "unapproved") {
+          return item.status == "unapproved";
+        } else return true;
+      }),
+    [JSON.stringify(_data)]
+  );
 
-    useEffect(() => {
-        fetchAllFleets({ page })
-    }, [page])
+  useEffect(() => {
+    fetchAllFleets({ page });
+  }, [page]);
 
-    function onPageChange(selectedItem: {
-        selected: number;
-    }) {
-        setPage(selectedItem.selected)
-    }
+  function onPageChange(selectedItem: { selected: number }) {
+    setPage(selectedItem.selected);
+  }
 
-    function openFilterModal() {
-        filerModalRef.current?.open({
-            selectedOption: filterOption,
-            onOptionSelected: (option) => {
-                setFilterOption(option)
-                filerModalRef.current?.close()
-            }
-        })
-    }
+  function openFilterModal() {
+    filerModalRef.current?.open({
+      selectedOption: filterOption,
+      onOptionSelected: (option) => {
+        setFilterOption(option);
+        filerModalRef.current?.close();
+      },
+    });
+  }
 
-    function onViewBoatDetails(fleet: Fleet) {
-        BoatDetailModalRef.current?.open({
-            data: fleet
-        })
-    }
+  function onViewBoatDetails(fleet: Fleet) {
+    BoatDetailModalRef.current?.open({
+      data: fleet,
+    });
+  }
 
-    // useEffect(() => {
-    //     if (error == 'Unauthorized' || error == 'Not authenticated') {
-    //         showSnackBar({ severity: 'error', message: error })
-    //     }
-    // }, [error])
+  // useEffect(() => {
+  //     if (error == 'Unauthorized' || error == 'Not authenticated') {
+  //         showSnackBar({ severity: 'error', message: error })
+  //     }
+  // }, [error])
 
-    useEffect(() => {
-        props.updateSize?.(data.length)
-    }, [data.length])
+  useEffect(() => {
+    props.updateSize?.(data.length);
+  }, [data.length]);
 
-    function onVerifyError(error: string) {
-        showSnackBar({ severity: 'error', message: error })
-    }
+  function onVerifyError(error: string) {
+    showSnackBar({ severity: "error", message: error });
+  }
 
-    function onVerifySuccess(fleet: Fleet) {
-        showSnackBar({ severity: 'success', message: 'Fleet verified successfully' })
-    }
+  function onVerifySuccess(fleet: Fleet) {
+    showSnackBar({
+      severity: "success",
+      message: "Fleet verified successfully",
+    });
+  }
 
-    function onSuspendSuccess(fleet: Fleet) {
-        showSnackBar({ severity: 'success', message: 'Fleet suspended successfully' })
-    }
+  function onSuspendSuccess(fleet: Fleet) {
+    showSnackBar({
+      severity: "success",
+      message: "Fleet suspended successfully",
+    });
+  }
 
-    return <div>
-        <BoatDetailModal ref={BoatDetailModalRef} />
-        <FilterFleetModal ref={filerModalRef} />
-        <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
-            <TextField.Container className="flex-1 border border-gray-200">
-                <TextField.Input className="h-10" placeholder="Search" />
+  return (
+    <div>
+      <BoatDetailModal ref={BoatDetailModalRef} />
+      <FilterFleetModal ref={filerModalRef} />
+      <div className="flex flex-col items-start p-4 bg-white gap-4 md:flex-row md:items-center">
+        <TextField.Container className="flex-1 border border-gray-200">
+          <TextField.Input className="h-10" placeholder="Search" />
 
-                <IconButton className="text-gray-200">
-                    <SearchIcon />
-                </IconButton>
-            </TextField.Container>
+          <IconButton className="text-gray-200">
+            <SearchIcon />
+          </IconButton>
+        </TextField.Container>
 
-            <Popover>
-                <PopoverTrigger>
-                    <div className="cursor-pointer flex items-center gap-1 text-text-normal font-semibold border rounded-md py-2 px-2">
-                        <PlusIcon className="text-gray-500 w-4 h-4" />
-                        <p className="text-sm">Add New Fleet</p>
-                    </div>
-                </PopoverTrigger>
-
-                <PopoverContent className="flex flex-col w-auto px-2 py-1 gap-3">
-                    <div className="flex items-center px-2 gap-2 cursor-pointer py-2 hover:bg-gray-100 rounded-md">
-                        <PlusIcon className="text-primary" />
-                        <p onClick={props.addFleet}>Add Single Fleet</p>
-                    </div>
-
-                    <p className="text-gray-500 text-xs font-medium px-1">Add Multiple</p>
-
-                    <div className="flex items-center px-2 gap-2 cursor-pointer py-2 hover:bg-gray-100 rounded-md">
-                        <UploadIcon className="text-primary" />
-                        <p>Upload (Excel Template)</p>
-                    </div>
-
-                    <div className="flex items-center px-2 gap-2 cursor-pointer py-2 hover:bg-gray-100 rounded-md">
-                        <DownloadIcon className="text-primary" />
-                        <p>Download Excel Template</p>
-                    </div>
-
-                </PopoverContent>
-            </Popover>
-
-
-            <div className="border rounded-md">
-                <div onClick={openFilterModal} className="flex px-2 py-1 items-center gap-3 text-text-normal font-semibold cursor-pointer">
-                    <p className="text-sm">Filter</p>
-                    <ChevronDown className="text-gray-500" />
-                </div>
+        <Popover>
+          <PopoverTrigger>
+            <div className="cursor-pointer flex items-center gap-1 text-text-normal font-semibold border rounded-md py-2 px-2">
+              <PlusIcon className="text-gray-500 w-4 h-4" />
+              <p className="text-sm">Add New Fleet</p>
             </div>
+          </PopoverTrigger>
+
+          <PopoverContent className="flex flex-col w-auto px-2 py-1 gap-3">
+            <div className="flex items-center px-2 gap-2 cursor-pointer py-2 hover:bg-gray-100 rounded-md">
+              <PlusIcon className="text-primary" />
+              <p onClick={props.addFleet}>Add Single Fleet</p>
+            </div>
+
+            <p className="text-gray-500 text-xs font-medium px-1">
+              Add Multiple
+            </p>
+
+            <div className="flex items-center px-2 gap-2 cursor-pointer py-2 hover:bg-gray-100 rounded-md">
+              <UploadIcon className="text-primary" />
+              <p>Upload (Excel Template)</p>
+            </div>
+
+            <div className="flex items-center px-2 gap-2 cursor-pointer py-2 hover:bg-gray-100 rounded-md">
+              <DownloadIcon className="text-primary" />
+              <p>Download Excel Template</p>
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        <div className="border rounded-md">
+          <div
+            onClick={openFilterModal}
+            className="flex px-2 py-1 items-center gap-3 text-text-normal font-semibold cursor-pointer"
+          >
+            <p className="text-sm">Filter</p>
+            <ChevronDown className="text-gray-500" />
+          </div>
         </div>
+      </div>
 
-        <div className="min-h-[500px]">
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead className="w-[100px]">
-                            <div className="flex items-center">
-                                <CheckBox />
-                            </div>
-                        </TableHead>
-                        <TableHead>Boat Name</TableHead>
-                        <TableHead>Seats</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>{`Owner's`} Name</TableHead>
-                        <TableHead></TableHead>
-                    </TableRow>
-                </TableHeader>
+      <div className="min-h-[500px]">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">
+                <div className="flex items-center">
+                  <CheckBox />
+                </div>
+              </TableHead>
+              <TableHead>Boat Name</TableHead>
+              <TableHead>Seats</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>{`Owner's`} Name</TableHead>
+              <TableHead></TableHead>
+            </TableRow>
+          </TableHeader>
 
-                {data.map((item, index) => <FleetTableDataList key={index} data={item} onViewBoatDetails={onViewBoatDetails} onVerifyError={onVerifyError} onVerifySuccess={onVerifySuccess} onSuspendSuccess={onSuspendSuccess} />)}
-            </Table>
-            {isLoading ? <Loading className="h-[400px]" /> : error ? <Error onRetry={fetchAllFleets} className="h-[400px]" /> : null}
-        </div>
-
-        <div className="flex mt-4 justify-center">
-            <TablePagination
-                breakLabel="..."
-                nextLabel=">"
-                onPageChange={onPageChange}
-                pageRangeDisplayed={5}
-                currentPage={page}
-                pageCount={Math.max(0, data.length / 20)}
-                // pageCount={1}
-                className="flex gap-4"
-                nextClassName="text-gray-500"
-                previousClassName="text-gray-500"
-                pageClassName="flex w-8 h-7 bg-white justify-center items-center text-sm text-gray-500 rounded-sm outline outline-2 outline-gray-100 text-center"
-                activeClassName="!bg-primary text-white !outline-none"
-                previousLabel="<"
-                renderOnZeroPageCount={null}
+          {data.map((item, index) => (
+            <FleetTableDataList
+              key={index}
+              data={item}
+              onViewBoatDetails={onViewBoatDetails}
+              onVerifyError={onVerifyError}
+              onVerifySuccess={onVerifySuccess}
+              onSuspendSuccess={onSuspendSuccess}
             />
-        </div>
+          ))}
+        </Table>
+        {isLoading ? (
+          <Loading className="h-[400px]" />
+        ) : error ? (
+          <Error onRetry={fetchAllFleets} className="h-[400px]" />
+        ) : null}
+      </div>
+
+      <div className="flex mt-4 justify-center">
+        <TablePagination
+          breakLabel="..."
+          nextLabel=">"
+          onPageChange={onPageChange}
+          pageRangeDisplayed={5}
+          currentPage={page}
+          pageCount={Math.max(0, data.length / 20)}
+          // pageCount={1}
+          className="flex gap-4"
+          nextClassName="text-gray-500"
+          previousClassName="text-gray-500"
+          pageClassName="flex w-8 h-7 bg-white justify-center items-center text-sm text-gray-500 rounded-sm outline outline-2 outline-gray-100 text-center"
+          activeClassName="!bg-primary text-white !outline-none"
+          previousLabel="<"
+          renderOnZeroPageCount={null}
+        />
+      </div>
     </div>
-}
+  );
+};
 
 export default function Fleets() {
-    const [size, setSize] = useState(0)
-    const addFleetModalRef = useRef<AddFleetModalRef>(null)
-    const router = useRouter()
-    const [activeTab, setActiveTab] = useState<string>()
+  const [size, setSize] = useState(0);
+  const addFleetModalRef = useRef<AddFleetModalRef>(null);
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState<string>();
 
-    useEffect(() => {
-        const tab = router.query.tab as string | undefined
-        if (!tab) {
-            setActiveTab(`active`)
-        } else setActiveTab(tab)
-    }, [router.query])
+  useEffect(() => {
+    const tab = router.query.tab as string | undefined;
+    if (!tab) {
+      setActiveTab(`active`);
+    } else setActiveTab(tab);
+  }, [router.query]);
 
-    function onTabValueChanged(value: string) {
-        router.push(`/vessels?tab=${value}`)
-    }
+  function onTabValueChanged(value: string) {
+    router.push(`/vessels?tab=${value}`);
+  }
 
-    function addFleet() {
-        addFleetModalRef.current?.open()
-    }
+  function addFleet() {
+    addFleetModalRef.current?.open();
+  }
 
-    function onNewFleetAdded(fleet: Fleet) {
-        addFleetModalRef.current?.close()
-        router.push(`/vessels?tab=${fleet.status}`)
-    }
+  function onNewFleetAdded(fleet: Fleet) {
+    addFleetModalRef.current?.close();
+    router.push(`/vessels?tab=${fleet.status}`);
+  }
 
-    return (
-        <DashboardLayout>
-            <Tabs value={activeTab} onValueChange={onTabValueChanged} className="flex flex-col py-8">
+  return (
+    <DashboardLayout>
+      <Tabs
+        value={activeTab}
+        onValueChange={onTabValueChanged}
+        className="flex flex-col py-8"
+      >
+        <div className="flex flex-col gap-6">
+          <SEO title="Laswa | Vessels" />
+          <AddFleetModal
+            ref={addFleetModalRef}
+            onNewFleetAdded={onNewFleetAdded}
+          />
+          {/* <FleetGalleryModal /> */}
+          {/* <ScheduleInspectionDateModal /> */}
+          {/* <VesselInfoModal /> */}
+          {/* <VesselDisapprovalModal /> */}
+          <h1 className="text-2xl font-bold">
+            All Vessels <span className="text-primary">({size})</span>
+          </h1>
 
-                <div className="flex flex-col gap-6">
-                    <SEO title="Laswa | Vessels" />
-                    <AddFleetModal ref={addFleetModalRef} onNewFleetAdded={onNewFleetAdded} />
-                    {/* <FleetGalleryModal /> */}
-                    {/* <ScheduleInspectionDateModal /> */}
-                    {/* <VesselInfoModal /> */}
-                    {/* <VesselDisapprovalModal /> */}
-                    <h1 className="text-2xl font-bold">All Vessels <span className="text-primary">({size})</span></h1>
-
-                    <div>
-                        <TabsList className="flex flex-wrap justify-start bg-white h-auto py-0 px-0">
-                            {tabs.map((item) => <div className={``} key={item.value}>
-                                <TabsTrigger className="mx-0 w-36 py-4 data-[state=active]:bg-[#F9F9FE] text-gray-500 rounded-none data-[state=active]:text-primary data-[state=active]:border-b-2 border-b-primary" value={item.value}>{item.name}</TabsTrigger>
-                            </div>)}
-                        </TabsList>
-                    </div>
-
-                    <div className="mt-4">
-                        <TabsContent value="active">
-                            <TabBody addFleet={addFleet} tab="active" updateSize={setSize} />
-                        </TabsContent>
-
-                        <TabsContent value="all">
-                            <TabBody addFleet={addFleet} tab="all" updateSize={setSize} />
-                        </TabsContent>
-
-                        <TabsContent value="suspended">
-                            <TabBody addFleet={addFleet} tab="suspended" updateSize={setSize} />
-                        </TabsContent>
-
-                        <TabsContent value="unapproved">
-                            <TabBody addFleet={addFleet} tab="unapproved" updateSize={setSize} />
-                        </TabsContent>
-
-                        <TabsContent value="pending">
-                            <TabBody addFleet={addFleet} tab="pending" updateSize={setSize} />
-                        </TabsContent>
-                    </div>
-
+          <div>
+            <TabsList className="flex flex-wrap justify-start bg-white h-auto py-0 px-0">
+              {tabs.map((item) => (
+                <div className={``} key={item.value}>
+                  <TabsTrigger
+                    className="mx-0 w-36 py-4 data-[state=active]:bg-[#F9F9FE] text-gray-500 rounded-none data-[state=active]:text-primary data-[state=active]:border-b-2 border-b-primary"
+                    value={item.value}
+                  >
+                    {item.name}
+                  </TabsTrigger>
                 </div>
+              ))}
+            </TabsList>
+          </div>
 
-            </Tabs>
-        </DashboardLayout>
-    )
+          <div className="mt-4">
+            <TabsContent value="active">
+              <TabBody addFleet={addFleet} tab="active" updateSize={setSize} />
+            </TabsContent>
+
+            <TabsContent value="all">
+              <TabBody addFleet={addFleet} tab="all" updateSize={setSize} />
+            </TabsContent>
+
+            <TabsContent value="suspended">
+              <TabBody
+                addFleet={addFleet}
+                tab="suspended"
+                updateSize={setSize}
+              />
+            </TabsContent>
+
+            <TabsContent value="unapproved">
+              <TabBody
+                addFleet={addFleet}
+                tab="unapproved"
+                updateSize={setSize}
+              />
+            </TabsContent>
+
+            <TabsContent value="pending">
+              <TabBody addFleet={addFleet} tab="pending" updateSize={setSize} />
+            </TabsContent>
+          </div>
+        </div>
+      </Tabs>
+    </DashboardLayout>
+  );
 }

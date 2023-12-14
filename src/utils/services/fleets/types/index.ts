@@ -28,6 +28,10 @@ export type VerifyFleetParams = {
     boatId: string
 }
 
+export type ActivateFleetParams = {
+    boatId: string
+}
+
 export type SuspendFleetParams = {
     boatId: string
 }

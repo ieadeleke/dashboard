@@ -1,6 +1,6 @@
 import { formatFleet } from "@/utils/data/fleets"
 import { request, RequestConfig } from "../../request"
-import { AddFleetParams, AddFleetResponse, GetAllFleetResponse, GetFleetsRequestParams, SuspendFleetParams, SuspendFleetResponse, VerifyFleetParams, VerifyFleetResponse } from "./types"
+import { ActivateFleetParams, AddFleetParams, AddFleetResponse, GetAllFleetResponse, GetFleetsRequestParams, SuspendFleetParams, SuspendFleetResponse, VerifyFleetParams, VerifyFleetResponse } from "./types"
 
 
 export function FleetService(config?: RequestConfig) {
@@ -36,6 +36,14 @@ export function FleetService(config?: RequestConfig) {
         return _data
     }
 
+    async function activateFleet(payload: ActivateFleetParams) {
+        const { data } = await request(`api/v1/boat/admin/ActivateBoat`, "PUT", {
+            body: payload
+        })
+        const _data = (data as VerifyFleetResponse)
+        return _data
+    }
+
     async function suspendFleet(payload: SuspendFleetParams) {
         const { data } = await request(`api/v1/boat/admin/SuspendBoat`, "PUT", {
             body: payload
@@ -47,6 +55,7 @@ export function FleetService(config?: RequestConfig) {
     return {
         getAllFleets,
         verifyFleet,
+        activateFleet,
         suspendFleet,
         getActiveFleets,
         addFleet
