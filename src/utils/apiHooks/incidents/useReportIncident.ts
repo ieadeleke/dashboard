@@ -13,7 +13,6 @@ export const useReportIncident = () => {
         const response = await execute(async () => await IncidentService().createIncident(params))
         if (response) {
             setIsComplete(true)
-            setCount(response.count)
         }
     }
 
