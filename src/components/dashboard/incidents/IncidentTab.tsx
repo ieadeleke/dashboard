@@ -25,14 +25,14 @@ type TabItemProps = {
 const TabItem = (props: TabItemProps) => {
     const [data, setData] = useState<Incident[]>([])
 
-    useEffect(() => {
-        setData(() => Array(50).fill(0).map((item) => {
-            return {
-                fleet_id: faker.number.int({ min: 1000, max: 9999 }).toString(),
-                status: "Approved"
-            }
-        }))
-    }, [])
+    // useEffect(() => {
+    //     setData(() => Array(50).fill(0).map((item) => {
+    //         return {
+    //             fleet_id: faker.number.int({ min: 1000, max: 9999 }).toString(),
+    //             status: "Approved"
+    //         }
+    //     }))
+    // }, [])
 
     return <IncidentTable data={data} />
 }

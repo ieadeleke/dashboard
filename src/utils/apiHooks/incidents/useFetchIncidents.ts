@@ -18,5 +18,14 @@ export const useFetchIncidents = () => {
         }
     }
 
-    return { isLoading, error, data, count, fetchIncidents }
+    async function fetchUnapprovedIncidents(params?: GetIncidentRequestParams) {
+        setData([])
+        const response = await execute(async () => await IncidentService().getUnApprovedIncidents(params))
+        if (response) {
+            setData(response.Incidents)
+            setCount(response.count)
+        }
+    }
+
+    return { isLoading, error, data, count, fetchIncidents, fetchUnapprovedIncidents }
 }

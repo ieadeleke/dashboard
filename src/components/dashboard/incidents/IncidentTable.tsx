@@ -1,79 +1,111 @@
-import { Incident } from "@/models/incidents"
+import { Incident } from "@/models/incidents";
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { CheckBox } from "@/components/buttons/CheckBox";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { AlertTriangleIcon, EditIcon, MoreHorizontalIcon } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { EyeIcon, MoreHorizontalIcon } from "lucide-react";
 import { IconButton } from "@/components/buttons/IconButton";
 import { TripHistoryStatusChip } from "../trip-history/TripHistoryStatusChip";
+import { useEffect, useRef, useState } from "react";
+import { IncidentInfoModal, IncidentInfoModalRef } from "./IncidentInfo";
 
 type IncidentTableProps = {
-    data: Incident[]
-}
+  data: Incident[];
+};
 
 export const IncidentTable = (props: IncidentTableProps) => {
-    const { data } = props
+  const [data, setData] = useState(props.data);
+  const incidentInfoModalRef = useRef<IncidentInfoModalRef>(null);
 
-    return <Table>
-        <TableHeader>
-            <TableRow>
-                <TableHead className="w-[100px]">
-                    <div className="flex items-center">
-                        <CheckBox />
-                    </div>
-                </TableHead>
-                <TableHead>Fleet ID</TableHead>
-                <TableHead>Lorem</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead></TableHead>
-                <TableHead></TableHead>
-                <TableHead></TableHead>
-            </TableRow>
-        </TableHeader>
+  useEffect(() => {
+    setData(props.data);
+  }, [JSON.stringify(props.data)]);
 
-        {data.map((item) => <TableBody key={item.fleet_id} className="bg-white">
-            <TableRow>
-                <TableCell className="flex font-medium"><CheckBox /></TableCell>
-                <TableCell>
-                    <div className="flex items-center gap-4">
-                        <p>{item.fleet_id}</p>
-                    </div>
-                </TableCell>
-                {/* <TableCell>{item.status}</TableCell> */}
-                <TableCell>Lorem</TableCell>
-                <TableCell>
-                    <div className="flex"><TripHistoryStatusChip status="complete" /></div>
-                </TableCell>
-                <TableCell>Lorem</TableCell>
-                <TableCell>
-                    <Popover>
-                        <PopoverTrigger>
-                            <IconButton className="text-primary border border-primary rounded-sm">
-                                <MoreHorizontalIcon />
-                            </IconButton>
-                        </PopoverTrigger>
+  function handleReportIncident(incident: Incident) {
+    incidentInfoModalRef.current?.open({ data: incident });
+  }
 
-                        <PopoverContent className="w-auto px-0 py-1">
-                            <div className="flex items-center gap-4 px-4 py-4 cursor-pointer hover:bg-gray-100">
-                                <EditIcon className="text-gray-500" />
-                                <p className="text-sm cursor-pointer">Review</p>
-                            </div>
+  function onIncidentDataChanged(incident: Incident) {
+    setData((data) =>
+      data.map((item) => (item._id == incident._id ? incident : item))
+    );
+  }
+  return (
+    <Table>
+      <IncidentInfoModal
+        onIncidentDataChanged={onIncidentDataChanged}
+        ref={incidentInfoModalRef}
+      />
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-[100px]">
+            <div className="flex items-center">
+              <CheckBox />
+            </div>
+          </TableHead>
+          <TableHead>Boat Name</TableHead>
+          <TableHead>Number of Injury</TableHead>
+          <TableHead>Number of Missing</TableHead>
+          <TableHead>Boat capacity</TableHead>
+          <TableHead>Status</TableHead>
+        </TableRow>
+      </TableHeader>
 
-                            <div className="flex items-center gap-4 px-4 py-4 cursor-pointer hover:bg-gray-100">
-                                <AlertTriangleIcon className="text-red-500" />
-                                <p className="text-sm cursor-pointer">Reject</p>
-                            </div>
+      {data.map((item) => (
+        <TableBody key={item.BoatName} className="bg-white">
+          <TableRow>
+            <TableCell className="flex font-medium">
+              <CheckBox />
+            </TableCell>
+            <TableCell>
+              <div className="flex items-center gap-4">
+                <p>{item.BoatName}</p>
+              </div>
+            </TableCell>
+            {/* <TableCell>{item.status}</TableCell> */}
+            <TableCell>{item.NumberOfInjury}</TableCell>
 
-                        </PopoverContent>
-                    </Popover>
-                </TableCell>
-            </TableRow>
-        </TableBody>)}
+            <TableCell>{item.MissingPerson}</TableCell>
+            <TableCell>{item.BoatCapacity}</TableCell>
+            <TableCell>
+              <div className="flex">
+                <TripHistoryStatusChip
+                  status={item.ConfirmStatus ? "complete" : "pending"}
+                />
+              </div>
+            </TableCell>
+            <TableCell>
+              <Popover>
+                <PopoverTrigger>
+                  <IconButton className="text-primary border border-primary rounded-sm">
+                    <MoreHorizontalIcon />
+                  </IconButton>
+                </PopoverTrigger>
+
+                <PopoverContent className="w-auto px-0 py-1">
+                  <div
+                    onClick={() => handleReportIncident(item)}
+                    className="flex items-center gap-4 px-4 py-4 cursor-pointer hover:bg-gray-100"
+                  >
+                    <EyeIcon className="text-gray-500" />
+                    <p className="text-sm cursor-pointer">Review</p>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      ))}
     </Table>
-}
+  );
+};

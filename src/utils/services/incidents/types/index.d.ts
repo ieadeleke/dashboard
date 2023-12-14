@@ -1,3 +1,4 @@
+import { ApiResponse } from "@/models"
 import { Incident } from "@/models/incidents"
 
 export type GetIncidentRequestParams = {
@@ -24,5 +25,13 @@ export type AddReportIncident = {
 }
 
 export type AddReportIncidentResponse = ApiResponse & {
+    
+}
+
+export type ApproveIncidentParams = {
+    incidentId: string
+}
+
+export type ApproveIncidentResponse = ApiResponse & {
     
 }
