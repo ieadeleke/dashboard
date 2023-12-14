@@ -79,7 +79,7 @@ export const ScheduleInspectionDateModal = forwardRef<ScheduleInspectionDateModa
     function submit() {
         try {
             const response = schema.parse(state)
-        } catch (error) {
+        } catch (error: any) {
             if (error.issues && error.issues.length > 0) {
                 showSnackBar({ severity: 'error', message: error.issues[0].message })
             }
