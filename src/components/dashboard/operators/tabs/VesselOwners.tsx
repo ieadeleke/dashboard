@@ -1,13 +1,16 @@
 import { useFetchOperators } from "@/utils/apiHooks/operators/useFetchOperators";
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
 import { OperatorTableList } from "../OperatorTableList";
 
-type DeckHandsProps = {
+type VesselOwnersProps = {
   addOperator?: () => void;
   updateSize?: (size: number) => void;
 };
 
-export const DeckHands = (props: DeckHandsProps) => {
+export const VesselOwners = (props: VesselOwnersProps) => {
   const {
     isLoading: isFetchLoading,
     count,
@@ -22,7 +25,7 @@ export const DeckHands = (props: DeckHandsProps) => {
   }, [_data.length])
 
   useEffect(() => {
-    fetchOperators({ page, profileType: "deckhands" });
+    fetchOperators({ page, profileType: "vesselOwner" });
   }, [page]);
 
   function onPageChange(selectedItem: { selected: number }) {

@@ -1,6 +1,8 @@
 import { User } from "../users";
 
 export type Operator = User & {
+    isActive: boolean,
+    approve: boolean,
     BusinessProfile?: {
         verify: boolean,
         _id: string,

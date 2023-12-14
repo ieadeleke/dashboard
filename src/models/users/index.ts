@@ -6,6 +6,7 @@ export type User = {
     Boats: string[],
     _id: string,
     phoneNumber: string,
+    residentialAddress: string,
     image: string,
     firstName: string,
     lastName: string,

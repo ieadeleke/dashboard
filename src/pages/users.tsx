@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRouter } from "next/router";
 import { Captains } from "@/components/dashboard/operators/tabs/Captains";
 import { DeckHands } from "@/components/dashboard/operators/tabs/DeckHands";
+import { VesselOwners } from "@/components/dashboard/operators/tabs/VesselOwners";
 
 
 const tabs = [
@@ -74,7 +75,7 @@ export default function Operators() {
             </TabsContent>
 
             <TabsContent value="vesselOwners">
-              <DeckHands updateSize={setSize} addOperator={addOperator} />
+              <VesselOwners updateSize={setSize} addOperator={addOperator} />
             </TabsContent>
           </div>
 
