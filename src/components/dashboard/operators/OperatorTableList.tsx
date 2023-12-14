@@ -191,11 +191,22 @@ export const OperatorTableList = (props: OperatorTableListProps) => {
     });
   }
 
+  function onOperatorDataChanged(operator: Operator) {
+    setOperators((operators) =>
+      operators.map((currentOperator) =>
+        currentOperator._id == operator._id ? operator : currentOperator
+      )
+    );
+  }
+
   return (
     <div className="flex flex-col">
       <ConfirmationAlertDialog ref={confirmationDialogRef} />
       <FilterOperatorModal ref={filterOperatorRef} />
-      <OperatorInfoModal ref={operatorInfoModalRef} />
+      <OperatorInfoModal
+        ref={operatorInfoModalRef}
+        onOperatorDataChanged={onOperatorDataChanged}
+      />
       <LoadingModal isVisible={isLoading} />
 
       <div className="flex flex-col gap-6">

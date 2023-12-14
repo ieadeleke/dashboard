@@ -1,11 +1,8 @@
 import { IconButton } from "@/components/buttons/IconButton";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { GlobalActionContext } from "@/context/GlobalActionContext";
-import { Fleet } from "@/models/fleets";
-import { useAddFleet } from "@/utils/apiHooks/fleets/useAddFleet";
 import {
   GalleryThumbnailsIcon,
-  HistoryIcon,
   MoreHorizontal,
 } from "lucide-react";
 import {
@@ -19,22 +16,14 @@ import {
 import FleetIcon from "@/assets/icons/ic_fleet_on_water.svg";
 import Button from "@/components/buttons";
 import { Avatar } from "@/components/image/Avatar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import BlockIcon from "@/assets/icons/ic_block.svg";
 import { useRef } from "react";
 import { Select, SelectContent, SelectTrigger } from "@/components/ui/select";
-import { useSuspendFleet } from "@/utils/apiHooks/fleets/useSuspendFleet";
 import {
   ConfirmationAlertDialog,
   ConfirmationAlertDialogRef,
 } from "@/components/dialogs/ConfirmationAlertDialog";
-import { useVerifyFleet } from "@/utils/apiHooks/fleets/useVerifyFleet";
 import { fleetActions } from "@/redux/reducers/fleets";
-import { useActivateFleet } from "@/utils/apiHooks/fleets/useActivateFleet";
 import { FleetStatusChip } from "../fleet/FleetStatusChip";
 import { Operator } from "@/models/operators";
 import {
@@ -44,7 +33,9 @@ import {
 import { useUnSuspendOperator } from "@/utils/apiHooks/operators/useUnSuspendOperator";
 import { useSuspendOperator } from "@/utils/apiHooks/operators/useSuspendOperator";
 
-type OperatorInfoModalProps = {};
+type OperatorInfoModalProps = {
+    onOperatorDataChanged?: (operator: Operator) => void
+};
 
 type OperatorInfoOpenPayload = {
   data: Operator;
@@ -81,7 +72,6 @@ export const OperatorInfoModal = forwardRef<
 >((props, ref) => {
   const { showSnackBar } = useContext(GlobalActionContext);
   const [data, setData] = useState<Operator>();
-  const [isForApproval, setIsForApproval] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const fleetGalleryModalRef = useRef<FleetGalleryModalRef>(null);
 
@@ -115,12 +105,7 @@ export const OperatorInfoModal = forwardRef<
       setData((prevData) => {
         return Object.assign({}, prevData, suspendData);
       });
-      if (data) {
-        fleetActions.updateFleet({
-          fleet_id: data._id,
-          data: { status: "suspended" },
-        });
-      }
+      props.onOperatorDataChanged?.(suspendData)
     }
   }, [suspendData]);
 
@@ -130,12 +115,7 @@ export const OperatorInfoModal = forwardRef<
       setData((prevData) => {
         return Object.assign({}, prevData, unSuspendData);
       });
-      if (data) {
-        fleetActions.updateFleet({
-          fleet_id: data._id,
-          data: { status: "active" },
-        });
-      }
+      props.onOperatorDataChanged?.(unSuspendData)
     }
   }, [unSuspendData]);
 
@@ -153,7 +133,6 @@ export const OperatorInfoModal = forwardRef<
   useImperativeHandle(ref, () => ({
     open(payload) {
       setData(payload.data);
-      setIsForApproval(payload.isForApproval ?? false);
       setIsVisible(true);
     },
     close() {
