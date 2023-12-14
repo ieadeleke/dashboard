@@ -14,5 +14,6 @@ export type SuspendOperatorResponse = {
 }
 
 export type GetOperatorsRequestParams = {
-    page?: number
+    page?: number,
+    profileType: "vesselOwner" | "captain" | "deckhands"
 }

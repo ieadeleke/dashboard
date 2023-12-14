@@ -5,7 +5,12 @@ import { GetAllOperatorsResponse, GetOperatorsRequestParams, SuspendOperatorPara
 export function OperatorsService(config?: RequestConfig) {
 
     async function getOperators(params?: GetOperatorsRequestParams) {
-        const { data } = await request(`api/v1/admin/user/GetAllUsers?page=${params?.page || 1}`, "GET", config)
+        const { data } = await request(`api/v1/admin/user/GetAllUsers?page=${params?.page || 1}`, "PUT", {
+            ...config,
+            body: {
+                profileType: params?.profileType
+            }
+        })
         const response = data as GetAllOperatorsResponse
         return response
     }
@@ -25,7 +30,7 @@ export function OperatorsService(config?: RequestConfig) {
         const _data = data as SuspendOperatorResponse
         return _data
     }
-    
+
     return {
         getOperators,
         suspendOperator,

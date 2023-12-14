@@ -2,7 +2,7 @@ import { IconButton } from "@/components/buttons/IconButton";
 import { TextField } from "@/components/input/InputText";
 import DashboardLayout from "@/components/layout/dashboard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ChevronDown, DownloadIcon, EyeIcon, MoreHorizontalIcon, PlusIcon, SearchIcon, UploadIcon } from "lucide-react";
+import { AlertTriangleIcon, ChevronDown, DownloadIcon, EyeIcon, MoreHorizontalIcon, PenIcon, PlusIcon, SearchIcon, UploadIcon } from "lucide-react";
 import {
     Table,
     TableBody,
@@ -27,6 +27,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { TablePagination } from "@/components/pagination/TablePagination";
 import { FilterFleetModal, FilterFleetModalRef, FilterOption } from "@/components/dashboard/fleet/FilterFleetModal";
 import { FleetOptionModal, FleetOptionModalRef } from "@/components/dashboard/fleet/FleetOptionModal";
+import { VesselInfoModal } from "@/components/dashboard/fleet/VesselInfo";
+import { VesselDisapprovalModal } from "@/components/dashboard/fleet/VesselDisapprovalModal";
+import { ScheduleInspectionDateModal } from "@/components/dashboard/fleet/ScheduleInspectionDateModal";
+import { FleetGalleryModal } from "@/components/dashboard/fleet/FleetGalleryModal";
 
 type TableDataListProps = {
     data: Fleet,
@@ -139,8 +143,13 @@ export const FleetTableDataList = (props: TableDataListProps) => {
 
                     <PopoverContent className="w-auto px-0 py-1">
                         <div className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleFleetOptions(data)}>
-                            <EyeIcon />
-                            <p>View</p>
+                            <PenIcon className="text-gray-400" />
+                            <p>Review</p>
+                        </div>
+
+                        <div className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleFleetOptions(data)}>
+                            <AlertTriangleIcon className="text-primary" />
+                            <p className="text-primary">Approve</p>
                         </div>
                     </PopoverContent>
                 </Popover>
@@ -327,7 +336,7 @@ export default function Fleets() {
     }, [router.query])
 
     function onTabValueChanged(value: string) {
-        router.push(`/fleets?tab=${value}`)
+        router.push(`/vessels?tab=${value}`)
     }
 
     function addFleet() {
@@ -336,7 +345,7 @@ export default function Fleets() {
 
     function onNewFleetAdded(fleet: Fleet) {
         addFleetModalRef.current?.close()
-        router.push(`/fleets?tab=${fleet.status}`)
+        router.push(`/vessels?tab=${fleet.status}`)
     }
 
     return (
@@ -344,8 +353,12 @@ export default function Fleets() {
             <Tabs value={activeTab} onValueChange={onTabValueChanged} className="flex flex-col py-8">
 
                 <div className="flex flex-col gap-6">
-                    <SEO title="Laswa | Fleets" />
+                    <SEO title="Laswa | Vessels" />
                     <AddFleetModal ref={addFleetModalRef} onNewFleetAdded={onNewFleetAdded} />
+                    {/* <FleetGalleryModal /> */}
+                    {/* <ScheduleInspectionDateModal /> */}
+                    {/* <VesselInfoModal /> */}
+                    {/* <VesselDisapprovalModal /> */}
                     <h1 className="text-2xl font-bold">All Vessels <span className="text-primary">({size})</span></h1>
 
                     <div>
