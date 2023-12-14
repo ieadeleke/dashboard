@@ -41,6 +41,8 @@ import {
   FleetGalleryModal,
   FleetGalleryModalRef,
 } from "../fleet/FleetGalleryModal";
+import { useUnSuspendOperator } from "@/utils/apiHooks/operators/useUnSuspendOperator";
+import { useSuspendOperator } from "@/utils/apiHooks/operators/useSuspendOperator";
 
 type OperatorInfoModalProps = {};
 
@@ -86,15 +88,15 @@ export const OperatorInfoModal = forwardRef<
   const {
     isLoading: isSuspendLoading,
     data: suspendData,
-    suspendFleet,
+    suspendOperator,
     error: suspendError,
-  } = useSuspendFleet();
+  } = useSuspendOperator();
   const {
     isLoading: isUnSuspendLoading,
     data: unSuspendData,
-    activateFleet,
+    unSuspendOperator,
     error: unsuspendError,
-  } = useActivateFleet();
+  } = useUnSuspendOperator();
   const confirmationDialogRef = useRef<ConfirmationAlertDialogRef>(null);
 
   const isLoading = useMemo(
@@ -109,9 +111,9 @@ export const OperatorInfoModal = forwardRef<
 
   useEffect(() => {
     if (suspendData) {
-      showSnackBar({ severity: "success", message: "Vessel suspended" });
+      showSnackBar({ severity: "success", message: "User suspended" });
       setData((prevData) => {
-        return Object.assign({}, prevData, { status: "suspended" });
+        return Object.assign({}, prevData, suspendData);
       });
       if (data) {
         fleetActions.updateFleet({
@@ -124,9 +126,9 @@ export const OperatorInfoModal = forwardRef<
 
   useEffect(() => {
     if (unSuspendData) {
-      showSnackBar({ severity: "success", message: "Vessel approved" });
+      showSnackBar({ severity: "success", message: "User approved" });
       setData((prevData) => {
-        return Object.assign({}, prevData, { status: "active" });
+        return Object.assign({}, prevData, unSuspendData);
       });
       if (data) {
         fleetActions.updateFleet({
@@ -165,33 +167,33 @@ export const OperatorInfoModal = forwardRef<
     }
   }
 
-  function handleSuspendVessel() {
+  function handleSuspendUser() {
     if (data) {
       confirmationDialogRef.current?.show({
         data: {
-          title: `Are you sure you want to suspend this vessel?`,
+          title: `Are you sure you want to suspend this user?`,
           description: "",
         },
         onCancel: () => confirmationDialogRef.current?.dismiss(),
         onConfirm: () => {
           confirmationDialogRef.current?.dismiss();
-          suspendFleet({ boatId: data._id });
+          suspendOperator({ userId: data._id });
         },
       });
     }
   }
 
-  function handleUnsuspendVessel() {
+  function handleUnsuspendUser() {
     if (data) {
       confirmationDialogRef.current?.show({
         data: {
-          title: `Are you sure you want to approve this vessel?`,
+          title: `Are you sure you want to unsuspend this user?`,
           description: "",
         },
         onCancel: () => confirmationDialogRef.current?.dismiss(),
         onConfirm: () => {
           confirmationDialogRef.current?.dismiss();
-          activateFleet({ boatId: data._id });
+          unSuspendOperator({ userId: data._id });
         },
       });
     }
@@ -243,7 +245,9 @@ export const OperatorInfoModal = forwardRef<
 
                 <div className="flex items-center gap-2 flex-1">
                   <div className="flex-1" />
-                  <FleetStatusChip status={"active"} />
+                  <FleetStatusChip
+                    status={data.isActive ? "active" : "suspended"}
+                  />
 
                   <Select>
                     <SelectTrigger className="w-auto border-none">
@@ -261,21 +265,21 @@ export const OperatorInfoModal = forwardRef<
                         <p className="text-sm">View Documents</p>
                       </div>
 
-                      {true ? (
+                      {!data.isActive ? (
                         <div
                           className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleUnsuspendVessel()}
+                          onClick={() => handleUnsuspendUser()}
                         >
                           <BlockIcon className="text-gray-400" />
-                          <p className="text-sm">Unsuspend Vessel</p>
+                          <p className="text-sm">Unsuspend User</p>
                         </div>
                       ) : (
                         <div
                           className="flex items-center gap-4 px-4 pr-16 py-2 cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleSuspendVessel()}
+                          onClick={() => handleSuspendUser()}
                         >
                           <BlockIcon className="text-gray-400" />
-                          <p className="text-sm">Suspend Vessel</p>
+                          <p className="text-sm">Suspend User</p>
                         </div>
                       )}
                     </SelectContent>
