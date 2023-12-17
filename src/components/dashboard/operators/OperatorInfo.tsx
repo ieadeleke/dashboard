@@ -34,7 +34,7 @@ import { useUnSuspendOperator } from "@/utils/apiHooks/operators/useUnSuspendOpe
 import { useSuspendOperator } from "@/utils/apiHooks/operators/useSuspendOperator";
 
 type OperatorInfoModalProps = {
-    onOperatorDataChanged?: (operator: Operator) => void
+  onOperatorDataChanged?: (operator: Operator) => void
 };
 
 type OperatorInfoOpenPayload = {
@@ -316,11 +316,33 @@ export const OperatorInfoModal = forwardRef<
                 </div>
               </div>
 
+              {!data.isActive ? (
+                 <Button
+                 onClick={handleUnsuspendUser}
+                 isLoading={isLoading}
+                 disabled={isLoading}
+                 variant="contained"
+                 className="flex-1 rounded-lg min-h-[50px]"
+               >
+                 Unsuspend User
+               </Button>
+              ) : (
+                <Button
+                onClick={handleSuspendUser}
+                isLoading={isLoading}
+                disabled={isLoading}
+                variant="contained"
+                className="flex-1 rounded-lg min-h-[50px]"
+              >
+                Approve User
+              </Button>
+              )}
+
               <Button
                 onClick={closeModal}
                 isLoading={isLoading}
                 disabled={isLoading}
-                variant="contained"
+                variant="outlined"
                 className="flex-1 rounded-lg min-h-[50px]"
               >
                 Close
