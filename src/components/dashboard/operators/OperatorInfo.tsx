@@ -324,7 +324,7 @@ export const OperatorInfoModal = forwardRef<
                  variant="contained"
                  className="flex-1 rounded-lg min-h-[50px]"
                >
-                 Unsuspend User
+                 Approve User
                </Button>
               ) : (
                 <Button
@@ -334,7 +334,7 @@ export const OperatorInfoModal = forwardRef<
                 variant="contained"
                 className="flex-1 rounded-lg min-h-[50px]"
               >
-                Approve User
+                Suspend User
               </Button>
               )}
 
