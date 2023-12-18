@@ -1,79 +1,54 @@
-import { ControllableSnackBar, ControllableSnackBarRef, ControllableSnackBarStateParams } from '@/components/snackbar/ControllableSnackbar'
-import { GlobalActionContext } from '@/context/GlobalActionContext'
-import UserContext from '@/context/UserContext'
-import { User } from '@/models/users'
-import LinearProgress from '@mui/material/LinearProgress';
-import storeFactory from '@/redux/store'
-import '@/styles/globals.css'
-import { theme } from '@/utils/theme'
-import { ThemeProvider } from '@mui/material'
-import type { AppProps } from 'next/app'
-import { useEffect, useRef, useState } from 'react'
-import { Provider as ReduxProvider } from 'react-redux'
-import Router, { useRouter } from 'next/router';
-import { startUserActivityTimer, stopUserActivityTimer } from '@/utils/timeoutActivity';
-import { logOut } from '@/utils/auth/logout';
+import {
+  ControllableSnackBar,
+  ControllableSnackBarRef,
+  ControllableSnackBarStateParams,
+} from "@/components/snackbar/ControllableSnackbar";
+import LinearProgress from "@mui/material/LinearProgress";
+import "@/styles/globals.css";
+import { ThemeProvider } from "@mui/material";
+import type { AppProps } from "next/app";
+import { useEffect, useRef, useState } from "react";
+import Router, { useRouter } from "next/router";
+import { GlobalActionContext } from "@/context/GlobalActionContext";
+import { theme } from "@/utils/theme";
 
 export default function App({ Component, pageProps }: AppProps) {
-  const { store } = storeFactory()
-  const snackBarRef = useRef<ControllableSnackBarRef>(null)
+  const snackBarRef = useRef<ControllableSnackBarRef>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [user, setUser] = useState<User | null>(null)
   const router = useRouter();
 
-  useEffect(() => {
-    const handleTimeout = (): void => {
-      logOut()
-      router.push('/login');
-    };
-
-    // timeout for 10 mins
-    startUserActivityTimer(10 * 60 * 1000, handleTimeout);
-
-    return (): void => {
-      stopUserActivityTimer();
-    };
-  }, [router]);
-
   function showSnackBar(params: ControllableSnackBarStateParams) {
-    snackBarRef.current?.open(params)
+    snackBarRef.current?.open(params);
   }
 
   useEffect(() => {
-    const user = localStorage.getItem('user')
-    if (user) {
-      setUser(JSON.parse(user))
-    }
-  }, [])
-
-  function updateUser(user: User | null) {
-    localStorage.setItem('user', JSON.stringify(user))
-    setUser(user)
-  }
-
-  useEffect(() => {
-    Router.events.on('routeChangeStart', () => setIsLoading(true));
-    Router.events.on('routeChangeComplete', () => setIsLoading(false));
-    Router.events.on('routeChangeError', () => setIsLoading(false));
+    Router.events.on("routeChangeStart", () => setIsLoading(true));
+    Router.events.on("routeChangeComplete", () => setIsLoading(false));
+    Router.events.on("routeChangeError", () => setIsLoading(false));
     return () => {
-      Router.events.off('routeChangeStart', () => setIsLoading(true));
-      Router.events.off('routeChangeComplete', () => setIsLoading(false));
-      Router.events.off('routeChangeError', () => setIsLoading(false));
+      Router.events.off("routeChangeStart", () => setIsLoading(true));
+      Router.events.off("routeChangeComplete", () => setIsLoading(false));
+      Router.events.off("routeChangeError", () => setIsLoading(false));
     };
   }, [Router.events]);
 
-
-  return <ThemeProvider theme={theme}>
-    <UserContext.Provider value={{ user, updateUser, isAuthenticated: false }}>
+  return (
+    <ThemeProvider theme={theme}>
       <GlobalActionContext.Provider value={{ showSnackBar }}>
-        <ReduxProvider store={store}>
-          <>
-            <LinearProgress color="primary" sx={{ width: '100%', display: isLoading ? 'inherit' : 'none', zIndex: 2000, position: 'fixed !important' }} />
-            <Component {...pageProps} />
-            <ControllableSnackBar ref={snackBarRef} />
-          </>
-        </ReduxProvider>
+        <>
+          <LinearProgress
+            color="primary"
+            sx={{
+              width: "100%",
+              display: isLoading ? "inherit" : "none",
+              zIndex: 2000,
+              position: "fixed !important",
+            }}
+          />
+          <Component {...pageProps} />
+          <ControllableSnackBar ref={snackBarRef} />
+        </>
       </GlobalActionContext.Provider>
-    </UserContext.Provider>
-  </ThemeProvider>
+    </ThemeProvider>
+  );
 }
