@@ -29,7 +29,7 @@ const Button = forwardRef<HTMLButtonElement, ForwardRefButtonProps>((props, ref)
         }
     }
 
-    return <button className={cn(`rounded-[3px] h-14 text-base text-base-semibold ${bgClassName} ${disabled ? 'opacity-50' : ''}`, className)} ref={ref} onClick={handleOnClick} {...rest}>
+    return <button className={cn(`rounded-[3px] h-[50px] text-base text-base-semibold ${bgClassName} ${disabled ? 'opacity-50' : ''}`, className)} ref={ref} onClick={handleOnClick} {...rest}>
         {typeof children == 'string' ?
             <div className="flex justify-center items-center gap-3">
                 <ClipLoader color={'white'} size={24} loading={isLoading != undefined ? isLoading : false} />
