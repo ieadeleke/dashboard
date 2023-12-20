@@ -6,9 +6,50 @@ import {
   ChevronRight,
   CreditCardIcon,
   MapPinIcon,
+  MessageCircleIcon,
   PencilIcon,
+  PhoneIcon,
   PlusCircleIcon,
 } from "lucide-react";
+import { IconButton } from "@/components/buttons/IconButton";
+
+const RiderArriving = () => {
+  return (
+    <div className="flex flex-col bg-gray-200 p-3 gap-2 rounded-lg">
+      <h1 className="font-bold text-lg">Rider Arriving in 7 Minutes</h1>
+      <div className="flex items-center ">
+        <p className="flex-1 text-sm">Suzuki Motorcycle, Black</p>
+
+        <div className="bg-gray-300 rounded-md">
+          <p className="text-sm p-1">ABC187LZ</p>
+        </div>
+      </div>
+
+      <Divider />
+
+      <div className="flex justify-around items-center gap-4">
+        <div className="flex flex-col gap-1">
+          <Avatar className="w-10 h-10 bg-black" />
+          <p className="text-sm text-center">Jasper</p>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <IconButton className="bg-gray-100 w-10 h-10 flex justify-center items-center">
+            <MessageCircleIcon className="text-black" />
+          </IconButton>
+          <p className="text-sm text-center">Chat</p>
+        </div>
+
+        <div className="flex flex-col gap-1">
+        <IconButton className="bg-gray-100 w-10 h-10 flex justify-center items-center">
+            <PhoneIcon className="text-black" />
+          </IconButton>
+          <p className="text-sm text-center">Call</p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export const ConnectRider = () => {
   return (
@@ -83,6 +124,10 @@ export const ConnectRider = () => {
                   <ChevronRight className="text-gray-400" />
                 </div>
               </div>
+            </div>
+
+            <div>
+              <RiderArriving />
             </div>
           </div>
         </div>
