@@ -28,8 +28,8 @@ export const MenuSideBar = () => {
                 <ListItem isActive startIcon={<DashboardIcon />} name="Dashboard" href="/" />
                 <ListItem startIcon={<SendIcon />} name="Send Package" href="/vessels" />
                 <ListItem startIcon={<TrackingIcon />} name="Track Package" href="/track-package" />
-                <ListItem startIcon={<WalletIcon />} name="Fund Wallet" href="/trip-history" />
-                <ListItem startIcon={<CalculatorIcon />} name="Calculator" href="/incidents" />
+                <ListItem startIcon={<WalletIcon />} name="Fund Wallet" href="/fund-wallet" />
+                <ListItem startIcon={<CalculatorIcon />} name="Calculator" href="/calculator" />
                 <Divider />
             </div>
         </div>
