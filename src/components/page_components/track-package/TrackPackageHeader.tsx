@@ -4,8 +4,6 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { TextField } from "@/components/input/InputText";
 import Button from "@/components/buttons";
-import { DefaultMap } from "@/components/map/DefaultMap";
-import { RecentActivity } from "./RecentActivity";
 
 const PackageCategoryChip = () => {
   const [selectedCategory, setSelectedCategory] = useState<
@@ -80,13 +78,6 @@ export const TrackPackageHeader = () => {
             </Button>
           </div>
         </div>
-
-        <div className="flex flex-col gap-2">
-          <p className="font-medium">Current Delivery</p>
-          <DefaultMap className="h-[300px]" />
-        </div>
-
-        <RecentActivity />
       </div>
     </div>
   );
