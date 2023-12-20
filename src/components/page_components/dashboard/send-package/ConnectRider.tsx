@@ -12,6 +12,7 @@ import {
   PlusCircleIcon,
 } from "lucide-react";
 import { IconButton } from "@/components/buttons/IconButton";
+import { DefaultMap } from "@/components/map/DefaultMap";
 
 const RiderArriving = () => {
   return (
@@ -55,7 +56,9 @@ export const ConnectRider = () => {
   return (
     <div className="flex flex-col">
       <div className="flex gap-4 h-[700px]">
-        <div className="bg-red-500 flex-[0.7]" />
+        <div className="bg-gray-500 flex-[0.7]">
+          <DefaultMap className="w-full h-full" />
+        </div>
 
         <div className="flex-[0.3]">
           <div className="flex flex-col gap-4">
