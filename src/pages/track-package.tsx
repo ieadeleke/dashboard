@@ -1,6 +1,7 @@
 import Button from "@/components/buttons";
 import DashboardLayout from "@/components/layout/dashboard";
 import { DefaultMap } from "@/components/map/DefaultMap";
+import { PackageDelivered } from "@/components/page_components/track-package/PackageDelivered";
 import { PackageStatus } from "@/components/page_components/track-package/PackageStatus";
 import { RecentActivity } from "@/components/page_components/track-package/RecentActivity";
 import { TrackPackageHeader } from "@/components/page_components/track-package/TrackPackageHeader";
@@ -33,9 +34,10 @@ const Track = () => {
 export default function TrackPackage() {
   return (
     <DashboardLayout>
-      <div className="pb-8">
+      <div className="px-4 py-8">
         {/* <Track /> */}
-        <OrderHistory />
+        {/* <OrderHistory /> */}
+        <PackageDelivered />
       </div>
     </DashboardLayout>
   );
