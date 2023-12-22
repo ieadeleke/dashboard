@@ -13,6 +13,7 @@ import moment from "moment";
 import { CalendarIcon, HistoryIcon, PlusIcon } from "lucide-react";
 import Button from "@/components/buttons";
 import { IconButton } from "@/components/buttons/IconButton";
+import { Value } from "react-time-picker/dist/cjs/shared/types";
 
 type FormItemProps = {
   name: string;
@@ -27,7 +28,7 @@ const FormItem = (props: FormItemProps) => {
   );
 };
 export default function PackageDetailsForm() {
-  const [value, setValue] = useState("10:00");
+  const [value, setValue] = useState<Value>("10:00");
   const [date, setDate] = useState<Date>();
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
 
