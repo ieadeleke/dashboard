@@ -8,6 +8,10 @@ type FormItemProps = {
   keyboardType?: "default" | "number";
 };
 
+type CalculatorFormProps = {
+  calculate?: () => void
+}
+
 const FormItem = (props: FormItemProps) => {
   return (
     <div className="flex flex-col gap-2">
@@ -26,7 +30,7 @@ const FormItem = (props: FormItemProps) => {
   );
 };
 
-export const CalculatorForm = () => {
+export const CalculatorForm = (props: CalculatorFormProps) => {
   return (
     <div className="flex flex-col gap-6">
       <form className="flex flex-col gap-3">
@@ -57,7 +61,7 @@ export const CalculatorForm = () => {
         </div>
       </form>
 
-      <Button variant="contained">Calculate</Button>
+      <Button onClick={props.calculate} variant="contained">Calculate</Button>
     </div>
   );
 };
