@@ -6,6 +6,7 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     domains: ['ik.imagekit.io', 'res.cloudinary.com'],
   },
+  transpilePackages: ['@mui/x-charts'],
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,

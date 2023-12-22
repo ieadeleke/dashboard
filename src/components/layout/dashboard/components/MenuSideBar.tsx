@@ -26,7 +26,7 @@ export const MenuSideBar = () => {
 
             <div className="flex flex-col gap-5 mt-4 lg:w-full">
                 <ListItem isActive startIcon={<DashboardIcon />} name="Dashboard" href="/" />
-                <ListItem startIcon={<SendIcon />} name="Send Package" href="/vessels" />
+                <ListItem startIcon={<SendIcon />} name="Send Package" href="/send-package" />
                 <ListItem startIcon={<TrackingIcon />} name="Track Package" href="/track-package" />
                 <ListItem startIcon={<WalletIcon />} name="Fund Wallet" href="/fund-wallet" />
                 <ListItem startIcon={<CalculatorIcon />} name="Calculator" href="/calculator" />

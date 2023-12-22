@@ -13,13 +13,15 @@ export const DeliveryDetails = () => {
       <h1 className="font-medium text-2xl">Delivery Details</h1>
 
       <Table>
-        <TableHeader>
+        <TableHeader className="bg-primary rounded-xl">
           <TableRow>
-            <TableHead>Boat Name</TableHead>
-            <TableHead>Number of Injury</TableHead>
-            <TableHead>Number of Missing</TableHead>
-            <TableHead>Boat capacity</TableHead>
-            <TableHead>Status</TableHead>
+            <TableHead className="text-black">Destination</TableHead>
+            <TableHead className="text-black">Tracking ID</TableHead>
+            <TableHead className="text-black">Weight (kg)</TableHead>
+            <TableHead className="text-black">Status</TableHead>
+            <TableHead className="text-black">Departure Date</TableHead>
+            <TableHead className="text-black">Arrival Date</TableHead>
+            <TableHead className="text-black">Delivery Time</TableHead>
           </TableRow>
         </TableHeader>
 
@@ -28,16 +30,12 @@ export const DeliveryDetails = () => {
           .map((item) => (
             <TableBody key={item.BoatName} className="bg-white">
               <TableRow>
-                <TableCell>
-                  <div className="flex items-center gap-4">
-                    <p>Test 12</p>
-                  </div>
-                </TableCell>
                 <TableCell>Test 3</TableCell>
-
+                <TableCell>Test 3</TableCell>
+                <TableCell>Test 3</TableCell>
+                <TableCell>Test 3</TableCell>
                 <TableCell>Test 5</TableCell>
                 <TableCell>Test 7</TableCell>
-                <TableCell></TableCell>
                 <TableCell>Test 3</TableCell>
               </TableRow>
             </TableBody>

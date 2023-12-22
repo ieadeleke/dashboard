@@ -63,11 +63,11 @@ export const Overview = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 gap-8 my-4 md:grid-cols-2">
         <WeeklyDeliveries />
         <DailyAnalytics />
-        <DeliveryDetails />
       </div>
+      <DeliveryDetails />
     </div>
   );
 };
