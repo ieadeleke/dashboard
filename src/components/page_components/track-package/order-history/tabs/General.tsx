@@ -26,8 +26,8 @@ export const General = () => {
           <div className="flex flex-col gap-3">
             {Array(3)
               .fill(0)
-              .map(() => {
-                return <li className="text-sm">Iphone 15 Pro Max</li>;
+              .map((_, index) => {
+                return <li key={index} className="text-sm">Iphone 15 Pro Max</li>;
               })}
           </div>
         </div>
