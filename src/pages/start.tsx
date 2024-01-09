@@ -16,7 +16,7 @@ export default function HomePage() {
     <Layout>
       <div className="flex flex-col gap-16 bg-white">
         <Hero />
-        <div className="-mt-32 z-10 px-32">
+        {/* <div className="-mt-32 z-10 px-32">
           <HeroOptions />
         </div>
         <OurServices />
@@ -29,7 +29,7 @@ export default function HomePage() {
         <div className="bg-[#333333]">
           <ContactUs />
           <Footer />
-        </div>
+        </div> */}
       </div>
     </Layout>
   );
