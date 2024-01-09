@@ -20,9 +20,9 @@ export default function HomePage() {
           <HeroOptions />
         </div> */}
         {/* <OurServices /> */}
-        <EkoMileLogistics />
-        {/* <BecomeAPartner />
-        <CalculateShipping />
+        {/* <EkoMileLogistics /> */}
+        <BecomeAPartner />
+        {/* <CalculateShipping />
         <Testimonials />
         <FAQ />
         <DownloadApp />
