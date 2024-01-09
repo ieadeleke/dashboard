@@ -4,8 +4,8 @@ import PlaystoreIcon from "@/assets/icons/ic_playstore.svg";
 
 export const DownloadApp = () => {
   return (
-    <div className="flex flex-col px-16">
-      <div className="grid grid-cols-2 gap-8 items-center">
+    <div className="flex flex-col px-3 md:px-8 lg:px-16">
+      <div className="grid grid-cols-1 gap-8 items-center md:grid-cols-2">
         <div className="bg-black h-[400px]" />
 
         <div className="flex flex-col gap-10">
@@ -15,7 +15,7 @@ export const DownloadApp = () => {
             </div>
 
             <div className="flex flex-col gap-2">
-              <h1 className="font-bold text-4xl leading-[40px]">
+              <h1 className="font-bold text-2xl md:text-4xl md:leading-[40px]">
                 Experience the convenience of our app
               </h1>
               <p className="text-gray-800">
@@ -25,7 +25,7 @@ export const DownloadApp = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-8">
+          <div className="flex flex-col gap-4 md:gap-8 lg:flex-row lg:items-center">
             <div className="flex items-center gap-5 bg-primary px-5 py-2 rounded-lg cursor-pointer">
               <AppleIcon />
               <div className="bg-white w-[0.5px] h-8" />

@@ -24,9 +24,9 @@ export default function HomePage() {
         {/* <BecomeAPartner /> */}
         {/* <CalculateShipping /> */}
         {/* <Testimonials /> */}
-        <FAQ />
-        {/* <DownloadApp />
-        <div className="bg-[#333333]">
+        {/* <FAQ /> */}
+        <DownloadApp />
+        {/* <div className="bg-[#333333]">
           <ContactUs />
           <Footer />
         </div> */}
