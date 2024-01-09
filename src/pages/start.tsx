@@ -2,6 +2,7 @@ import { Layout } from "@/components/layout";
 import { BecomeAPartner } from "@/components/page_components/landing-page/become-a-partner";
 import { CalculateShipping } from "@/components/page_components/landing-page/calculate-shipping";
 import { EkoMileLogistics } from "@/components/page_components/landing-page/EkoMileLogistics";
+import { FAQ } from "@/components/page_components/landing-page/faq";
 import { Hero } from "@/components/page_components/landing-page/Hero";
 import { HeroOptions } from "@/components/page_components/landing-page/HeroOptions";
 import { OurServices } from "@/components/page_components/landing-page/our-services";
@@ -19,6 +20,7 @@ export default function HomePage() {
             <BecomeAPartner />
             <CalculateShipping />
             <Testimonials />
+            <FAQ />
         </div>
     </Layout>
 }
