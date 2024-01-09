@@ -1,6 +1,7 @@
 import { Layout } from "@/components/layout";
 import { BecomeAPartner } from "@/components/page_components/landing-page/become-a-partner";
 import { CalculateShipping } from "@/components/page_components/landing-page/calculate-shipping";
+import { DownloadApp } from "@/components/page_components/landing-page/download-app";
 import { EkoMileLogistics } from "@/components/page_components/landing-page/EkoMileLogistics";
 import { FAQ } from "@/components/page_components/landing-page/faq";
 import { Hero } from "@/components/page_components/landing-page/Hero";
@@ -21,6 +22,7 @@ export default function HomePage() {
             <CalculateShipping />
             <Testimonials />
             <FAQ />
+            <DownloadApp />
         </div>
     </Layout>
 }
