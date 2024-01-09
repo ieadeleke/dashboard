@@ -53,7 +53,7 @@ export const OurServices = () => {
             <div className="h-full bg-black" />
 
             <div className="grid grid-cols-2 grid-rows-2 gap-4 h-full">
-                {data.map((item) => <div className="w-full h-full bg-[#F9FAFB] flex flex-col justify-center px-2">
+                {data.map((item) => <div key={item.title} className="w-full h-full bg-[#F9FAFB] flex flex-col justify-center px-2">
                     <ServiceItem key={item.title} {...item} />
                 </div>)}
             </div>
