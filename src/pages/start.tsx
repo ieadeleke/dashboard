@@ -21,9 +21,9 @@ export default function HomePage() {
         </div> */}
         {/* <OurServices /> */}
         {/* <EkoMileLogistics /> */}
-        <BecomeAPartner />
-        {/* <CalculateShipping />
-        <Testimonials />
+        {/* <BecomeAPartner /> */}
+        <CalculateShipping />
+        {/* <Testimonials />
         <FAQ />
         <DownloadApp />
         <div className="bg-[#333333]">
