@@ -25,11 +25,11 @@ export default function HomePage() {
         {/* <CalculateShipping /> */}
         {/* <Testimonials /> */}
         {/* <FAQ /> */}
-        <DownloadApp />
-        {/* <div className="bg-[#333333]">
+        {/* <DownloadApp /> */}
+        <div className="bg-[#333333]">
           <ContactUs />
           <Footer />
-        </div> */}
+        </div>
       </div>
     </Layout>
   );

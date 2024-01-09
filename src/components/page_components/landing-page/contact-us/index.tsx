@@ -19,10 +19,10 @@ const InputField = ({ className, ...props }: InputProps) => {
 
 export const ContactUs = () => {
   return (
-    <div className="px-16 py-16">
-      <div className="flex gap-32">
+    <div className="px-3 py-16 md:px-16">
+      <div className="flex flex-col gap-16 md:flex-row md:gap-24 lg:md:gap-32">
         <div className="flex flex-col gap-6 mt-16">
-          <h1 className="font-bold text-4xl text-white">CONTACT US</h1>
+          <h1 className="font-bold text-2xl text-white md:text-4xl">CONTACT US</h1>
 
           <div>
             <p className="font-semibold text-white">Global Logistics</p>
@@ -34,7 +34,7 @@ export const ContactUs = () => {
           </div>
         </div>
 
-        <div className="-mt-16">
+        <div className="-mt-8 md:-mt-16">
           <div className="w-[1px] h-52 bg-white" />
           <div className="w-3 h-3 bg-white rounded-full -ml-[5px]" />
         </div>
