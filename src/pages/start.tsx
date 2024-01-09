@@ -15,17 +15,17 @@ export default function HomePage() {
   return (
     <Layout>
       <div className="flex flex-col gap-16 bg-white">
-        {/* <Hero />
+        <Hero />
         <div className="-mt-32 z-10 md:px-10 lg:px-32">
           <HeroOptions />
-        </div> */}
-        {/* <OurServices /> */}
-        {/* <EkoMileLogistics /> */}
-        {/* <BecomeAPartner /> */}
-        {/* <CalculateShipping /> */}
-        {/* <Testimonials /> */}
-        {/* <FAQ /> */}
-        {/* <DownloadApp /> */}
+        </div>
+        <OurServices />
+        <EkoMileLogistics />
+        <BecomeAPartner />
+        <CalculateShipping />
+        <Testimonials />
+        <FAQ />
+        <DownloadApp />
         <div className="bg-[#333333]">
           <ContactUs />
           <Footer />
