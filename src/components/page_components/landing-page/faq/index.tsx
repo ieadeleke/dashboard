@@ -36,7 +36,7 @@ const faqs = [
 ];
 export const FAQ = () => {
   return (
-    <div className="flex flex-col items-center bg-[#F8F8F8] py-8">
+    <div id="faqs" className="flex flex-col items-center bg-[#F8F8F8] py-8">
       <div className="flex flex-col gap-4">
         <h1 className="font-bold text-lg text-center md:text-2xl">
           Frequently Asked Questions.

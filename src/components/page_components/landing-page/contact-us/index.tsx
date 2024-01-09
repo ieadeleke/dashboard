@@ -19,7 +19,7 @@ const InputField = ({ className, ...props }: InputProps) => {
 
 export const ContactUs = () => {
   return (
-    <div className="px-3 py-16 md:px-16">
+    <div id="support" className="px-3 py-16 md:px-16">
       <div className="flex flex-col gap-16 md:flex-row md:gap-24 lg:md:gap-32">
         <div className="flex flex-col gap-6 mt-16">
           <h1 className="font-bold text-2xl text-white md:text-4xl">CONTACT US</h1>

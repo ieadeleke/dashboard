@@ -51,7 +51,7 @@ const data: ServiceItemProps[] = [
 ];
 export const OurServices = () => {
   return (
-    <div className="flex flex-col gap-16">
+    <div id="services" className="flex flex-col gap-16">
       <div className="flex flex-col items-center text-center px-2 self-center gap-4 md:max-w-[85%] lg:max-w-[75%]">
         <h2 className="text-primary font-bold md:text-lg">OUR SERVICES</h2>
         <div>

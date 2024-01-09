@@ -14,7 +14,29 @@ import {
 } from "@/components/ui/drawer";
 import { IconButton } from "../buttons/IconButton";
 
-const links = ["Ship Now", "Track Now", "Services", "FAQs", "Support"];
+const links = [
+  {
+    name: "Ship Now",
+    href: "#ship-now",
+  },
+  {
+    name: "Track Now",
+    href: "#track-now",
+  },
+  {
+    name: "Services",
+    href: "#services",
+  },
+  {
+    name: "FAQs",
+    href: "#faqs",
+  },
+  {
+    name: "Support",
+    href: "#support",
+  },
+];
+
 export const NavBar = () => {
   return (
     <Drawer>
@@ -24,29 +46,41 @@ export const NavBar = () => {
         </Link>
 
         <div className="items-center text-white gap-8 hidden lg:flex">
-          <div className="flex items-center gap-1 cursor-pointer">
+          <Link
+            href="#ship-now"
+            className="flex items-center gap-1 cursor-pointer"
+          >
             <p className="font-semibold">Ship Now</p>
             <ChevronDown />
-          </div>
+          </Link>
 
-          <div className="flex items-center gap-1 cursor-pointer">
+          <Link
+            href="#track-now"
+            className="flex items-center gap-1 cursor-pointer"
+          >
             <p className="font-semibold">Track Now</p>
             <ChevronDown />
-          </div>
+          </Link>
 
-          <div className="flex items-center gap-1 cursor-pointer">
+          <Link
+            href="#services"
+            className="flex items-center gap-1 cursor-pointer"
+          >
             <p className="font-semibold">Services</p>
             <ChevronDown />
-          </div>
+          </Link>
 
-          <div className="flex items-center gap-1 cursor-pointer">
+          <Link href="#faqs" className="flex items-center gap-1 cursor-pointer">
             <p className="font-semibold">FAQs</p>
             <ChevronDown />
-          </div>
+          </Link>
 
-          <div className="flex items-center gap-1 cursor-pointer">
+          <Link
+            href="#support"
+            className="flex items-center gap-1 cursor-pointer"
+          >
             <p className="font-semibold">Support</p>
-          </div>
+          </Link>
         </div>
 
         <Button className="h-[40px] rounded-lg px-6 hidden lg:flex">
@@ -59,12 +93,13 @@ export const NavBar = () => {
         <DrawerContent>
           <div className="flex flex-col gap-3 px-4 py-8">
             {links.map((item) => (
-              <div
-                key={item}
+              <Link
+                href={item.href}
+                key={item.href}
                 className="flex items-center gap-1 cursor-pointer"
               >
-                <p className="font-semibold">{item}</p>
-              </div>
+                <p className="font-semibold">{item.name}</p>
+              </Link>
             ))}
           </div>
           <DrawerClose className="flex justify-center">
