@@ -87,7 +87,7 @@ export const NavBar = () => {
           Get started for free
         </Button>
 
-        <DrawerTrigger>
+        <DrawerTrigger className="lg:hidden">
           <MenuIcon className="text-white" />
         </DrawerTrigger>
         <DrawerContent>
