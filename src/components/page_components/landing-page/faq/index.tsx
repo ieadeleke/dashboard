@@ -38,20 +38,22 @@ export const FAQ = () => {
   return (
     <div className="flex flex-col items-center bg-[#F8F8F8] py-8">
       <div className="flex flex-col gap-4">
-        <h1 className="font-bold text-2xl text-center">
+        <h1 className="font-bold text-lg text-center md:text-2xl">
           Frequently Asked Questions.
         </h1>
 
-        <div className="w-[800px]">
-          <Accordion
-            type="single"
-            collapsible
-            className="flex flex-col gap-4"
-          >
+        <div className="w-full px-2 lg:w-[800px]">
+          <Accordion type="single" collapsible className="flex flex-col gap-4">
             {faqs.map((item) => (
-              <AccordionItem key={item.title} value={item.title} className="bg-white shadow p-4 rounded-lg">
+              <AccordionItem
+                key={item.title}
+                value={item.title}
+                className="bg-white shadow p-4 rounded-lg"
+              >
                 <AccordionTrigger className="p-0 py-2">
-                  <h1 className="text-black font-bold">{item.title}</h1>
+                  <h1 className="text-black font-semibold text-sm">
+                    {item.title}
+                  </h1>
                 </AccordionTrigger>
                 <AccordionContent className="text-sm mt-4 text-gray-600">
                   {item.description}

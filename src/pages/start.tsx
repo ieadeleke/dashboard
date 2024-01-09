@@ -22,10 +22,10 @@ export default function HomePage() {
         {/* <OurServices /> */}
         {/* <EkoMileLogistics /> */}
         {/* <BecomeAPartner /> */}
-        <CalculateShipping />
-        {/* <Testimonials />
+        {/* <CalculateShipping /> */}
+        {/* <Testimonials /> */}
         <FAQ />
-        <DownloadApp />
+        {/* <DownloadApp />
         <div className="bg-[#333333]">
           <ContactUs />
           <Footer />
