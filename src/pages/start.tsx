@@ -16,7 +16,7 @@ export default function HomePage() {
     <Layout>
       <div className="flex flex-col gap-16 bg-white">
         <Hero />
-        <div className="-mt-32 z-10 md:px-10 lg:px-32">
+        <div className="-mt-24 z-10 md:px-10 md:-mt-32 lg:px-32">
           <HeroOptions />
         </div>
         <OurServices />
