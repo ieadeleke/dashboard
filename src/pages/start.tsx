@@ -15,13 +15,13 @@ export default function HomePage() {
   return (
     <Layout>
       <div className="flex flex-col gap-16 bg-white">
-        <Hero />
-        {/* <div className="-mt-32 z-10 px-32">
+        {/* <Hero />
+        <div className="-mt-32 z-10 md:px-10 lg:px-32">
           <HeroOptions />
-        </div>
-        <OurServices />
+        </div> */}
+        {/* <OurServices /> */}
         <EkoMileLogistics />
-        <BecomeAPartner />
+        {/* <BecomeAPartner />
         <CalculateShipping />
         <Testimonials />
         <FAQ />
