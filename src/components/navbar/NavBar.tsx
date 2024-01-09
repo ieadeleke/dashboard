@@ -6,13 +6,10 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { IconButton } from "../buttons/IconButton";
+import { useState } from "react";
 
 const links = [
   {
@@ -38,8 +35,14 @@ const links = [
 ];
 
 export const NavBar = () => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  function handleLinkLink() {
+    setIsDrawerOpen(false)
+  }
+
   return (
-    <Drawer>
+    <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
       <div className="flex items-center p-4 px-6 justify-between">
         <Link href="/">
           <Logo />
@@ -96,6 +99,7 @@ export const NavBar = () => {
               <Link
                 href={item.href}
                 key={item.href}
+                onClick={handleLinkLink}
                 className="flex items-center gap-1 cursor-pointer"
               >
                 <p className="font-semibold">{item.name}</p>
