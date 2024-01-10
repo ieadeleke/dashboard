@@ -27,7 +27,9 @@ export const Hero = () => {
               <Link href="/dashboard">
                 <Button className="px-8 text-black">Get Started</Button>
               </Link>
-              <Button variant="outlined">Become a Rider</Button>
+              <Link href="/login">
+                <Button variant="outlined">Become a Rider</Button>
+              </Link>
             </div>
           </div>
         </div>
