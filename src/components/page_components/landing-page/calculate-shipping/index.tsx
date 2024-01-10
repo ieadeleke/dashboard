@@ -10,7 +10,12 @@ export const CalculateShipping = () => {
       </h2>
 
       <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[65%,35%]">
-        <div className="h-[500px] bg-black" />
+        <div style={{
+          backgroundImage: `url(https://res.cloudinary.com/dfzhxlgll/image/upload/v1704877729/eko%20mile/brt_bus_c7dd4c.png)`,
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'contain',
+          backgroundPosition: 'center'
+        }} className="h-[500px] bg-transparent" />
 
         <div className="flex flex-col gap-2">
           <h1 className="text-3xl font-bold md:text-4xl">Service Calculator</h1>

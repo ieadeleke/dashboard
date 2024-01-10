@@ -14,24 +14,24 @@ const faqs = [
   {
     title: "How can I track my shipment?",
     description:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit, soluta! Suscipit eaque perferendis quo, aut accusamus consequuntur totam vero rem voluptates error nulla saepe dolores esse vel molestias atque nam?",
+      "You can track your shipment by entering your tracking number on our website. Our tracking system provides real-time updates on the status and location of your cargo",
   },
   {
     title: "What is the estimated delivery time for my shipment?",
     description:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit, soluta! Suscipit eaque perferendis quo, aut accusamus consequuntur totam vero rem voluptates error nulla saepe dolores esse vel molestias atque nam?",
+      "Delivery times vary based on the shipping method and destination. You can get an estimate by entering your details on our website or by contacting our customer support team.",
   },
   {
     title:
       "How do you ensure the safety and security of my goods during transit?",
     description:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit, soluta! Suscipit eaque perferendis quo, aut accusamus consequuntur totam vero rem voluptates error nulla saepe dolores esse vel molestias atque nam?",
+      "We take security very seriously and empkoy various measures, including advanced tracking systems, secure packaging, and experienced drivers, to ensure the safety of your cargo during transportation.",
   },
   {
     title:
       "What sets your logistics company apart from others in the industry?",
     description:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit, soluta! Suscipit eaque perferendis quo, aut accusamus consequuntur totam vero rem voluptates error nulla saepe dolores esse vel molestias atque nam?",
+      "Our commitment to customer satisfaction, innovative technology, a global network of partners, and a proven track record of reliability and efficiency make us a trusted choice for logistics services.",
   },
 ];
 export const FAQ = () => {
