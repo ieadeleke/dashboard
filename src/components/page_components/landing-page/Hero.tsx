@@ -3,7 +3,11 @@ import { NavBar } from "@/components/navbar/NavBar";
 
 export const Hero = () => {
   return (
-    <div className="flex flex-col bg-black h-[550px]">
+    <div style={{
+      backgroundImage: 'url(https://res.cloudinary.com/dfzhxlgll/image/upload/v1704877044/eko%20mile/hero_image_fq87if.png)',
+      backgroundPosition: 'center',
+      backgroundSize: 'cover'
+    }} className="flex flex-col bg-black h-[550px]">
       <NavBar />
       <div className="flex flex-col justify-center md:justify-normal">
         <div className="px-4 pt-[10%] text-white text-center md:px-[10%] lg:px-[20%]">

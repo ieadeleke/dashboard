@@ -86,7 +86,12 @@ export const BecomeAPartner = () => {
           </div>
         </div>
 
-        <div className="h-[500px] bg-black" />
+        <div style={{
+          backgroundImage: `url(https://res.cloudinary.com/dfzhxlgll/image/upload/v1704877549/eko%20mile/partner_phone_ftgp2u.png)`,
+          backgroundSize: 'contain',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }} className="h-[500px] bg-transparent" />
       </div>
     </div>
   );

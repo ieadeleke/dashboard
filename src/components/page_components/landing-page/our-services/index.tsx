@@ -66,7 +66,12 @@ export const OurServices = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-        <div className="w-full h-[500px] bg-black" />
+        <div style={{
+            backgroundImage: `url(https://res.cloudinary.com/dfzhxlgll/image/upload/v1704877428/eko%20mile/benefits_dn3mh1.png)`,
+            backgroundPosition: 'center',
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat'
+        }} className="w-full h-[500px] bg-transparent" />
 
         <div className="grid grid-cols-1 grid-rows-2 gap-4 h-full md:grid-cols-2">
           {data.map((item) => (
