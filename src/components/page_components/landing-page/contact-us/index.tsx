@@ -9,7 +9,7 @@ const InputField = ({ className, ...props }: InputProps) => {
   return (
     <RegularTextInput
       className={cn(
-        "outline outline-2 outline-[#FFFFFF33] border-none border-0 bg-transparent",
+        "outline outline-2 outline-[#FFFFFF33] border-none border-0 bg-transparent text-gray-200",
         className
       )}
       {...props}
