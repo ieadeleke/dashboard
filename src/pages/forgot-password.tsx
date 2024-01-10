@@ -8,13 +8,13 @@ export default function ForgotPassword() {
 
     return <Layout>
         <div className="flex flex-col gap-8">
-            <div className="flex items-center">
+            <div className="flex items-center px-2 py-2">
                 <Logo className="text-primary" />
                 <div className="flex-1" />
                 <Button variant="text" className="text-black underline">Close this page</Button>
             </div>
 
-            <div className="flex flex-col self-center items-center w-[500px] gap-4 mt-16">
+            <div className="flex flex-col self-center items-center px-3 gap-4 mt-16 md:[500px]">
                 <div className="flex flex-col gap-3 text-center">
                     <h1 className="font-bold text-2xl">Forgot Password</h1>
                     <p className="text-gray-500">{`Don’t worry about it, happens to the best of us☺️`}</p>

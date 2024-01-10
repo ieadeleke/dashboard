@@ -4,6 +4,7 @@ import { IconButton } from "@/components/buttons/IconButton";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useState } from "react";
 import Button from "@/components/buttons";
+import Link from "next/link";
 
 export const IndividualSignUpForm = () => {
     const [showPassword, setShowPassword] = useState(false)
@@ -62,7 +63,9 @@ export const IndividualSignUpForm = () => {
             <Button>Sign Up</Button>
             <div className="flex items-center justify-center gap-4">
                 <p>Already have an account?</p>
-                <Button variant="text">Login</Button>
+                <Link href="/login">
+                    <Button variant="text">Login</Button>
+                </Link>
             </div>
         </div>
     </div>
