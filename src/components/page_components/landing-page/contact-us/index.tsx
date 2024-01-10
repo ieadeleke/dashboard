@@ -48,7 +48,7 @@ export const ContactUs = () => {
             <InputField placeholder="Name" />
             <InputField placeholder="Email" />
             <InputField placeholder="Subject" />
-            <textarea className="h-32 resize-none outline outline-2 outline-[#FFFFFF33] border-none border-0 bg-transparent" />
+            <textarea className="h-32 resize-none outline outline-2 outline-[#FFFFFF33] border-none border-0 bg-transparent text-gray-200" />
           </div>
 
           <div className="flex items-center bg-primary p-4 text-white">
