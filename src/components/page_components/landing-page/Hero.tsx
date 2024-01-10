@@ -1,5 +1,6 @@
 import Button from "@/components/buttons";
 import { NavBar } from "@/components/navbar/NavBar";
+import Link from "next/link";
 
 export const Hero = () => {
   return (
@@ -23,7 +24,9 @@ export const Hero = () => {
             </div>
 
             <div className="flex flex-col gap-2 justify-center md:flex-row md:items-center">
-              <Button className="px-8 text-black">Get Started</Button>
+              <Link href="/dashboard">
+                <Button className="px-8 text-black">Get Started</Button>
+              </Link>
               <Button variant="outlined">Become a Rider</Button>
             </div>
           </div>
