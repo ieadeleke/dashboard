@@ -35,17 +35,21 @@ export default function Login() {
                         <RegularTextInput />
                     </div>
 
-                    <div>
-                        <p className="font-semibold">Confirm Password:</p>
+                    <div className="flex flex-col">
+                        <p className="font-semibold">Password:</p>
                         <TextField.Container className="bg-white outline outline-1 outline-gray-200">
                             <TextField.Input />
                             <IconButton onClick={toggleShowPassword}>
                                 {showPassword ? <EyeIcon /> : <EyeOffIcon />}
                             </IconButton>
                         </TextField.Container>
+
+                        <Link href="/forgot-password" className="self-end">
+                            <Button variant="text" className="h-8 mt-1">Forgot Password?</Button>
+                        </Link>
                     </div>
 
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 mt-4">
                         <Button>Sign In</Button>
                         <div className="flex items-center justify-center">
                             <p>{`Don't`} have an account?</p>
