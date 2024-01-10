@@ -45,7 +45,7 @@ export const NavBar = () => {
     <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
       <div className="flex items-center p-4 px-6 justify-between">
         <Link href="/">
-          <Logo />
+          <Logo className="text-white" />
         </Link>
 
         <div className="items-center text-white gap-8 hidden lg:flex">
