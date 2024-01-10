@@ -17,7 +17,7 @@ export const MenuSideBar = () => {
     return (
         <div className="w-full h-full flex flex-col gap-8 items-center bg-white overflow-y-scroll no-scrollbar px-0 py-6 lg:px-2 lg:items-start">
             <ConfirmationAlertDialog ref={confirmationDialogRef} />
-            <Link className="mx-auto flex items-center gap-8" href="/home" passHref>
+            <Link className="mx-auto flex items-center gap-8" href="/dashboard" passHref>
 
                 <MenuIcon className="text-primary" />
                 <h1 className='font-bold'>EKOMILE</h1>
@@ -25,11 +25,11 @@ export const MenuSideBar = () => {
             </Link>
 
             <div className="flex flex-col gap-5 mt-4 lg:w-full">
-                <ListItem isActive startIcon={<DashboardIcon />} name="Dashboard" href="/" />
-                <ListItem startIcon={<SendIcon />} name="Send Package" href="/send-package" />
-                <ListItem startIcon={<TrackingIcon />} name="Track Package" href="/track-package" />
-                <ListItem startIcon={<WalletIcon />} name="Fund Wallet" href="/fund-wallet" />
-                <ListItem startIcon={<CalculatorIcon />} name="Calculator" href="/calculator" />
+                <ListItem isActive startIcon={<DashboardIcon />} name="Dashboard" href="/dashboard" />
+                <ListItem startIcon={<SendIcon />} name="Send Package" href="/dashboard/send-package" />
+                <ListItem startIcon={<TrackingIcon />} name="Track Package" href="/dashboard/track-package" />
+                <ListItem startIcon={<WalletIcon />} name="Fund Wallet" href="/dashboard/fund-wallet" />
+                <ListItem startIcon={<CalculatorIcon />} name="Calculator" href="/dashboard/calculator" />
                 <Divider />
             </div>
         </div>
