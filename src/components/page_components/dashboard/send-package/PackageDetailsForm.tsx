@@ -27,7 +27,12 @@ const FormItem = (props: FormItemProps) => {
     </div>
   );
 };
-export default function PackageDetailsForm() {
+
+type PackageDetailsFormProps = {
+  showSummary?: () => void
+}
+
+export default function PackageDetailsForm(props: PackageDetailsFormProps) {
   const [value, setValue] = useState<Value>("10:00");
   const [date, setDate] = useState<Date>();
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
@@ -63,7 +68,7 @@ export default function PackageDetailsForm() {
         </IconButton>
       </div>
 
-      <form className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6">
         <FormItem name="Pickup Address" />
 
         <div className="flex items-center gap-4">
@@ -118,10 +123,10 @@ export default function PackageDetailsForm() {
           <p>Add new delivery</p>
         </div>
 
-        <Button variant="contained" className="text-black">
+        <Button onClick={props.showSummary} variant="contained" className="text-black">
           Continue
         </Button>
-      </form>
+      </div>
     </div>
   );
 }

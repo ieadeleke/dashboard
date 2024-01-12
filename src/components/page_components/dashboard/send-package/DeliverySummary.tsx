@@ -70,7 +70,11 @@ const DeliverySummaryItem = () => {
   );
 };
 
-export const DeliverySummary = () => {
+type DeliverySummaryProps = {
+  showRider?: () => void
+}
+
+export const DeliverySummary = (props: DeliverySummaryProps) => {
   return (
     <div className="flex flex-col gap-8 py-8">
       <h1 className="font-bold text-2xl">Delivery Summary</h1>
@@ -88,7 +92,7 @@ export const DeliverySummary = () => {
         </div>
       </div>
 
-      <Button variant="contained"> Make Payment</Button>
+      <Button onClick={props.showRider} variant="contained"> Make Payment</Button>
     </div>
   );
 };
