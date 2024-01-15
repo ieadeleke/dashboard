@@ -10,8 +10,8 @@ import StatIcon4 from "@/assets/icons/ic_delivery_stat_4.svg";
 export default function GuestTracking() {
   return (
     <Layout>
-      <div className="flex flex-col h-screen overflow-hidden">
-        <div className="w-full h-full grid grid-cols-2">
+      <div className="flex flex-col h-screen md:overflow-hidden">
+        <div className="w-full h-full grid grid-cols-1 md:grid-cols-2">
           <div className="flex flex-col bg-[#FFB60B33] h-full justify-center items-center">
             <img src="https://res.cloudinary.com/dfzhxlgll/image/upload/v1705318673/eko%20mile/out_for_delivery_y7oita.png" />
             <h1 className="font-bold text-2xl mt-4">
@@ -19,17 +19,17 @@ export default function GuestTracking() {
             </h1>
           </div>
 
-          <div className="flex flex-col overflow-y-scroll h-full">
+          <div className="flex flex-col md:overflow-y-scroll md:h-full">
             <DefaultMap className="h-[300px]" />
 
-            <div className="flex flex-col gap-5 p-4 h-0">
+            <div className="flex flex-col gap-5 p-4 md:h-0">
               <div>
                 <h1 className="font-bold text-xl">Order Picked</h1>
                 <p className="text-sm text-gray-700">
                   Bimbo’s Apparel . 11/10/23. 13.50 WAT-4 arrival
                 </p>
 
-                <div className="flex items-center gap-3 mt-4">
+                <div className="flex items-center gap-3 mt-4 flex-wrap">
                   <StatIcon1 className="text-primary" />
                   <div className="h-2 w-32 bg-gray-400 rounded-full" />
                   <StatIcon2 className="text-gray-400" />
