@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import Router, { useRouter } from "next/router";
 import { GlobalActionContext } from "@/context/GlobalActionContext";
 import { theme } from "@/utils/theme";
+import SEO from "@/components/SEO";
 
 export default function App({ Component, pageProps }: AppProps) {
   const snackBarRef = useRef<ControllableSnackBarRef>(null);
@@ -45,6 +46,7 @@ export default function App({ Component, pageProps }: AppProps) {
               position: "fixed !important",
             }}
           />
+          <SEO title="Eko Mile" />
           <Component {...pageProps} />
           <ControllableSnackBar ref={snackBarRef} />
         </>
