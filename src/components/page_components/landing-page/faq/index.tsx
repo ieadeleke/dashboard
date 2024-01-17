@@ -33,7 +33,26 @@ const faqs = [
     description:
       "Our commitment to customer satisfaction, innovative technology, a global network of partners, and a proven track record of reliability and efficiency make us a trusted choice for logistics services.",
   },
+  {
+    title:
+      "How can I contact Eko-Mile for support?",
+    description:
+      "For any inquiries or assistance, our dedicated support team is ready to help. Reach out through the app or contact us via email or phone for prompt assistance.",
+  },
+  {
+    title:
+      "Is Eko-Mile available only in Lagos?",
+    description:
+      "For now, Yes, Eko-Mile currently operates exclusively in Lagos, Nigeria, focusing on providing efficient last-mile delivery services in the region using the BRT system",
+  },
+  {
+    title:
+      "How can I join Eko-Mile as a partner?",
+    description:
+      "Joining is simple! Whether you own a bike or ride one, you can become a partner with Eko-Mile. Explore earning possibilities and start making money with your bike every month.",
+  },
 ];
+
 export const FAQ = () => {
   return (
     <div id="faqs" className="flex flex-col items-center bg-[#F8F8F8] py-8">
