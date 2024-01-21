@@ -1,11 +1,13 @@
 import { Divider } from "@/components/Divider";
 import Button from "@/components/buttons";
 import { Layout } from "@/components/layout";
+import Lottie from "lottie-react";
 import { DefaultMap } from "@/components/map/DefaultMap";
 import StatIcon1 from "@/assets/icons/ic_delivery_stat_1.svg";
 import StatIcon2 from "@/assets/icons/ic_delivery_stat_2.svg";
 import StatIcon3 from "@/assets/icons/ic_delivery_stat_3.svg";
 import StatIcon4 from "@/assets/icons/ic_delivery_stat_4.svg";
+import riderAnim from "@/assets/lottie/track_animation.json";
 
 export default function GuestTracking() {
   return (
@@ -13,7 +15,8 @@ export default function GuestTracking() {
       <div className="flex flex-col h-screen md:overflow-hidden">
         <div className="w-full h-full grid grid-cols-1 md:grid-cols-2">
           <div className="flex flex-col bg-[#FFB60B33] h-full justify-center items-center">
-            <img src="https://res.cloudinary.com/dfzhxlgll/image/upload/v1705318673/eko%20mile/out_for_delivery_y7oita.png" />
+            <Lottie className="w-full h-80 md:w-[400px] md:h-auto" animationData={riderAnim} loop={true} />
+            {/* <img src="https://res.cloudinary.com/dfzhxlgll/image/upload/v1705318673/eko%20mile/out_for_delivery_y7oita.png" /> */}
             <h1 className="font-bold text-2xl mt-4">
               Your Order is on the way!
             </h1>
