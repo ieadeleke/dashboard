@@ -1,98 +1,34 @@
-import { Divider } from "@/components/Divider";
 import Button from "@/components/buttons";
+import { RegularTextInput } from "@/components/input/RegularTextInput";
 import { Layout } from "@/components/layout";
-import { DefaultMap } from "@/components/map/DefaultMap";
-import StatIcon1 from "@/assets/icons/ic_delivery_stat_1.svg";
-import StatIcon2 from "@/assets/icons/ic_delivery_stat_2.svg";
-import StatIcon3 from "@/assets/icons/ic_delivery_stat_3.svg";
-import StatIcon4 from "@/assets/icons/ic_delivery_stat_4.svg";
+import { TrackHero } from "@/components/page_components/track-package/TrackHero";
+import { useRouter } from "next/router";
 
-export default function GuestTracking() {
+export default function Track() {
+  const router = useRouter();
+
   return (
     <Layout>
-      <div className="flex flex-col h-screen md:overflow-hidden">
-        <div className="w-full h-full grid grid-cols-1 md:grid-cols-2">
-          <div className="flex flex-col bg-[#FFB60B33] h-full justify-center items-center">
-            <img src="https://res.cloudinary.com/dfzhxlgll/image/upload/v1705318673/eko%20mile/out_for_delivery_y7oita.png" />
-            <h1 className="font-bold text-2xl mt-4">
-              Your Order is on the way!
+      <div>
+        <TrackHero />
+        <div className="flex flex-col bg-white -mt-8 h-80 rounded-t-3xl items-center px-2 py-8">
+          <div className="text-center">
+            <h1 className="text-3xl">
+              Track Your <span className="font-bold">Shipment</span>
             </h1>
-          </div>
+            <p className="font-light">Find the status of your package</p>
 
-          <div className="flex flex-col md:overflow-y-scroll md:h-full">
-            <DefaultMap className="h-[300px]" />
-
-            <div className="flex flex-col gap-5 p-4 md:h-0">
-              <div>
-                <h1 className="font-bold text-xl">Order Picked</h1>
-                <p className="text-sm text-gray-700">
-                  Bimbo’s Apparel . 11/10/23. 13.50 WAT-4 arrival
-                </p>
-
-                <div className="flex items-center gap-3 mt-4 flex-wrap">
-                  <StatIcon1 className="text-primary" />
-                  <div className="h-2 w-32 bg-gray-400 rounded-full" />
-                  <StatIcon2 className="text-gray-400" />
-                  <div className="h-2 w-32 bg-gray-400 rounded-full" />
-                  <StatIcon3 className="text-gray-400" />
-                  <div className="h-2 w-32 bg-gray-400 rounded-full" />
-                  <StatIcon4 className="text-gray-400" />
-                </div>
-              </div>
-
-              <Divider />
-
-              <div className="flex flex-col gap-2">
-                <h1 className="font-medium text-lg">See your order details</h1>
-                <p className="text-sm text-gray-700">
-                  You can see the content of your order or keep it a surprise
-                  until it arrives.
-                </p>
-                <Button className="rounded-full self-start h-10 text-sm">
-                  Reveal order details
-                </Button>
-              </div>
-
-              <Divider />
-
-              <div className="flex flex-col gap-2">
-                <h1 className="font-medium text-lg">Delivery Address</h1>
-                <p className="text-sm text-gray-700">
-                  155A Ralph J Karieren Crescent, Lekki Pennisula Scheme 2,
-                  Ogombo, Lagos.
-                </p>
-              </div>
-
-              <Divider />
-
-              <div className="flex flex-col gap-2">
-                <h1 className="font-medium text-lg">
-                  Need help with your order?
-                </h1>
-                <p className="text-sm text-gray-700">
-                  If something isn’t right, we’ll help you out.
-                </p>
-                <Button
-                  variant="text"
-                  className="rounded-full self-start h-10 text-sm"
-                >
-                  Get help
-                </Button>
-              </div>
-
-              <Divider />
-
-              <div className="flex flex-col gap-2">
-                <h1 className="font-medium text-sm">
-                  How was your experience?
-                </h1>
-                <Button
-                  variant="text"
-                  className="rounded-full self-start h-10 text-sm"
-                >
-                  Share feedback
-                </Button>
-              </div>
+            <div className="flex items-center mt-8 w-full md:w-[500px]">
+              <RegularTextInput
+                placeholder="Enter your tracking number"
+                className="border-r-0 outline-none"
+              />
+              <Button
+                onClick={() => router.push("/guest-tracking/8764898765456")}
+                className="w-32 h-10"
+              >
+                Track
+              </Button>
             </div>
           </div>
         </div>
