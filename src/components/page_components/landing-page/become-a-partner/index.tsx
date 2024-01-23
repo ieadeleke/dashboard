@@ -1,5 +1,7 @@
 import Button from "@/components/buttons";
+import { PLAYSTORE_APP_URL } from "@/utils/constants/strings";
 import { BuildingIcon, DollarSignIcon, HelpingHandIcon } from "lucide-react";
+import Link from "next/link";
 
 type PartnerItemProps = {
   title: string;
@@ -29,25 +31,25 @@ const data: PartnerItemProps[] = [
   {
     title: "Ready to Start Earning An Income?",
     description:
-      "Lorem ipsum dolor sit amet consectetur. Quis tempus velit sit iaculis integer diam ",
+      "As a partner, your bike isn't just a mode of transport; it's a monthly income generator with Eko-Mile",
     icon: <DollarSignIcon className="text-primary" />,
   },
   {
     title: "Passive Income Made Easy",
     description:
-      "Lorem ipsum dolor sit amet consectetur. Dictum diam feugiat feugiat ullamcorper mi.",
+      "Join us as a partner and start earning a steady income each month simply by putting your bike to work with Eko-Mile.",
     icon: <HelpingHandIcon className="text-primary" />,
   },
   {
     title: "Above 18 Years? You too can Earn",
     description:
-      "Lorem ipsum dolor sit amet consectetur. Donec consequat proin eu felis odio turpis enim commodo egestas.",
+      "Partner with Eko-Mile, and maximize your earnings on your terms by bringing in your own riders.",
     icon: <BuildingIcon className="text-primary" />,
   },
   {
     title: "Above 18 Years? You too can Earn",
     description:
-      "Lorem ipsum dolor sit amet consectetur. Donec consequat proin eu felis odio turpis enim commodo egestas.",
+      "Lorem ipsum dolor sit amet consectetur. Donec consequat proin eu felis odio ",
     icon: <BuildingIcon className="text-primary" />,
   },
 ];
@@ -78,20 +80,27 @@ export const BecomeAPartner = () => {
           </div>
 
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:w-[80%] md:gap-8">
-            <Button className="flex-1">Sign Up</Button>
+            <Link className="flex-1" href="/login">
+              <Button className="w-full">Sign Up</Button>
+            </Link>
 
-            <Button variant="outlined" className="flex-1">
-              Sign in
-            </Button>
+            <Link className="flex-1" href={PLAYSTORE_APP_URL} target="_blank" rel="noreferrer">
+              <Button variant="outlined" className="w-full">
+                {`Download Rider's App`}
+              </Button>
+            </Link>
           </div>
         </div>
 
-        <div style={{
-          backgroundImage: `url(https://res.cloudinary.com/dfzhxlgll/image/upload/v1704877549/eko%20mile/partner_phone_ftgp2u.png)`,
-          backgroundSize: 'contain',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
-        }} className="h-[500px] bg-transparent" />
+        <div
+          style={{
+            backgroundImage: `url(https://res.cloudinary.com/dfzhxlgll/image/upload/v1704877549/eko%20mile/partner_phone_ftgp2u.png)`,
+            backgroundSize: "contain",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+          className="h-[500px] bg-transparent"
+        />
       </div>
     </div>
   );

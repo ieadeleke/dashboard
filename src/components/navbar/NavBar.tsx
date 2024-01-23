@@ -38,7 +38,7 @@ export const NavBar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   function handleLinkLink() {
-    setIsDrawerOpen(false)
+    setIsDrawerOpen(false);
   }
 
   return (
@@ -50,19 +50,17 @@ export const NavBar = () => {
 
         <div className="items-center text-white gap-8 hidden lg:flex">
           <Link
-            href="#ship-now"
+            href="#become-a-partner"
             className="flex items-center gap-1 cursor-pointer"
           >
-            <p className="font-semibold">Ship Now</p>
-            <ChevronDown />
+            <p className="font-semibold">Become a Partner</p>
           </Link>
 
           <Link
-            href="#track-now"
+            href="/guest-tracking"
             className="flex items-center gap-1 cursor-pointer"
           >
             <p className="font-semibold">Track Now</p>
-            <ChevronDown />
           </Link>
 
           <Link
@@ -70,24 +68,24 @@ export const NavBar = () => {
             className="flex items-center gap-1 cursor-pointer"
           >
             <p className="font-semibold">Services</p>
-            <ChevronDown />
           </Link>
 
           <Link href="#faqs" className="flex items-center gap-1 cursor-pointer">
             <p className="font-semibold">FAQs</p>
-            <ChevronDown />
           </Link>
 
           <Link
-            href="#support"
+            href="htpps://play.google.com"
+            target="_blank"
+            rel="noreferrer"
             className="flex items-center gap-1 cursor-pointer"
           >
-            <p className="font-semibold">Support</p>
+            <p className="font-semibold">Download App</p>
           </Link>
         </div>
 
         <Button className="h-[40px] rounded-lg px-6 hidden lg:flex">
-          Get started for free
+          Get started
         </Button>
 
         <DrawerTrigger className="lg:hidden">

@@ -4,6 +4,7 @@ import {
   HistoryIcon,
   TrainTrackIcon,
 } from "lucide-react";
+import benefitsImage from '@/assets/images/unlock_benefits.png'
 
 type ServiceItemProps = {
   title: string;
@@ -53,7 +54,7 @@ export const OurServices = () => {
   return (
     <div id="services" className="flex flex-col gap-16">
       <div className="flex flex-col items-center text-center px-2 self-center gap-4 md:max-w-[85%] lg:max-w-[75%]">
-        <h2 className="text-primary font-bold md:text-lg">OUR SERVICES</h2>
+        <h2 className="text-primary font-bold md:text-xl">OUR SERVICES</h2>
         <div>
           <h1 className="text-2xl md:text3xl">
             Unlock a <span className="text-primary">World</span> of Benefits.
@@ -67,7 +68,7 @@ export const OurServices = () => {
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <div style={{
-            backgroundImage: `url(https://res.cloudinary.com/dfzhxlgll/image/upload/v1704877428/eko%20mile/benefits_dn3mh1.png)`,
+            backgroundImage: `url(${benefitsImage.src})`,
             backgroundPosition: 'center',
             backgroundSize: 'contain',
             backgroundRepeat: 'no-repeat'
