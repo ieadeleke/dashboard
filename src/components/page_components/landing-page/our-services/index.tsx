@@ -4,7 +4,7 @@ import {
   HistoryIcon,
   TrainTrackIcon,
 } from "lucide-react";
-import benefitsImage from '@/assets/images/unlock_benefits.png'
+import benefitsImage from "@/assets/images/unlock_benefits.png";
 
 type ServiceItemProps = {
   title: string;
@@ -66,17 +66,22 @@ export const OurServices = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-        <div style={{
-            backgroundImage: `url(${benefitsImage.src})`,
-            backgroundPosition: 'center',
-            backgroundSize: 'contain',
-            backgroundRepeat: 'no-repeat'
-        }} className="w-full h-[500px] bg-transparent" />
+      <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2">
+        <div
+          className="flex flex-col w-full bg-transparent"
+        >
+          <img
+            src={benefitsImage.src}
+            className="object-contain object-center h-[300px] self-center md:h-[400px]"
+          />
+        </div>
 
         <div className="grid grid-cols-1 grid-rows-2 gap-4 h-full md:grid-cols-2">
           {data.map((item) => (
-            <div key={item.title} className="w-full h-full bg-[#F9FAFB] flex flex-col justify-center py-4 px-4">
+            <div
+              key={item.title}
+              className="w-full h-full bg-[#F9FAFB] flex flex-col justify-center py-4 px-4"
+            >
               <ServiceItem key={item.title} {...item} />
             </div>
           ))}

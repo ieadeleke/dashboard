@@ -15,7 +15,7 @@ export const EkoMileLogistics = () => {
         </p>
       </div>
 
-      <Button className="w-full rounded-2xl md:px-32">Get Started</Button>
+      <Button className="w-full rounded-2xl md:w-[300px]">Get Started</Button>
     </div>
   );
 };
