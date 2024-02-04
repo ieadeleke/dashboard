@@ -11,7 +11,7 @@ export const WeeklyDeliveries = () => {
     <div className="flex flex-col gap-4 bg-white rounded-lg p-4">
       <div className="flex items-center">
         <p className="flex-1">
-          Total Weekly Deliveries: <span className="font-bold ml-3">50</span>
+          Total Weekly Transactions: <span className="font-bold ml-3">50</span>
         </p>
 
         <IconButton className="bg-primary">
@@ -28,7 +28,7 @@ export const WeeklyDeliveries = () => {
               data: uData,
               label: "NUMBER OF DELIVERIES",
               type: "bar",
-              color: "#FFB60B",
+              color: "#6A22B2",
             },
           ]}
           xAxis={[

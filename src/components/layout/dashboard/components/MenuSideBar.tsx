@@ -1,8 +1,12 @@
 import DashboardIcon from '@/assets/icons/ic_compass.svg'
-import SendIcon from '@/assets/icons/ic_send_message.svg'
-import TrackingIcon from '@/assets/icons/ic_tracking.svg'
-import WalletIcon from '@/assets/icons/ic_wallet.svg'
-import CalculatorIcon from '@/assets/icons/ic_calculator.svg'
+import AgentsIcon from '@/assets/icons/ic_agents.svg'
+import AgencyIcon from '@/assets/icons/ic_agency.svg'
+import TransactionIcon from '@/assets/icons/ic_transactions.svg'
+import ReceiptIcon from '@/assets/icons/ic_receipt.svg'
+import RevenueIcon from '@/assets/icons/ic_revenue.svg'
+import LGAIcon from '@/assets/icons/ic_lga.svg'
+import SettingsIcon from '@/assets/icons/ic_settings.svg'
+import LogOutIcon from '@/assets/icons/ic_logout.svg'
 import MenuIcon from '@/assets/icons/ic_main.svg'
 import { ListItem } from './ListItem'
 import Link from 'next/link'
@@ -25,11 +29,15 @@ export const MenuSideBar = () => {
             </Link>
 
             <div className="flex flex-col gap-5 mt-4 lg:w-full">
-                <ListItem isActive startIcon={<DashboardIcon />} name="Dashboard" href="/dashboard" />
-                <ListItem startIcon={<SendIcon />} name="Send Package" href="/dashboard/send-package" />
-                <ListItem startIcon={<TrackingIcon />} name="Track Package" href="/dashboard/track-package" />
-                <ListItem startIcon={<WalletIcon />} name="Fund Wallet" href="/dashboard/fund-wallet" />
-                <ListItem startIcon={<CalculatorIcon />} name="Calculator" href="/dashboard/calculator" />
+                <ListItem isActive startIcon={<DashboardIcon />} name="Dashboard" href="/" />
+                <ListItem startIcon={<AgentsIcon />} name="Agents" href="/agents" />
+                <ListItem startIcon={<AgencyIcon />} name="Agency" href="/agency" />
+                <ListItem startIcon={<TransactionIcon />} name="Transactions" href="/transactions" />
+                <ListItem startIcon={<ReceiptIcon />} name="Receipts" href="/receipts" />
+                <ListItem startIcon={<RevenueIcon />} name="Revenue" href="/revenue" />
+                <ListItem startIcon={<LGAIcon />} name="LGA" href="/lga" />
+                <ListItem startIcon={<SettingsIcon />} name="Settings" href="/settings" />
+                <ListItem startIcon={<LogOutIcon />} name="Logout" href="/logout" />
                 <Divider />
             </div>
         </div>

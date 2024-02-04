@@ -10,18 +10,18 @@ import {
 export const DeliveryDetails = () => {
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="font-medium text-2xl">Delivery Details</h1>
+      <h1 className="font-medium text-2xl">Recent Transactions</h1>
 
       <Table>
         <TableHeader className="bg-primary rounded-xl">
           <TableRow>
-            <TableHead className="text-black">Destination</TableHead>
-            <TableHead className="text-black">Tracking ID</TableHead>
-            <TableHead className="text-black">Weight (kg)</TableHead>
-            <TableHead className="text-black">Status</TableHead>
-            <TableHead className="text-black">Departure Date</TableHead>
-            <TableHead className="text-black">Arrival Date</TableHead>
-            <TableHead className="text-black">Delivery Time</TableHead>
+            <TableHead className="text-white">Name</TableHead>
+            <TableHead className="text-white">Payment ID</TableHead>
+            <TableHead className="text-white">LGA (kg)</TableHead>
+            <TableHead className="text-white">Status</TableHead>
+            <TableHead className="text-white">Transaction Date</TableHead>
+            <TableHead className="text-white">Agent Name</TableHead>
+            <TableHead className="text-white">Lorem Ipsum</TableHead>
           </TableRow>
         </TableHeader>
 

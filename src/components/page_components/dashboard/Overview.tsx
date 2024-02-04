@@ -37,28 +37,47 @@ export const Overview = () => {
 
         <div className="grid grid-cols-1 items-center gap-4 md:grid-cols-2 lg:grid-cols-4">
           <OverviewItem
-            title="Total Deliveries"
-            description="1000"
+            title="Agents"
+            description="10K"
             iconClassName="text-blue-800 bg-blue-300"
             icon={<ListIcon />}
           />
           <OverviewItem
-            title="Deliveries"
-            description="30"
+            title="All Transcations"
+            description="100K"
             iconClassName="text-[#147D77] bg-[#c9f2f0ff]"
             icon={<ScooterIcon />}
           />
           <OverviewItem
-            title="Ongoing Deliveries"
-            description="12"
+            title="Declined Transactions"
+            description="21K"
             iconClassName="text-[#FF0000] bg-[#ffededff]"
             icon={<PendingDeliveryIcon />}
           />
           <OverviewItem
-            title="Completed Deliveries"
+            title="Completed Transactions"
             description="40"
             iconClassName="text-[#23A321] bg-[#D9F7D8]"
             icon={<CompletedDeliveryIcon />}
+          />
+
+          <OverviewItem
+            title="Today's Transactions"
+            description="21K"
+            iconClassName="text-[#FF0000] bg-[#ffededff]"
+            icon={<PendingDeliveryIcon />}
+          />
+          <OverviewItem
+            title="Revenu"
+            description="40"
+            iconClassName="text-[#23A321] bg-[#D9F7D8]"
+            icon={<CompletedDeliveryIcon />}
+          />
+          <OverviewItem
+            title="Tax Payers"
+            description="21K"
+            iconClassName="text-[#FF0000] bg-[#ffededff]"
+            icon={<PendingDeliveryIcon />}
           />
         </div>
       </div>

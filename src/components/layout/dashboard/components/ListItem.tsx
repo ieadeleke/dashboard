@@ -23,7 +23,7 @@ export const ListItem = (props: ListItemProps) => {
       passHref
       target={props.newTab ? "_blank" : undefined}
       rel={props.newTab ? "noreferrer noopener" : undefined}
-      className={`flex rounded-md ${isActive ? "text-black" : "text-black"} ${
+      className={`flex rounded-md ${isActive ? "text-white" : "text-gray-800"} ${
         isActive ? "bg-primary" : "bg-transparent"
       } ${isActive ? "border-l-[5px] border-primary" : ""} ${
         isActive ? "font-bold" : ""

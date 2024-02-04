@@ -26,7 +26,7 @@ export const DailyAnalytics = () => {
             strokeLinecap: "butt",
             // Text size
             textSize: "16px",
-            pathColor: "#FFB60B",
+            pathColor: "#6A22B2",
             textColor: "black",
             // How long animation takes to go from one percentage to another, in seconds
             pathTransitionDuration: 0.5,
@@ -42,17 +42,17 @@ export const DailyAnalytics = () => {
         <div>
           <div className="flex items-center gap-2">
             <div className="w-4 aspect-square bg-primary" />
-            <p>50% Successful deliveries</p>
+            <p>50% Successful Transactions</p>
           </div>
 
           <div className="flex items-center gap-2">
             <div className="w-4 aspect-square bg-primary-100" />
-            <p>0% Pending deliveries</p>
+            <p>0% Pending Transactions</p>
           </div>
 
           <div className="flex items-center gap-2">
             <div className="w-4 aspect-square bg-primary" />
-            <p>0% Failed deliveries</p>
+            <p>0% Failed Transactions</p>
           </div>
         </div>
       </div>
