@@ -46,7 +46,7 @@ export default function App({ Component, pageProps }: AppProps) {
               position: "fixed !important",
             }}
           />
-          <SEO title="Eko Mile" />
+          <SEO title="Pay4It Dashboard" />
           <Component {...pageProps} />
           <ControllableSnackBar ref={snackBarRef} />
         </>

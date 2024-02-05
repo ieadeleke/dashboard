@@ -5,7 +5,7 @@ import PendingDeliveryIcon from "@/assets/icons/ic_delivery_pending.svg";
 import ScooterIcon from "@/assets/icons/ic_scooter.svg";
 import { WeeklyDeliveries } from "./overview/WeeklyDeliveries";
 import { DailyAnalytics } from "./overview/DailyAnalytics";
-import { DeliveryDetails } from "./overview/DeliveryDetails";
+import { TransactionDetails } from "./overview/TransactionDetails";
 
 type OverviewItemProps = {
   title: string;
@@ -14,9 +14,9 @@ type OverviewItemProps = {
   iconClassName?: string;
 };
 
-const OverviewItem = (props: OverviewItemProps) => {
+export const OverviewItem = (props: OverviewItemProps) => {
   return (
-    <div className="flex items-center bg-white rounded-lg p-4 py-10">
+    <div className="flex items-center rounded-lg p-4 py-10">
       <div className="flex flex-col flex-1">
         <p className="font-medium">{props.title}</p>
         <p className="font-bold">{props.description}</p>
@@ -86,7 +86,7 @@ export const Overview = () => {
         <WeeklyDeliveries />
         <DailyAnalytics />
       </div>
-      <DeliveryDetails />
+      <TransactionDetails />
     </div>
   );
 };

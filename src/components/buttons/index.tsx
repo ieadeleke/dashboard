@@ -17,7 +17,7 @@ const Button = forwardRef<HTMLButtonElement, ForwardRefButtonProps>((props, ref)
             case 'text':
                 return 'bg-transparent text-primary hover:bg-gray-100'
             default:
-                return 'bg-primary text-black font-medium border-none hover:bg-primary-800'
+                return 'bg-primary text-black font-medium border-none hover:opacity-90'
         }
     }, [props.variant])
 

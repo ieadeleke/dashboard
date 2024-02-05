@@ -24,7 +24,7 @@ export default function SEO(props: SEOProps) {
     return (
         <Head>
             <title>{props.title}</title>
-            <link rel="icon" type="image/png" sizes="24x24" href={"https://res.cloudinary.com/dfzhxlgll/image/upload/v1705318854/eko%20mile/favicon_pcjrjc.png"} />
+            <link rel="icon" type="image/png" sizes="24x24" href={""} />
 
             <meta data-rh="true" content={image} property="og:image"></meta>
 
