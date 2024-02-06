@@ -9,6 +9,8 @@ import ScooterIcon from "@/assets/icons/ic_scooter.svg";
 import { WeeklyDeliveries } from "@/components/page_components/dashboard/overview/WeeklyDeliveries";
 import { DailyAnalytics } from "@/components/page_components/dashboard/overview/DailyAnalytics";
 import { TransactionTable } from "@/components/transactions/TransactionTable";
+import { DateRange } from "@/components/calendar/CalendarRange";
+import moment from "moment";
 
 export default function Home() {
   const {
@@ -20,10 +22,17 @@ export default function Home() {
 
   useEffect(() => {
     fetchTransactions({
-      startDate: "",
-      endDate: "",
+      startDate: "2023-01-01",
+      endDate: "2024-12-31",
     });
   }, []);
+
+  function onDateApplied(date: DateRange){
+    fetchTransactions({
+      startDate: moment(date.from).format('yyyy-mm-dd'),
+      endDate: moment(date.to).format('yyyy-mm-dd'),
+    });
+  }
 
   return (
     <DashboardLayout>
@@ -86,6 +95,7 @@ export default function Home() {
           <TransactionTable
             name="Recent Transactions"
             transactions={transactions}
+            onDateApplied={onDateApplied}
           />
         </div>
       </div>

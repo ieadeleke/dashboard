@@ -84,10 +84,7 @@ export const TransactionTable = (props: TransactionTableProps) => {
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
               <CalendarRange
-                disabled={{
-                  from: new Date(1970, 9, 1),
-                  to,
-                }}
+          
                 showOutsideDays={false}
                 onNewDateApplied={onNewDateApplied}
               />
