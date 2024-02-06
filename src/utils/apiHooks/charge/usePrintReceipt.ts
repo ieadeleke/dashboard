@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useApi } from "../index"
 import { ChargeService } from "@/utils/services/charge"
-import { PrintReceiptParams } from "@/utils/services/charge/types"
+import { PrintReceiptParams } from "@/utils/services/transactions/types"
 import { Reference } from "@/models/reference"
 
 export const usePrintReceipt = () => {

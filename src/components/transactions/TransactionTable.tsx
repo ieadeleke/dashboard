@@ -13,34 +13,47 @@ import {
 } from "@/components/ui/popover";
 import { IconButton } from "../buttons/IconButton";
 import { CalendarIcon, DownloadIcon, FilterIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CalendarRange, DateRange } from "../calendar/CalendarRange";
 import moment from "moment";
+import { Transaction } from "@/models/transactions";
 
 type TransactionTableProps = {
   name: string;
+  transactions: Transaction[];
+  onDateApplied?: (date: DateRange) => void
 };
 
 export const TransactionTable = (props: TransactionTableProps) => {
+  const { transactions } = props;
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [date, setDate] = useState<DateRange>({
     from: new Date(),
-    to: new Date()
+    to: new Date(),
   });
 
   const formatDateRange = useMemo(() => {
-    if (!date) return 'Tap to filter by date range'
-    const start = moment(date.from).format("MMM D, YYYY")
-    const end = moment(date.to).format("MMM D, YYYY")
-    return `From ${start} - ${end}`
-}, [JSON.stringify(date)])
+    if (!date) return "Tap to filter by date range";
+    const start = moment(date.from).format("MMM D, YYYY");
+    const end = moment(date.to).format("MMM D, YYYY");
+    return `From ${start} - ${end}`;
+  }, [JSON.stringify(date)]);
 
   function onNewDateApplied(date: DateRange) {
     if (date) {
-      setDate(prevDate => Object.assign({}, prevDate, { from: date.from || new Date(), to: date.to || new Date() }))
-  }
+      setDate((prevDate) =>
+        Object.assign({}, prevDate, {
+          from: date.from || new Date(),
+          to: date.to || new Date(),
+        })
+      );
+    }
     setIsDateModalOpen(false);
   }
+
+  useEffect(() => {
+    props.onDateApplied?.(date)
+  }, [date])
 
   const today = new Date();
   const to = new Date(
@@ -80,9 +93,6 @@ export const TransactionTable = (props: TransactionTableProps) => {
               />
             </PopoverContent>
           </Popover>
-          <IconButton className="text-gray-700">
-            <FilterIcon />
-          </IconButton>
 
           <IconButton className="text-gray-700">
             <DownloadIcon />
@@ -103,21 +113,19 @@ export const TransactionTable = (props: TransactionTableProps) => {
           </TableRow>
         </TableHeader>
 
-        {Array(5)
-          .fill(0)
-          .map((item) => (
-            <TableBody key={item.BoatName} className="bg-white">
-              <TableRow>
-                <TableCell>Test 3</TableCell>
-                <TableCell>Test 3</TableCell>
-                <TableCell>Test 3</TableCell>
-                <TableCell>Test 3</TableCell>
-                <TableCell>Test 5</TableCell>
-                <TableCell>Test 7</TableCell>
-                <TableCell>Test 3</TableCell>
-              </TableRow>
-            </TableBody>
-          ))}
+        {transactions.map((item) => (
+          <TableBody key={item.AgencyName} className="bg-white">
+            <TableRow>
+              <TableCell>{item.AgencyName}</TableCell>
+              <TableCell>{item.paymentDetails.data.id}</TableCell>
+              <TableCell>{item.OraAgencyRev}</TableCell>
+              <TableCell>{item.paymentDetails.status}</TableCell>
+              <TableCell>{moment(item.createdAt).fromNow()}</TableCell>
+              <TableCell>{item.PayerName}</TableCell>
+              <TableCell>Test 3</TableCell>
+            </TableRow>
+          </TableBody>
+        ))}
       </Table>
     </div>
   );

@@ -1,30 +1,48 @@
+import { DateRange } from "@/components/calendar/CalendarRange";
 import DashboardLayout from "@/components/layout/dashboard";
 import { OverviewItem } from "@/components/page_components/dashboard/Overview";
 import { TransactionTable } from "@/components/transactions/TransactionTable";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
-
-const agencies = [
-  {
-    title: "LASWA",
-    description: "$1.95M",
-  },
-  {
-    title: "LAASPA",
-    description: "$200M",
-  },
-  {
-    title: "LASHMA",
-    description: "$195M",
-  },
-  {
-    title: "BLE",
-    description: "$1.95M",
-  },
-];
+import { useFetchGroupTranscations } from "@/utils/apiHooks/transactions/useFetchGroupTransactions";
+import moment from "moment";
+import { useEffect, useMemo, useState } from "react";
 
 export default function Agents() {
+  const {
+    isLoading,
+    data: groups,
+    error,
+    fetchGroupTransactions,
+  } = useFetchGroupTranscations();
   const [selectedTab, setSelectedTab] = useState<string>("LASWA");
+
+  useEffect(() => {
+    fetchGroupTransactions({
+      startDate: "2024-02-05",
+      endDate: "2024-02-05",
+    });
+  }, []);
+
+  function onDateApplied(date: DateRange){
+    fetchGroupTransactions({
+      startDate: moment(date.from).format('yyyy-mm-dd'),
+      endDate: moment(date.to).format('yyyy-mm-dd'),
+    });
+  }
+
+  useEffect(() => {
+    if (groups.length > 0) {
+      setSelectedTab(groups[0]._id);
+    }
+  }, [groups]);
+
+  const transactions = useMemo(() => {
+    if (groups.length > 0) {
+      return (
+        groups.find((group) => group._id == selectedTab)?.transactions ?? []
+      );
+    } else return [];
+  }, [groups.length, selectedTab]);
 
   return (
     <DashboardLayout>
@@ -32,25 +50,29 @@ export default function Agents() {
         <h1 className="font-medium text-2xl">Agency</h1>
         <div>
           <div className="grid grid-cols-4 gap-4">
-            {agencies.map((agency) => (
+            {groups.map((group) => (
               <div
-                onClick={() => setSelectedTab(agency.title)}
+                onClick={() => setSelectedTab(group._id)}
                 className={cn(
                   " rounded-lg cursor-pointer",
-                  agency.title == selectedTab ? `bg-gray-200` : `bg-white`
+                  group._id == selectedTab ? `bg-gray-200` : `bg-white`
                 )}
               >
                 <OverviewItem
-                  key={agency.title}
-                  title={agency.title}
-                  description={agency.description}
+                  key={group._id}
+                  title={group._id}
+                  description={group.totalAmountPaid.toString()}
                   iconClassName="text-blue-800 bg-blue-300"
                 />
               </div>
             ))}
           </div>
           <div className="mt-4">
-            <TransactionTable name={`Recent Transactions for ${selectedTab}`} />
+            <TransactionTable
+              onDateApplied={onDateApplied}
+              name={`Recent Transactions for ${selectedTab}`}
+              transactions={transactions}
+            />
           </div>
         </div>
       </div>

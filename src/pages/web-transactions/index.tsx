@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { isEmail } from "@/utils/validation/validation";
 import { GetServerSideProps } from "next";
-import { ChargeService } from "@/utils/services/charge";
+import { ChargeService } from "@/utils/services/transactions";
 import { errorHandler } from "@/utils/errorHandler";
 import { Reference } from "@/models/reference";
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";

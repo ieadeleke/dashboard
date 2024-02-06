@@ -1,0 +1,20 @@
+import { useState } from "react"
+import { useApi } from "../index"
+import { GetTransactionsParams } from "@/utils/services/transactions/types"
+import { TransactionService } from "@/utils/services/transactions"
+import { Transaction } from "@/models/transactions"
+
+export const useFetchTranscations = () => {
+    const [data, setData] = useState<Transaction[]>([])
+    const { isLoading, error, execute } = useApi()
+
+    async function fetchTransactions(params: GetTransactionsParams) {
+        setData([])
+        const response = await execute(async () => await TransactionService().getTransactions(params))
+        if (response) {
+            setData(response.Transaction)
+        }
+    }
+
+    return { isLoading, error, data, fetchTransactions }
+}

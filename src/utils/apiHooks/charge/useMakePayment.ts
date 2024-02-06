@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useApi } from "../index"
 import { ChargeService } from "@/utils/services/charge"
-import { MakePaymentParams } from "@/utils/services/charge/types"
+import { MakePaymentParams } from "@/utils/services/transactions/types"
 import { Payment } from "@/models/payment"
 
 export const useMakePayment = () => {

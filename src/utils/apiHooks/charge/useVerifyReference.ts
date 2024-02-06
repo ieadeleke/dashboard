@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useApi } from "../index"
 import { ChargeService } from "@/utils/services/charge"
-import { VerifyReferenceParams } from "@/utils/services/charge/types"
+import { VerifyReferenceParams } from "@/utils/services/transactions/types"
 import { Reference } from "@/models/reference"
 
 export const useVerifyReference = () => {
