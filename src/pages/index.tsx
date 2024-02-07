@@ -22,8 +22,8 @@ export default function Home() {
 
   useEffect(() => {
     fetchTransactions({
-      startDate: "2023-01-01",
-      endDate: "2024-12-31",
+      startDate: "2020-02-05",
+      endDate: "2024-12-12",
     });
   }, []);
 

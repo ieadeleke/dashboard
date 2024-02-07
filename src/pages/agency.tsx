@@ -18,8 +18,8 @@ export default function Agents() {
 
   useEffect(() => {
     fetchGroupTransactions({
-      startDate: "2024-02-05",
-      endDate: "2024-02-05",
+      startDate: "2020-02-05",
+      endDate: "2024-12-12",
     });
   }, []);
 
