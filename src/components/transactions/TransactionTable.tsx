@@ -13,10 +13,11 @@ import {
 } from "@/components/ui/popover";
 import { IconButton } from "../buttons/IconButton";
 import { CalendarIcon, DownloadIcon, FilterIcon } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CalendarRange, DateRange } from "../calendar/CalendarRange";
 import moment from "moment";
 import { Transaction } from "@/models/transactions";
+import { TransactionInfo, TransactionInfoRef } from "./TransactionInfo";
 
 type TransactionTableProps = {
   name: string;
@@ -26,6 +27,7 @@ type TransactionTableProps = {
 
 export const TransactionTable = (props: TransactionTableProps) => {
   const { transactions } = props;
+  const transactionInfoRef = useRef<TransactionInfoRef>(null)
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [date, setDate] = useState<DateRange>({
     from: new Date(),
@@ -48,11 +50,12 @@ export const TransactionTable = (props: TransactionTableProps) => {
         })
       );
     }
+    props.onDateApplied?.(date)
     setIsDateModalOpen(false);
   }
 
   useEffect(() => {
-    props.onDateApplied?.(date)
+    // props.onDateApplied?.(date)
   }, [date])
 
   const today = new Date();
@@ -62,8 +65,15 @@ export const TransactionTable = (props: TransactionTableProps) => {
     today.getDate() - 1
   );
 
+  function showTransactionDetails(transaction: Transaction){
+    transactionInfoRef.current?.open?.({
+      data: transaction
+    })
+  }
+
   return (
     <div className="flex flex-col gap-4">
+      <TransactionInfo ref={transactionInfoRef} />
       <div className="flex items-center">
         <h1 className="font-medium text-xl">{props.name}</h1>
         <div className="flex-1" />
@@ -111,7 +121,7 @@ export const TransactionTable = (props: TransactionTableProps) => {
         </TableHeader>
 
         {transactions.map((item) => (
-          <TableBody key={item.AgencyName} className="bg-white">
+          <TableBody onClick={() => showTransactionDetails(item)} key={item.AgencyName} className="bg-white">
             <TableRow>
               <TableCell>{item.AgencyName}</TableCell>
               <TableCell>{item.paymentDetails.data.id}</TableCell>
