@@ -1,5 +1,5 @@
 import { request } from "../../request"
-import { GetGroupedTransactionsResponse, GetTransactionsParams, GetTransactionsResponse } from "./types"
+import { GetGroupedTransactionsResponse, GetTransactionByReferenceParams, GetTransactionsByReferenceResponse, GetTransactionsParams, GetTransactionsResponse } from "./types"
 
 
 export function TransactionService() {
@@ -18,8 +18,16 @@ export function TransactionService() {
         return data as GetGroupedTransactionsResponse
     }
 
+    async function getTransactionsByReference(payload: GetTransactionByReferenceParams) {
+        const { data } = await request(`v1/abc/GetTransactionByReference`, "PUT", {
+            body: payload
+        })
+        return data as GetTransactionsByReferenceResponse
+    }
+
     return {
         getTransactions,
-        getGroupedTransactions
+        getGroupedTransactions,
+        getTransactionsByReference
     }
 }

@@ -27,10 +27,10 @@ export default function Home() {
     });
   }, []);
 
-  function onDateApplied(date: DateRange){
+  function onDateApplied(date: DateRange) {
     fetchTransactions({
-      startDate: moment(date.from).format('yyyy-mm-dd'),
-      endDate: moment(date.to).format('yyyy-mm-dd'),
+      startDate: moment(date.from).format("yyyy-mm-dd"),
+      endDate: moment(date.to).format("yyyy-mm-dd"),
     });
   }
 

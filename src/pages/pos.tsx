@@ -1,15 +1,41 @@
+import { DateRange } from "@/components/calendar/CalendarRange";
 import { TextField } from "@/components/input/InputText";
 import DashboardLayout from "@/components/layout/dashboard";
 import { TransactionTable } from "@/components/transactions/TransactionTable";
+import { useFetchTransactionsByReference } from "@/utils/apiHooks/transactions/useFetchTransactionsByReference";
 import { SearchIcon } from "lucide-react";
-import { useState } from "react";
+import moment from "moment";
+import { useEffect, useState } from "react";
 
 export default function POS() {
   const [searchWord, setSearchWord] = useState("");
   const [terminalId, setTerminalID] = useState("");
 
+  const {
+    isLoading,
+    error,
+    fetchTransactionsByReference,
+    data: transactions,
+  } = useFetchTransactionsByReference();
+
   function onSubmit() {
     setTerminalID(searchWord);
+  }
+
+  useEffect(() => {
+    if (terminalId.trim().length > 0) {
+      fetchTransactionsByReference({ reference: terminalId });
+    }
+  }, [terminalId]);
+
+  function onDateApplied(date: DateRange) {
+    if (terminalId.trim().length > 0) {
+      fetchTransactionsByReference({
+        reference: terminalId,
+        startDate: moment(date.from).format("yyyy-mm-dd"),
+        endDate: moment(date.to).format("yyyy-mm-dd"),
+      });
+    }
   }
 
   return (
@@ -34,6 +60,8 @@ export default function POS() {
         <div>
           {terminalId.trim().length > 0 && (
             <TransactionTable
+              transactions={transactions}
+              onDateApplied={onDateApplied}
               name={`Showing recent Transactions for "${terminalId}"`}
             />
           )}
