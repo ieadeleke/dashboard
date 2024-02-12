@@ -17,5 +17,11 @@ export type Reference = {
     PaymentFlag: string,
     CbnCode: string,
     AgencyName: string,
-    RevName: string
+    RevName: string,
+    settings: {
+        percentage: number,
+        min: number
+        min: number,
+        max: number
+    }
 }

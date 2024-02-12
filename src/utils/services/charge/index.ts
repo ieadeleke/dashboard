@@ -1,6 +1,6 @@
 import { request } from "../../request"
 import { Reference } from "@/models/reference"
-import { MakePaymentParams, MakePaymentResponse, PrintReceiptParams, VerifyReferenceParams } from "./types"
+import { InitiatePaymentParams, InitiatePaymentWithUpperLinkParams, InitiatePaymentWithUpperLinkResponse, MakePaymentParams, MakePaymentResponse, PrintReceiptParams, UpperLinkPaymentNotificationParams, UpperLinkPaymentNotificationResponse, VerifyReferenceParams } from "./types"
 
 
 export function ChargeService() {
@@ -26,9 +26,33 @@ export function ChargeService() {
         return data as Reference
     }
 
+    async function initiatePayment(payload: InitiatePaymentParams) {
+        const { data } = await request(`v1/abc/InitialPayWithEgoPay`, "POST", {
+            body: payload
+        })
+        return data as MakePaymentResponse
+    }
+
+    async function initiatePaymentWithUpperlink(payload: InitiatePaymentWithUpperLinkParams) {
+        const { data } = await request(`v1/abc/InitiateUpperLinkPayment`, "POST", {
+            body: payload
+        })
+        return data as InitiatePaymentWithUpperLinkResponse
+    }
+
+    async function upperLinkNotification(payload: UpperLinkPaymentNotificationParams) {
+        const { data } = await request(`v1/abc/UpperLinkPaymentNotification`, "POST", {
+            body: payload
+        })
+        return data as UpperLinkPaymentNotificationResponse
+    }
+
     return {
         verifyReference,
         makePayment,
-        printReceipt
+        printReceipt,
+        initiatePayment,
+        initiatePaymentWithUpperlink,
+        upperLinkNotification
     }
 }

@@ -5,20 +5,33 @@ import {
 import { cn } from "@/lib/utils";
 import Button from "@/components/buttons";
 import { useRouter } from "next/router";
-import { ChangeEvent, useContext, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { isEmail } from "@/utils/validation/validation";
 import { GetServerSideProps } from "next";
-import { ChargeService } from "@/utils/services/transactions";
+import { ChargeService } from "@/utils/services/charge";
 import { errorHandler } from "@/utils/errorHandler";
 import { Reference } from "@/models/reference";
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
 import { config } from "@/utils/data/flutterwave.config";
 import { GlobalActionContext } from "@/context/GlobalActionContext";
-import { useMakePayment } from "@/utils/apiHooks/charge/useMakePayment";
 import { GenerateReceipt } from "@/components/charge/GenerateReceipt";
 import { ErrorComponent } from "@/components/charge/ErrorComponent";
 import { Payment } from "@/models/payment";
 import DashboardLayout from "@/components/layout/dashboard";
+import {
+  PaymentModal,
+  PaymentModalRef,
+} from "@/components/transactions/PaymentModal";
+import moment from "moment";
+import { useInitiatePaymentWithUpperlink } from "@/utils/apiHooks/charge/useInitiatePaymentWithUpperlink";
+import { useUpperlinkNotification } from "@/utils/apiHooks/charge/useUpperlinkNotification";
 
 const TextInput = ({ className, ...props }: InputProps) => (
   <RegularTextInput className={cn("w-full md:w-96", className)} {...props} />
@@ -46,7 +59,19 @@ export default function Charge(props: ChargeProps) {
   const [isAboveLimit, setIsAboveLimit] = useState(false);
   const { showSnackBar } = useContext(GlobalActionContext);
   const [payment, setPayment] = useState<Payment | null>(null);
-  const { isLoading, data, error, makePayment } = useMakePayment();
+  const paymentModalRef = useRef<PaymentModalRef>(null);
+  const {
+    isLoading: isPaymentLoading,
+    data,
+    error: paymentError,
+    initiatePaymentWithUpperlink,
+  } = useInitiatePaymentWithUpperlink();
+  const {
+    isLoading: isUpperLinkNotificationLoading,
+    data: upperLinkNotificationData,
+    error: upperLinkNotificationError,
+    upperlinkNotification,
+  } = useUpperlinkNotification();
 
   const payNow = useFlutterwave({
     ...config,
@@ -59,6 +84,28 @@ export default function Charge(props: ChargeProps) {
     },
   });
 
+  const isLoading = useMemo(
+    () => isUpperLinkNotificationLoading || isPaymentLoading,
+    [isUpperLinkNotificationLoading, isPaymentLoading]
+  );
+
+  const error = useMemo(
+    () => paymentError || upperLinkNotificationError,
+    [paymentError, upperLinkNotificationError]
+  );
+
+  const serviceCharge = useMemo(() => {
+    const amount = isNaN(parseInt(formFields.amount))
+      ? 0
+      : parseInt(formFields.amount);
+    const total = amount * (props.data.settings.percentage / 100);
+    return total < props.data.settings.min
+      ? props.data.settings.min
+      : total > props.data.settings.max
+      ? props.data.settings.max
+      : total;
+  }, [props.data.settings.min, formFields.amount]);
+
   useEffect(() => {
     if (error) {
       showSnackBar({ severity: "error", message: error });
@@ -67,7 +114,7 @@ export default function Charge(props: ChargeProps) {
 
   useEffect(() => {
     if (data) {
-      setPayment(data);
+      completePayment(data);
     }
   }, [data]);
 
@@ -137,28 +184,53 @@ export default function Charge(props: ChargeProps) {
   }
 
   function handlePayNow() {
-    payNow({
-      callback: (data) => {
-        closePaymentModal();
-        setTimeout(() => {
-          // showSnackBar({ severity: "success", message: "Payment successful" });
-          makePayment({
-            AgencyCode: props.data.AgencyCode,
-            AgencyName: props.data.AgencyName,
-            PayerName: props.data.PayerName,
-            RevenueCode: props.data.RevenueCode,
-            reference: formFields.reference,
-            OraAgencyRev: props.data.OraAgencyRev,
-            RevName: props.data.RevName,
-            amountPaid: data.amount,
-            email: formFields.email,
-            paymentRef: data.transaction_id.toString(),
-          });
-        }, 1000);
-      },
-      onClose: () => {},
+    initiatePaymentWithUpperlink({
+      AgencyCode: props.data.AgencyCode,
+      AgencyName: props.data.AgencyName,
+      PayerName: props.data.PayerName,
+      RevenueCode: props.data.RevenueCode,
+      reference: formFields.reference,
+      OraAgencyRev: props.data.OraAgencyRev,
+      RevName: props.data.RevName,
+      amountPaid: parseInt(formFields.amount),
+      email: formFields.email,
+      paymentRef: moment().unix().toString(),
+      mobile: formFields.phone,
+      serviceCharge: serviceCharge.toString(),
     });
   }
+
+  useEffect(() => {
+    const { transaction_id } = router.query;
+    if (transaction_id) {
+      // sd
+      upperlinkNotification({
+        reference: transaction_id as string,
+      });
+    }
+  }, [router.query]);
+
+  function completePayment(data: Payment) {
+    const transactionId = Math.random().toString().replace("0.", "");
+    const name = data.PayerName.split(" ");
+    const body = {
+      transactionId: transactionId,
+      amount: data.amountPaid,
+      currency: "NGN",
+      country: "NG",
+      email: data.email,
+      phoneNumber: data.mobile,
+      firstName: name[0] ?? "",
+      lastName: name[1] ?? "",
+      logoURL: "",
+      customerUrl: `http://localhost:3000/web-transactions?transaction_id=${transactionId}`,
+      merchantId: "UPLN4AB",
+      meta: "",
+    };
+    (window as any).payGateCheckout(body);
+  }
+
+  useEffect(() => {}, []);
 
   return (
     <DashboardLayout>
@@ -186,7 +258,7 @@ export default function Charge(props: ChargeProps) {
             <GenerateReceipt
               data={{
                 amount: props.data.AmountDue,
-                url: payment.ReceiptNumber,
+                url: "payment.ReceiptNumber",
                 billingReference: formFields.reference,
                 paymentTime: new Date().toString(),
                 senderName: config.customer.name,
@@ -197,6 +269,7 @@ export default function Charge(props: ChargeProps) {
               <h1 className="font-bold text-2xl text-center">
                 Revenue Collection
               </h1>
+              <PaymentModal ref={paymentModalRef} />
 
               <form
                 onSubmit={onSubmit}
