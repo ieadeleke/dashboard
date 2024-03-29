@@ -10,10 +10,32 @@ import { Divider } from '@/components/Divider'
 import { ConfirmationAlertDialog, ConfirmationAlertDialogRef } from '@/components/dialogs/ConfirmationAlertDialog'
 import { useRef } from 'react'
 import { PhoneIcon } from 'lucide-react'
+import { logOut } from '@/utils/auth/logout'
 
 
 export const MenuSideBar = () => {
     const confirmationDialogRef = useRef<ConfirmationAlertDialogRef>(null)
+
+    function handleLogout() {
+        confirmationDialogRef.current?.show({
+            data: {
+                title: "Are you sure you want to logout?",
+                description: "Your active session will be removed from this device",
+                label: {
+                    confirm: "Yes",
+                    cancel: "No"
+                }
+            },
+            onCancel: () => {
+                confirmationDialogRef.current?.dismiss()
+            },
+            onConfirm: () => {
+                confirmationDialogRef.current?.dismiss()
+                logOut()
+                location.href = "/login"
+            }
+        })
+    }
 
     return (
         <div className="w-full h-full flex flex-col gap-8 items-center bg-white overflow-y-scroll no-scrollbar px-0 py-6 lg:px-2 lg:items-start">
@@ -29,10 +51,16 @@ export const MenuSideBar = () => {
                 <ListItem isActive startIcon={<DashboardIcon />} name="Dashboard" href="/" />
                 <ListItem startIcon={<AgentsIcon />} name="Agents" href="/agents" />
                 <ListItem startIcon={<AgencyIcon />} name="Agency" href="/agency" />
-                <ListItem startIcon={<PhoneIcon />} name="POS" href="/pos" />
                 <ListItem startIcon={<TransactionIcon />} name="Web Transactions" href="/web-transactions" />
-                <ListItem startIcon={<LogOutIcon />} name="Logout" href="/logout" />
                 <Divider />
+                <div
+                    onClick={handleLogout}
+                    className={`flex cursor-pointer rounded-md items-center gap-4 px-3 py-3 hover:bg-primary-20`}>
+
+                    <LogOutIcon />
+                    <p className={`hidden text-sm lg:block`}>Log Out</p>
+
+                </div>
             </div>
         </div>
     );
