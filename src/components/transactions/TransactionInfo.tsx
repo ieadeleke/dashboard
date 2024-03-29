@@ -73,3 +73,5 @@ export const TransactionInfo = forwardRef<
     </Dialog>
   );
 });
+
+TransactionInfo.displayName = "TransactionInfo"

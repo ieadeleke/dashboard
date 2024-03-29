@@ -100,3 +100,5 @@ export const TransactionDetails = forwardRef<
         </Dialog>
     );
 });
+
+TransactionDetails.displayName = "TransactionDetails"

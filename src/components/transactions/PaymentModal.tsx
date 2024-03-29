@@ -198,3 +198,4 @@ export const PaymentModal = forwardRef<PaymentModalRef, PaymentModalProps>(
     );
   }
 );
+PaymentModal.displayName = "PaymentModal"
