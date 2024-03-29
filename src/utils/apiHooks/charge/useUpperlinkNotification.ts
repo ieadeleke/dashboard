@@ -12,7 +12,7 @@ export const useUpperlinkNotification = () => {
         setData(null)
         const response = await execute(async () => await ChargeService().upperLinkNotification(params))
         if (response) {
-            setData(response)
+            // setData(response)
         }
     }
 

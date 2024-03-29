@@ -12,8 +12,8 @@ export const useVerifyReference = () => {
         setData(null)
         const response = await execute(async () => await ChargeService().verifyReference(params))
         if (response) {
-            console.log(response)
-            setData(response)
+            // console.log(response)
+            // setData(response)
         }
     }
 

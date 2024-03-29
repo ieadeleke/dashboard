@@ -12,7 +12,7 @@ export const usePrintReceipt = () => {
         setData(null)
         const response = await execute(async () => await ChargeService().printReceipt(params))
         if (response) {
-            setData(response)
+            // setData(response)
         }
     }
 
