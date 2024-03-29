@@ -1,5 +1,5 @@
 import { request } from "../../request"
-import { GetGroupedTransactionsResponse, GetTransactionByAgencyParams, GetTransactionByReferenceParams, GetTransactionsByAgencyResponse, GetTransactionsByReferenceResponse, GetTransactionsParams, GetTransactionsResponse } from "./types"
+import { GetGroupedTransactionsResponse, GetTransactionByAgencyParams, GetTransactionByPaymentRefParams, GetTransactionByReferenceParams, GetTransactionsByAgencyResponse, GetTransactionByPaymentRefResponse, GetTransactionsByReferenceResponse, GetTransactionsParams, GetTransactionsResponse } from "./types"
 
 
 export function TransactionService() {
@@ -40,10 +40,20 @@ export function TransactionService() {
         return data as GetTransactionsByAgencyResponse
     }
 
+    async function getTransactionByPaymentRef(payload: GetTransactionByPaymentRefParams) {
+        const data = await request({
+            path: `v1/admin/Transaction/GetTransactionByPaymentRef`,
+            body: payload,
+            method: "PUT"
+        })
+        return data as GetTransactionByPaymentRefResponse
+    }
+
     return {
         getTransactions,
         getGroupedTransactions,
         getTransactionsByReference,
-        getTransactionsByAgency
+        getTransactionsByAgency,
+        getTransactionByPaymentRef
     }
 }

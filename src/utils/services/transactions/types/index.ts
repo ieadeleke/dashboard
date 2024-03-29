@@ -23,6 +23,10 @@ export type GetTransactionByAgencyParams = {
     endDate?: string
 }
 
+export type GetTransactionByPaymentRefParams = {
+    paymentRef: string
+}
+
 
 export type GetTransactionsResponse = ApiResponse & {
     Transaction: Transaction[],
@@ -37,6 +41,10 @@ export type GetTransactionsByReferenceResponse = ApiResponse & {
 export type GetTransactionsByAgencyResponse = ApiResponse & {
     Transaction: Transaction[],
     count: number
+}
+
+export type GetTransactionByPaymentRefResponse = ApiResponse & {
+    Transaction: Transaction
 }
 
 export type VerifyReferenceParams = {
