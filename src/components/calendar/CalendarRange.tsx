@@ -9,13 +9,18 @@ export type DateRange = {
 
 type CalendarRangeProps = CalendarProps & {
   onNewDateApplied?: (date: DateRange) => void;
+  dateRange?: {
+    from: Date,
+    to?: Date
+  }
 };
 
 export const CalendarRange = ({
   onNewDateApplied,
+  dateRange,
   ...props
 }: CalendarRangeProps) => {
-  const [date, setDate] = useState<DateRange>({
+  const [date, setDate] = useState<DateRange>(dateRange || {
     from: new Date(),
     to: new Date(),
   });

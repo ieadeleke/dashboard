@@ -13,13 +13,17 @@ import {
 } from "@/components/ui/popover";
 import { IconButton } from "../buttons/IconButton";
 import { CalendarIcon, DownloadIcon } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { CalendarRange, DateRange } from "../calendar/CalendarRange";
 import moment from "moment";
 import { Transaction } from "@/models/transactions";
 import Loading from "../states/Loading";
 import Error from "../states/Error";
 import { TransactionDetails, TransactionDetailsRef } from "./TransactionDetails";
+import { useDownloadReport } from "@/utils/apiHooks/transactions/useDownloadReport";
+import { LoadingModal } from "../states/LoadingModal";
+import { GlobalActionContext } from "@/context/GlobalActionContext";
+import { convertToDate } from "@/utils/data/getDefaultDate";
 
 type TransactionTableProps = {
   name: string;
@@ -27,17 +31,26 @@ type TransactionTableProps = {
   isLoading?: boolean;
   error?: string | null;
   fetchData?: () => void,
+  dateRange?: {
+    startDate: string,
+    endDate: string
+  },
   onDateApplied?: (date: DateRange) => void
 };
 
 export const TransactionTable = (props: TransactionTableProps) => {
-  const { transactions } = props;
+  const { transactions, dateRange } = props;
+  const { isLoading: isDownloadReportLoading, error: downloadReportError, downloadReport, data } = useDownloadReport()
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const transactionDetailsRef = useRef<TransactionDetailsRef>(null)
-  const [date, setDate] = useState<DateRange>({
+  const [date, setDate] = useState<DateRange>(dateRange ? {
+    from: convertToDate(dateRange.startDate),
+    to: convertToDate(dateRange.endDate),
+  } : {
     from: new Date(),
     to: new Date(),
   });
+  const { showSnackBar } = useContext(GlobalActionContext)
 
   const formatDateRange = useMemo(() => {
     if (!date) return "Tap to filter by date range";
@@ -70,15 +83,32 @@ export const TransactionTable = (props: TransactionTableProps) => {
     today.getDate() - 1
   );
 
-  function showTransactionDetails(transaction: Transaction){
+  function showTransactionDetails(transaction: Transaction) {
     transactionDetailsRef.current?.open?.({
       data: transaction
     })
   }
 
+  useEffect(() => {
+    if (downloadReportError) {
+      showSnackBar({
+        severity: 'error',
+        message: downloadReportError
+      })
+    }
+  }, [downloadReportError])
+
+  function handleDownloadReport() {
+    const dateRange = ({
+      startDate: moment(date.from).format('yyyy-mm-dd'),
+      endDate: moment(date.to).format('yyyy-mm-dd'),
+    });
+    downloadReport(dateRange)
+  }
   return (
     <div className="flex flex-col gap-4">
       <TransactionDetails ref={transactionDetailsRef} />
+      <LoadingModal isVisible={isDownloadReportLoading} />
       <div className="flex items-center">
         <h1 className="font-medium text-xl">{props.name}</h1>
         <div className="flex-1" />
@@ -99,14 +129,17 @@ export const TransactionTable = (props: TransactionTableProps) => {
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
               <CalendarRange
-          
                 showOutsideDays={false}
                 onNewDateApplied={onNewDateApplied}
+                dateRange={{
+                  from: date.from,
+                  to: date.to
+                }}
               />
             </PopoverContent>
           </Popover>
 
-          <IconButton className="text-gray-700">
+          <IconButton onClick={handleDownloadReport} className="text-gray-700">
             <DownloadIcon />
           </IconButton>
         </div>
@@ -139,7 +172,7 @@ export const TransactionTable = (props: TransactionTableProps) => {
           </TableBody>
         ))}
       </Table>
-        {props.isLoading ? <Loading /> : props.error && <Error onRetry={props.fetchData} message={props.error} />}
+      {props.isLoading ? <Loading /> : props.error && <Error onRetry={props.fetchData} message={props.error} />}
     </div>
   );
 };

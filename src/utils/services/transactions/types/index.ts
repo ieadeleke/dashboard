@@ -23,6 +23,11 @@ export type GetTransactionByAgencyParams = {
     endDate?: string
 }
 
+export type DownloadReportParams = {
+    startDate?: string,
+    endDate?: string
+}
+
 export type GetTransactionByPaymentRefParams = {
     paymentRef: string
 }

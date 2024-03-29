@@ -7,22 +7,24 @@ import { cn } from "@/lib/utils";
 import { Transaction } from "@/models/transactions";
 import { useFetchGroupTranscations } from "@/utils/apiHooks/transactions/useFetchGroupTransactions";
 import { useFetchTransactionsByAgency } from "@/utils/apiHooks/transactions/useFetchTransactionsByAgency";
+import { getDefaultDateAsString } from "@/utils/data/getDefaultDate";
 import moment from "moment";
 import { useEffect, useMemo, useState } from "react";
 
 
 type AgentsTable = {
   AgencyName: string,
-  data?: Transaction[]
+  data?: Transaction[],
+  dateRange?: {
+    startDate: string,
+    endDate: string
+  },
 }
 
 const AgentsTable = (props: AgentsTable) => {
   const [transactions, setTransactions] = useState(props.data ?? [])
   const { fetchTransactionsByAgency, isLoading, error, data } = useFetchTransactionsByAgency()
-  const [date, setDate] = useState({
-    startDate: "2020-02-05",
-    endDate: "2024-12-12",
-  })
+  const [date, setDate] = useState(getDefaultDateAsString())
 
   useEffect(() => {
     setTransactions(data)
@@ -53,6 +55,7 @@ const AgentsTable = (props: AgentsTable) => {
       transactions={transactions}
       isLoading={isLoading}
       error={error}
+      dateRange={props.dateRange}
       fetchData={fetchData}
     />
   </div>
@@ -66,10 +69,7 @@ export default function Agents() {
     fetchGroupTransactions,
   } = useFetchGroupTranscations();
   const [selectedTab, setSelectedTab] = useState<string>("LASWA");
-  const [date, setDate] = useState({
-    startDate: "2020-02-05",
-    endDate: "2024-12-12",
-  })
+  const [date, setDate] = useState(getDefaultDateAsString())
 
   function fetchData() {
     fetchGroupTransactions(date);
@@ -78,13 +78,6 @@ export default function Agents() {
   useEffect(() => {
     fetchData()
   }, [date]);
-
-  function onDateApplied(date: DateRange) {
-    fetchGroupTransactions({
-      startDate: moment(date.from).format('yyyy-mm-dd'),
-      endDate: moment(date.to).format('yyyy-mm-dd'),
-    });
-  }
 
   useEffect(() => {
     if (groups.length > 0) {
@@ -125,7 +118,7 @@ export default function Agents() {
               ))}
             </div>
             {isLoading || <div className="mt-4">
-              <AgentsTable AgencyName={selectedTab} />
+              <AgentsTable AgencyName={selectedTab} dateRange={date} />
             </div>}
           </div>
         </NetworkRequestContainer>

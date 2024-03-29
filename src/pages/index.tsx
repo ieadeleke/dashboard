@@ -11,6 +11,7 @@ import { DailyAnalytics } from "@/components/page_components/dashboard/overview/
 import { TransactionTable } from "@/components/transactions/TransactionTable";
 import { DateRange } from "@/components/calendar/CalendarRange";
 import moment from "moment";
+import { getDefaultDateAsString } from "@/utils/data/getDefaultDate";
 
 export default function Home() {
   const {
@@ -19,10 +20,7 @@ export default function Home() {
     error,
     fetchTransactions,
   } = useFetchTranscations();
-  const [date, setDate] = useState({
-    startDate: "2020-02-05",
-    endDate: "2024-12-12",
-  })
+  const [date, setDate] = useState(getDefaultDateAsString())
 
   function fetchData() {
     fetchTransactions(date);
@@ -102,6 +100,7 @@ export default function Home() {
             transactions={transactions}
             isLoading={isLoading}
             fetchData={fetchData}
+            dateRange={date}
             onDateApplied={onDateApplied}
             error={error}
           />
