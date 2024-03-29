@@ -12,14 +12,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { IconButton } from "../buttons/IconButton";
-import { CalendarIcon, DownloadIcon, FilterIcon } from "lucide-react";
+import { CalendarIcon, DownloadIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CalendarRange, DateRange } from "../calendar/CalendarRange";
 import moment from "moment";
 import { Transaction } from "@/models/transactions";
-import { TransactionInfo, TransactionInfoRef } from "./TransactionInfo";
 import Loading from "../states/Loading";
 import Error from "../states/Error";
+import { TransactionDetails, TransactionDetailsRef } from "./TransactionDetails";
 
 type TransactionTableProps = {
   name: string;
@@ -32,8 +32,8 @@ type TransactionTableProps = {
 
 export const TransactionTable = (props: TransactionTableProps) => {
   const { transactions } = props;
-  const transactionInfoRef = useRef<TransactionInfoRef>(null)
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
+  const transactionDetailsRef = useRef<TransactionDetailsRef>(null)
   const [date, setDate] = useState<DateRange>({
     from: new Date(),
     to: new Date(),
@@ -71,14 +71,14 @@ export const TransactionTable = (props: TransactionTableProps) => {
   );
 
   function showTransactionDetails(transaction: Transaction){
-    transactionInfoRef.current?.open?.({
+    transactionDetailsRef.current?.open?.({
       data: transaction
     })
   }
 
   return (
     <div className="flex flex-col gap-4">
-      <TransactionInfo ref={transactionInfoRef} />
+      <TransactionDetails ref={transactionDetailsRef} />
       <div className="flex items-center">
         <h1 className="font-medium text-xl">{props.name}</h1>
         <div className="flex-1" />
@@ -126,7 +126,7 @@ export const TransactionTable = (props: TransactionTableProps) => {
         </TableHeader>
 
         {transactions.map((item) => (
-          <TableBody onClick={() => showTransactionDetails(item)} key={item.AgencyName} className="bg-white">
+          <TableBody onClick={() => showTransactionDetails(item)} key={item.AgencyName} className="bg-white cursor-pointer">
             <TableRow>
               <TableCell>{item.AgencyName}</TableCell>
               <TableCell>{item.paymentDetails.data.id}</TableCell>
