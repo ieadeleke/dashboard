@@ -12,7 +12,7 @@ export const useInitiatePaymentWithUpperlink = () => {
         setData(null)
         const response = await execute(async () => await ChargeService().initiatePaymentWithUpperlink(params))
         if (response) {
-            setData(response.Transaction)
+            // setData(response.Transaction)
         }
     }
 
