@@ -17,6 +17,13 @@ export type GetTransactionByReferenceParams = {
     endDate?: string
 }
 
+export type GetTransactionByAgencyParams = {
+    AgencyName: string,
+    startDate?: string,
+    endDate?: string
+}
+
+
 export type GetTransactionsResponse = ApiResponse & {
     Transaction: Transaction[],
     count: number
@@ -24,6 +31,11 @@ export type GetTransactionsResponse = ApiResponse & {
 
 export type GetTransactionsByReferenceResponse = ApiResponse & {
     Transactions: Transaction[],
+    count: number
+}
+
+export type GetTransactionsByAgencyResponse = ApiResponse & {
+    Transaction: Transaction[],
     count: number
 }
 

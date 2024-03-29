@@ -4,7 +4,7 @@ import { useFetchTranscations } from "@/utils/apiHooks/transactions/useFetchTran
 import PendingDeliveryIcon from "@/assets/icons/ic_delivery_pending.svg";
 import CompletedDeliveryIcon from "@/assets/icons/ic_delivery_complete.svg";
 import { ListIcon } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ScooterIcon from "@/assets/icons/ic_scooter.svg";
 import { WeeklyDeliveries } from "@/components/page_components/dashboard/overview/WeeklyDeliveries";
 import { DailyAnalytics } from "@/components/page_components/dashboard/overview/DailyAnalytics";
@@ -19,19 +19,24 @@ export default function Home() {
     error,
     fetchTransactions,
   } = useFetchTranscations();
+  const [date, setDate] = useState({
+    startDate: "2020-02-05",
+    endDate: "2024-12-12",
+  })
+
+  function fetchData() {
+    fetchTransactions(date);
+  }
 
   useEffect(() => {
-    fetchTransactions({
-      startDate: "2020-02-05",
-      endDate: "2024-12-12",
-    });
-  }, []);
+    fetchData()
+  }, [date]);
 
   function onDateApplied(date: DateRange) {
-    fetchTransactions({
+    setDate({
       startDate: moment(date.from).format("yyyy-mm-dd"),
       endDate: moment(date.to).format("yyyy-mm-dd"),
-    });
+    })
   }
 
   return (
@@ -95,7 +100,10 @@ export default function Home() {
           <TransactionTable
             name="Recent Transactions"
             transactions={transactions}
+            isLoading={isLoading}
+            fetchData={fetchData}
             onDateApplied={onDateApplied}
+            error={error}
           />
         </div>
       </div>

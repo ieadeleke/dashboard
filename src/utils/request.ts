@@ -1,23 +1,28 @@
 import axios from "axios";
-import { BASE_URL } from "@/utils/constants";
+import { BASE_URL } from "./constants";
+import AuthToken from "./AuthToken";
 
 type RequestType = "GET" | "POST" | "PUT" | "DELETE"
-
-export type RequestConfig = {
-    req?: any,
+type RequestConfig = {
+    path: string,
+    method?: RequestType,
     body?: any
 }
 
 
-export async function request(route: string, method: RequestType, config?: RequestConfig) {
-    const url = `${BASE_URL}/${route}`
+export async function request(params: RequestConfig) {
+    const url = `${BASE_URL}/${params.path}`
+    const token = AuthToken().retrieveToken()
 
     try {
-        const response = await axios(url, {
-            method,
-            data: config?.body
+        const { data } = await axios(url, {
+            method: params.method ?? "POST",
+            data: params.body,
+            headers: {
+                "Authorization": token ? `Bearer ${token}` : undefined
+            }
         })
-        return response
+        return data
     } catch (error) {
         throw error
     }

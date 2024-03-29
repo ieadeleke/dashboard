@@ -1,18 +1,54 @@
 import { Layout } from "@/components/layout";
 import Logo from "@/assets/icons/ic_logo.svg";
 import Button from "@/components/buttons";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { RegularTextInput } from "@/components/input/RegularTextInput";
 import { TextField } from "@/components/input/InputText";
 import { IconButton } from "@/components/buttons/IconButton";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import Link from "next/link";
+import { GlobalActionContext } from "@/context/GlobalActionContext";
+import { useLogin } from "@/utils/apiHooks/auth/useLogin";
+import { useRouter } from "next/router";
+import { isEmail } from "@/utils/validation";
 
 export default function Login() {
-    const [showPassword, setShowPassword] = useState(false)
+    const { showSnackBar } = useContext(GlobalActionContext)
+    const { error, isLoading, data, login } = useLogin()
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const router = useRouter()
+    const [isPasswordRevealed, setIsPasswordRevealed] = useState(false);
 
-    function toggleShowPassword() {
-        setShowPassword((value) => !value)
+    useEffect(() => {
+        if (error) {
+            showSnackBar({ severity: 'error', message: error })
+        }
+    }, [error])
+
+    useEffect(() => {
+        if (data) {
+            showSnackBar({ severity: 'success', message: "Login successful" })
+            setTimeout(() => {
+                router.push('/')
+            }, 1000)
+        }
+    }, [data])
+
+    function submit() {
+        if (!isEmail(email)) {
+            return showSnackBar({ severity: 'error', message: "Invalid email" })
+        } else if (password.trim().length < 4) {
+            return showSnackBar({ severity: 'error', message: "Password should be at least 4 characters" })
+        }
+        login({
+            email: email,
+            password
+        })
+    }
+
+    function revealPassword() {
+        setIsPasswordRevealed((value) => !value);
     }
 
     return <Layout>
@@ -32,15 +68,15 @@ export default function Login() {
                 <div className="w-full flex flex-col gap-4">
                     <div>
                         <p className="font-semibold">Email Address:</p>
-                        <RegularTextInput />
+                        <RegularTextInput type="email" placeholder="example@gmail.com" className="text-xs" value={email} onChange={(evt) => setEmail(evt.target.value)} />
                     </div>
 
                     <div className="flex flex-col">
                         <p className="font-semibold">Password:</p>
                         <TextField.Container className="bg-white outline outline-1 outline-gray-200">
-                            <TextField.Input />
-                            <IconButton onClick={toggleShowPassword}>
-                                {showPassword ? <EyeIcon /> : <EyeOffIcon />}
+                            <TextField.Input value={password} onChange={(evt) => setPassword(evt.target.value)} type={isPasswordRevealed ? "text" : "password"} placeholder="123456" className="text-xs" />
+                            <IconButton onClick={revealPassword}>
+                                {isPasswordRevealed ? <EyeIcon /> : <EyeOffIcon />}
                             </IconButton>
                         </TextField.Container>
 
@@ -50,7 +86,7 @@ export default function Login() {
                     </div>
 
                     <div className="flex flex-col gap-2 mt-4">
-                        <Button>Sign In</Button>
+                        <Button onClick={submit} isLoading={isLoading} disabled={isLoading}>Sign In</Button>
                         <div className="flex items-center justify-center">
                             <p>{`Don't`} have an account?</p>
                             <Link href="/signup">

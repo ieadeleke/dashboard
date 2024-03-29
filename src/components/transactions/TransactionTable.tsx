@@ -18,10 +18,15 @@ import { CalendarRange, DateRange } from "../calendar/CalendarRange";
 import moment from "moment";
 import { Transaction } from "@/models/transactions";
 import { TransactionInfo, TransactionInfoRef } from "./TransactionInfo";
+import Loading from "../states/Loading";
+import Error from "../states/Error";
 
 type TransactionTableProps = {
   name: string;
   transactions: Transaction[];
+  isLoading?: boolean;
+  error?: string | null;
+  fetchData?: () => void,
   onDateApplied?: (date: DateRange) => void
 };
 
@@ -112,7 +117,7 @@ export const TransactionTable = (props: TransactionTableProps) => {
           <TableRow>
             <TableHead className="text-white">Name</TableHead>
             <TableHead className="text-white">Payment ID</TableHead>
-            <TableHead className="text-white">LGA (kg)</TableHead>
+            <TableHead className="text-white">LGA</TableHead>
             <TableHead className="text-white">Status</TableHead>
             <TableHead className="text-white">Transaction Date</TableHead>
             <TableHead className="text-white">Agent Name</TableHead>
@@ -134,6 +139,7 @@ export const TransactionTable = (props: TransactionTableProps) => {
           </TableBody>
         ))}
       </Table>
+        {props.isLoading ? <Loading /> : props.error && <Error onRetry={props.fetchData} message={props.error} />}
     </div>
   );
 };
