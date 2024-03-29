@@ -35,7 +35,7 @@ export function AuthService() {
     async function resetPassword(params: ResetPasswordParams) {
         const response = await request({
             path: `v1/admin/ResetPassword`,
-            method: "PUT",
+            method: "POST",
             body: params
         })
         return response as ApiResponse
@@ -44,7 +44,7 @@ export function AuthService() {
     async function confirmResetPassword(params: ConfirmResetPasswordParams) {
         const response = await request({
             path: `v1/admin/ConfirmResetPassword`,
-            method: "PUT",
+            method: "POST",
             body: params
         })
         return response as ApiResponse

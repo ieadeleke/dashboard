@@ -1,5 +1,5 @@
 import { Layout } from "@/components/layout";
-import Logo from "@/assets/icons/ic_logo.svg";
+import Logo from "@/assets/icons/ic_logo_flat.svg";
 import Button from "@/components/buttons";
 import { useContext, useEffect, useState } from "react";
 import { RegularTextInput } from "@/components/input/RegularTextInput";
