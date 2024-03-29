@@ -12,7 +12,7 @@ export const useMakePayment = () => {
         setData(null)
         const response = await execute(async () => await ChargeService().makePayment(params))
         if (response) {
-            setData(response)
+            // setData(response)
         }
     }
 
