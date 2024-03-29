@@ -102,6 +102,7 @@ export default function Agents() {
             <div className="grid grid-cols-4 gap-4">
               {groups.map((group) => (
                 <div
+                  key={group._id}
                   onClick={() => setSelectedTab(group._id)}
                   className={cn(
                     " rounded-lg cursor-pointer",
