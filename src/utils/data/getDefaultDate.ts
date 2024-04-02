@@ -1,11 +1,11 @@
 export function getDefaultDateAsString() {
     const today = new Date();
-    const startDate = new Date(today.getFullYear(), today.getMonth(), 1);
-    const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    const lastMonth = new Date(today)
+    lastMonth.setMonth(lastMonth.getMonth() - 1)
     
     return {
-        startDate: formatDate(startDate),
-        endDate: formatDate(endDate)
+        startDate: formatDate(lastMonth),
+        endDate: formatDate(today)
     };
 }
 
