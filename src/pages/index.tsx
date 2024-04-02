@@ -11,7 +11,7 @@ import { DailyAnalytics } from "@/components/page_components/dashboard/overview/
 import { TransactionTable } from "@/components/transactions/TransactionTable";
 import { DateRange } from "@/components/calendar/CalendarRange";
 import moment from "moment";
-import { getDefaultDateAsString } from "@/utils/data/getDefaultDate";
+import { convertDateToFormat, getDefaultDateAsString } from "@/utils/data/getDefaultDate";
 
 export default function Home() {
   const {
@@ -32,9 +32,9 @@ export default function Home() {
 
   function onDateApplied(date: DateRange) {
     setDate({
-      startDate: moment(date.from).format("yyyy-mm-dd"),
-      endDate: moment(date.to).format("yyyy-mm-dd"),
-    })
+      startDate: convertDateToFormat(date.from),
+      endDate: convertDateToFormat(date.to ?? new Date()),
+    });
   }
 
   return (

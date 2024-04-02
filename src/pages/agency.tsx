@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { Transaction } from "@/models/transactions";
 import { useFetchGroupTranscations } from "@/utils/apiHooks/transactions/useFetchGroupTransactions";
 import { useFetchTransactionsByAgency } from "@/utils/apiHooks/transactions/useFetchTransactionsByAgency";
-import { getDefaultDateAsString } from "@/utils/data/getDefaultDate";
+import { convertDateToFormat, getDefaultDateAsString } from "@/utils/data/getDefaultDate";
 import moment from "moment";
 import { useEffect, useMemo, useState } from "react";
 
@@ -43,8 +43,8 @@ const AgentsTable = (props: AgentsTable) => {
 
   function onDateApplied(date: DateRange) {
     setDate({
-      startDate: moment(date.from).format('yyyy-mm-dd'),
-      endDate: moment(date.to).format('yyyy-mm-dd'),
+      startDate: convertDateToFormat(date.from),
+      endDate: convertDateToFormat(date.to ?? new Date()),
     });
   }
 
