@@ -58,12 +58,7 @@ export type VerifyReferenceParams = {
 
 export type DashboardInfoResponseParams = ApiResponse & {
     AllTransaction: number,
-    TotalAmount: [
-        {
-            _id: string,
-            totalAmount: number
-        }
-    ],
+    TotalAmount: number,
     Agency: number,
     FailTransaction: number,
     SuccessfulTransaction: number,

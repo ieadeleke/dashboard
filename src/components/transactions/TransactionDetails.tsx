@@ -12,6 +12,8 @@ import { Label } from "@/components/ui/label";
 import { Transaction } from "@/models/transactions";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import Button from "../buttons";
+import { formatDate } from "@/utils/formatters/formatDate";
+import { formatAmount } from "@/utils/formatters/formatAmount";
 
 type TransactionDetailsPayload = {
     data: Transaction;
@@ -91,7 +93,7 @@ export const TransactionDetails = forwardRef<
                     }} />
                     <DetailItem data={{
                         title: "Amount Paid",
-                        value: transaction.amountPaid.toString()
+                        value: formatAmount(transaction.amountPaid)
                     }} />
                     <DetailItem data={{
                         title: "Revenue Name",
@@ -102,8 +104,12 @@ export const TransactionDetails = forwardRef<
                         value: transaction.RevenueCode
                     }} />
                     <DetailItem data={{
-                        title: "Payment Refenrence",
+                        title: "Payment Reference",
                         value: transaction.paymentRef
+                    }} />
+                    <DetailItem data={{
+                        title: "Transaction Date",
+                        value: formatDate(transaction.createdAt)
                     }} />
                 </div>
 
@@ -129,6 +135,28 @@ export const TransactionDetails = forwardRef<
                         <DetailItem data={{
                             title: "Transaction Refenrence",
                             value: transaction.paymentDetails.data.tx_ref
+                        }} />
+                    </div>
+                </div>}
+
+                {(transaction.paymentDetails && transaction.paymentDetails.data.card) && <div className="flex flex-col">
+                    <p className="text-gray-500">Card Info</p>
+                    <div className="grid gap-4 py-4">
+                        <DetailItem data={{
+                            title: "First 6 Digits",
+                            value: transaction.paymentDetails.data.card.first_6digits
+                        }} />
+                        <DetailItem data={{
+                            title: "Last 6 Digits",
+                            value: transaction.paymentDetails.data.card.last_4digits
+                        }} />
+                        <DetailItem data={{
+                            title: "Country",
+                            value: transaction.paymentDetails.data.card.country
+                        }} />
+                        <DetailItem data={{
+                            title: "Card Type",
+                            value: transaction.paymentDetails.data.card.type
                         }} />
                     </div>
                 </div>}

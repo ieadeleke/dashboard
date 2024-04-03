@@ -41,6 +41,12 @@ export type Transaction = {
             narration: string,
             status: string,
             payment_type: string,
+            card: {
+                first_6digits: string,
+                last_4digits: string,
+                type: string,
+                country: string
+            },
             created_at: string,
             account_id: string,
             meta: {

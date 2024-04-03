@@ -112,7 +112,7 @@ export default function Agents() {
                   <OverviewItem
                     key={group._id}
                     title={group._id}
-                    description={group.totalAmountPaid.toString()}
+                    description={`${group.totalAmountPaid.toString()} transactions`}
                     iconClassName="text-blue-800 bg-blue-300"
                   />
                 </div>

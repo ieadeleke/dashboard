@@ -26,6 +26,7 @@ import { GlobalActionContext } from "@/context/GlobalActionContext";
 import { convertToDate } from "@/utils/data/getDefaultDate";
 import { TransactionStatus, TransactionStatusChip } from "./TransactionStatusChip";
 import Button from "../buttons";
+import { formatAmount } from "@/utils/formatters/formatAmount";
 
 type TransactionTableProps = {
   name: string;
@@ -166,7 +167,7 @@ export const TransactionTable = (props: TransactionTableProps) => {
             <TableRow>
               <TableCell>{item.AgencyName}</TableCell>
               <TableCell>{item.paymentDetails? item.paymentDetails.data.auth_model : "-"}</TableCell>
-              <TableCell>{item.paymentDetails ? item.paymentDetails.data.auth_model : item.amountPaid}</TableCell>
+              <TableCell>{formatAmount(item.paymentDetails ? item.paymentDetails.data.amount : item.amountPaid)}</TableCell>
               <TableCell>
                 <TransactionStatusChip status={item.paymentDetails ? item.paymentDetails.data.status as TransactionStatus : "failed"} />
               </TableCell>
