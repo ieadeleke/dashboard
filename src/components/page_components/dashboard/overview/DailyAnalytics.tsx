@@ -1,58 +1,107 @@
-import { IconButton } from "@/components/buttons/IconButton";
-import { ListFilterIcon } from "lucide-react";
-import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+  ChartData,
+} from 'chart.js';
+import { Pie } from 'react-chartjs-2';
 
-export const DailyAnalytics = () => {
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+type StatusData = {
+  status: string;
+  count: number;
+  percentage: number;
+}
+
+type DailyAnalyticsProps = {
+  data: {
+    success: {
+      count: number,
+      percentage: number
+    },
+    failed: {
+      count: number,
+      percentage: number
+    },
+    pending: {
+      count: number,
+      percentage: number
+    }
+  }
+}
+
+export const DailyAnalytics = (props: DailyAnalyticsProps) => {
+
+  const data: ChartData<"pie", number[], string> = {
+    labels: ['Successful Transactions', 'Failed Transactions', 'Pending Transactions'],
+    datasets: [
+      {
+        data: [props.data.success.percentage, props.data.pending.percentage, props.data.failed.percentage],
+        backgroundColor: ['#6A22B2', '#ba83fd', '#e7d5ff'],
+        hoverBackgroundColor: ['#6A22B2', '#ba83fd', '#e7d5ff'],
+      },
+    ],
+  };
+
+  // Options for customization
+  const options = {
+    maintainAspectRatio: false,
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false
+      },
+    }
+  };
+
+  const total = props.data.success.count + props.data.pending.count + props.data.failed.count
+
   return (
     <div className="flex flex-col gap-4 bg-white rounded-lg p-4">
       <div className="flex items-center">
         <p className="flex-1">
-          Daily Analytics: <span className="font-bold ml-3">50</span>
+          Daily Analytics: <span className="font-bold ml-3">{total} Transactions</span>
         </p>
-
+        {/* 
         <IconButton className="bg-primary">
           <ListFilterIcon />
-        </IconButton>
+        </IconButton> */}
       </div>
 
-      <div>
-        <CircularProgressbar
-          styles={buildStyles({
-            // Rotation of path and trail, in number of turns (0-1)
-            rotation: 0.25,
+      <div className="mx-auto w-[300px] h-[300px]">
+        <Pie data={data} options={options} />
 
-            // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
-            strokeLinecap: "butt",
-            // Text size
-            textSize: "16px",
-            pathColor: "#6A22B2",
-            textColor: "black",
-            // How long animation takes to go from one percentage to another, in seconds
-            pathTransitionDuration: 0.5,
-            trailColor: "#d6d6d6",
-          })}
-          className="w-40 h-40 mt-10"
-          value={60}
-          text={`${60}%`}
-        />
       </div>
 
       <div className="flex flex-col items-end">
         <div>
           <div className="flex items-center gap-2">
-            <div className="w-4 aspect-square bg-primary" />
-            <p>50% Successful Transactions</p>
+            <div className="w-4 aspect-square bg-[#6A22B2]" />
+            <p>{props.data.success.percentage}% Successful Transactions</p>
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="w-4 aspect-square bg-primary-100" />
-            <p>0% Pending Transactions</p>
+            <div className="w-4 aspect-square bg-[#ba83fd]" />
+            <p>{props.data.pending.percentage}% Pending Transactions</p>
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="w-4 aspect-square bg-primary" />
-            <p>0% Failed Transactions</p>
+            <div className="w-4 aspect-square bg-[#e7d5ff]" />
+            <p>{props.data.failed.percentage}% Failed Transactions</p>
           </div>
         </div>
       </div>

@@ -62,7 +62,16 @@ export type DashboardInfoResponseParams = ApiResponse & {
     Agency: number,
     FailTransaction: number,
     SuccessfulTransaction: number,
-    PendingTransaction: number
+    PendingTransaction: number,
+    WeeklyTransactions: ({
+        count: number,
+        dayOfWeek: string
+    })[],
+    WeeklyAnalytics: ({
+        status: string,
+        count: number,
+        percentage: number
+    })[]
 }
 
 export type MakePaymentParams = {
