@@ -24,7 +24,7 @@ export function TransactionService() {
 
     async function getTransactionsByReference(payload: GetTransactionByReferenceParams) {
         const data = await request({
-            path: `v1/abc/GetTransactionByReference`,
+            path: `v1/admin/Transaction/GetTransactionByReference`,
             body: payload,
             method: "PUT"
         })
