@@ -33,7 +33,7 @@ type DetailItemProps = {
 
 const DetailItem = (props: DetailItemProps) => {
     return <div className="grid grid-cols-4 items-center gap-4">
-        <Label htmlFor="name" className="text-right">
+        <Label htmlFor="name" className="text-left">
             {props.data.title}
         </Label>
         <Input id="name" disabled value={props.data.value} className="col-span-3" />
@@ -75,7 +75,7 @@ export const TransactionDetails = forwardRef<
 
     return (
         <Dialog open={isVisible} onOpenChange={setIsVisible}>
-            {transaction && <DialogContent className="sm:max-w-[425px] max-h-[90vh] overflow-y-scroll no-scrollbar">
+            {transaction && <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-scroll no-scrollbar">
                 <DialogHeader>
                     <DialogTitle>Transaction Info</DialogTitle>
                     <DialogDescription>Full details summary</DialogDescription>
