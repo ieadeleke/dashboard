@@ -64,7 +64,7 @@ export default function Transactionss() {
                     </form>
                     <NetworkRequestContainer isLoading={isLoading} error={error} onRetry={fetchData}>
                         {(!isLoading && !error) && <TransactionTable
-                            name="Recent Transactions"
+                            name="All Transactions"
                             transactions={transactions}
                             isLoading={isLoading}
                             fetchData={fetchData}
