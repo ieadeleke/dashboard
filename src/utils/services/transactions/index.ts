@@ -1,5 +1,5 @@
 import { request } from "../../request"
-import { GetGroupedTransactionsResponse, GetTransactionByAgencyParams, GetTransactionByPaymentRefParams, GetTransactionByReferenceParams, GetTransactionsByAgencyResponse, GetTransactionByPaymentRefResponse, GetTransactionsByReferenceResponse, GetTransactionsParams, GetTransactionsResponse, DownloadReportParams } from "./types"
+import { GetGroupedTransactionsResponse, GetTransactionByAgencyParams, GetTransactionByPaymentRefParams, GetTransactionByReferenceParams, GetTransactionsByAgencyResponse, GetTransactionByPaymentRefResponse, GetTransactionsByReferenceResponse, GetTransactionsParams, GetTransactionsResponse, DownloadReportParams, DashboardInfoResponseParams } from "./types"
 
 
 export function TransactionService() {
@@ -58,12 +58,21 @@ export function TransactionService() {
         return data as GetTransactionByPaymentRefResponse
     }
 
+    async function dashboardInfo() {
+        const data = await request({
+            path: `v1/admin/Transaction/DashboardInfo`,
+            method: "GET"
+        })
+        return data as DashboardInfoResponseParams
+    }
+
     return {
         getTransactions,
         getGroupedTransactions,
         getTransactionsByReference,
         getTransactionsByAgency,
         getTransactionByPaymentRef,
+        dashboardInfo,
         downloadReport
     }
 }
