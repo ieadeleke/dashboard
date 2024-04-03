@@ -165,10 +165,10 @@ export const TransactionTable = (props: TransactionTableProps) => {
           <TableBody onClick={() => showTransactionDetails(item)} key={item.AgencyName} className="bg-white cursor-pointer">
             <TableRow>
               <TableCell>{item.AgencyName}</TableCell>
-              <TableCell>{item.paymentDetails.data.auth_model}</TableCell>
-              <TableCell>{item.paymentDetails.data.amount}</TableCell>
+              <TableCell>{item.paymentDetails? item.paymentDetails.data.auth_model : "-"}</TableCell>
+              <TableCell>{item.paymentDetails ? item.paymentDetails.data.auth_model : item.amountPaid}</TableCell>
               <TableCell>
-                <TransactionStatusChip status={item.paymentDetails.status as TransactionStatus} />
+                <TransactionStatusChip status={item.paymentDetails ? item.paymentDetails.data.status as TransactionStatus : "failed"} />
               </TableCell>
               <TableCell>{moment(item.createdAt).format("MMMM D, YYYY")}</TableCell>
               <TableCell>{item.AgencyName}</TableCell>

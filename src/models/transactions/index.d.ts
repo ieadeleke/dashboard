@@ -22,7 +22,7 @@ export type Transaction = {
         Receipt: [],
         PropertyAddress: null
     },
-    paymentDetails: {
+    paymentDetails?: {
         status: string,
         message: string,
         data: {

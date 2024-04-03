@@ -61,14 +61,16 @@ export const TransactionDetails = forwardRef<
         setIsVisible(false);
     }
 
-    function handlePrintReceipt(){
-        if(transaction){
+    function handlePrintReceipt() {
+        if (transaction) {
             window.open(transaction.NotificationDetails.ReceiptNumber, "_blank")
         }
     }
 
-    function handleGenerateReceipt(){
-        alert("Coming soon")
+    function handleGenerateReceipt() {
+        if (transaction) {
+            const url = `https://usepay4it.com/payment/collection?tx_reference=${transaction.paymentRef}`
+        }
     }
 
     return (
@@ -105,7 +107,7 @@ export const TransactionDetails = forwardRef<
                     }} />
                 </div>
 
-                <div className="flex flex-col">
+                {transaction.paymentDetails && <div className="flex flex-col">
                     <p className="text-gray-500">Payment Info</p>
                     <div className="grid gap-4 py-4">
                         <DetailItem data={{
@@ -129,9 +131,9 @@ export const TransactionDetails = forwardRef<
                             value: transaction.paymentDetails.data.tx_ref
                         }} />
                     </div>
-                </div>
+                </div>}
 
-                <div className="flex flex-col">
+                {transaction.paymentDetails && <div className="flex flex-col">
                     <p className="text-gray-500">Customer Info</p>
                     <div className="grid gap-4 py-4">
                         <DetailItem data={{
@@ -147,9 +149,9 @@ export const TransactionDetails = forwardRef<
                             value: transaction.paymentDetails.data.customer.phone_number
                         }} />
                     </div>
-                </div>
+                </div>}
                 <DialogFooter className="gap-4">
-                    {transaction.paymentDetails.data.status == 'successful' ? <Button variant="outlined" onClick={handlePrintReceipt} type="submit">Print Receipt</Button> : <Button variant="outlined" onClick={handleGenerateReceipt} type="submit">Generate Receipt</Button>}
+                    {transaction.paymentDetails && transaction.paymentDetails.data.status == 'successful' ? <Button variant="outlined" onClick={handlePrintReceipt} type="submit">Print Receipt</Button> : <Button variant="outlined" onClick={handleGenerateReceipt} type="submit">Generate Receipt</Button>}
                     <Button onClick={closeModal} type="submit">Done</Button>
                 </DialogFooter>
             </DialogContent>}
