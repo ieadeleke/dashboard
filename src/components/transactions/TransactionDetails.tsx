@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+
 import {
     Dialog,
     DialogContent,
@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Transaction } from "@/models/transactions";
 import { forwardRef, useImperativeHandle, useState } from "react";
+import Button from "../buttons";
 
 type TransactionDetailsPayload = {
     data: Transaction;
@@ -60,9 +61,19 @@ export const TransactionDetails = forwardRef<
         setIsVisible(false);
     }
 
+    function handlePrintReceipt(){
+        if(transaction){
+            window.open(transaction.NotificationDetails.ReceiptNumber, "_blank")
+        }
+    }
+
+    function handleGenerateReceipt(){
+        alert("Coming soon")
+    }
+
     return (
         <Dialog open={isVisible} onOpenChange={setIsVisible}>
-            {transaction && <DialogContent className="sm:max-w-[425px]">
+            {transaction && <DialogContent className="sm:max-w-[425px] max-h-[90vh] overflow-y-scroll no-scrollbar">
                 <DialogHeader>
                     <DialogTitle>Transaction Info</DialogTitle>
                     <DialogDescription>Full details summary</DialogDescription>
@@ -93,7 +104,52 @@ export const TransactionDetails = forwardRef<
                         value: transaction.paymentRef
                     }} />
                 </div>
-                <DialogFooter>
+
+                <div className="flex flex-col">
+                    <p className="text-gray-500">Payment Info</p>
+                    <div className="grid gap-4 py-4">
+                        <DetailItem data={{
+                            title: "Currency",
+                            value: transaction.paymentDetails.data.currency
+                        }} />
+                        <DetailItem data={{
+                            title: "Payment Method",
+                            value: transaction.paymentDetails.data.auth_model
+                        }} />
+                        <DetailItem data={{
+                            title: "Channel Reference",
+                            value: transaction.paymentDetails.data.flw_ref
+                        }} />
+                        <DetailItem data={{
+                            title: "Revenue Code",
+                            value: transaction.RevenueCode
+                        }} />
+                        <DetailItem data={{
+                            title: "Transaction Refenrence",
+                            value: transaction.paymentDetails.data.tx_ref
+                        }} />
+                    </div>
+                </div>
+
+                <div className="flex flex-col">
+                    <p className="text-gray-500">Customer Info</p>
+                    <div className="grid gap-4 py-4">
+                        <DetailItem data={{
+                            title: "Name",
+                            value: transaction.paymentDetails.data.customer.name
+                        }} />
+                        <DetailItem data={{
+                            title: "Email",
+                            value: transaction.paymentDetails.data.customer.email
+                        }} />
+                        <DetailItem data={{
+                            title: "Phone Number",
+                            value: transaction.paymentDetails.data.customer.phone_number
+                        }} />
+                    </div>
+                </div>
+                <DialogFooter className="gap-4">
+                    {transaction.paymentDetails.data.status == 'successful' ? <Button variant="outlined" onClick={handlePrintReceipt} type="submit">Print Receipt</Button> : <Button variant="outlined" onClick={handleGenerateReceipt} type="submit">Generate Receipt</Button>}
                     <Button onClick={closeModal} type="submit">Done</Button>
                 </DialogFooter>
             </DialogContent>}
