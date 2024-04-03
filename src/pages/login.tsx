@@ -56,7 +56,7 @@ export default function Login() {
             <div className="flex items-center px-2 py-2">
                 <Logo className="text-primary" />
                 <div className="flex-1" />
-                <Button variant="text" className="text-black underline">Close this page</Button>
+                {/* <Button variant="text" className="text-black underline">Close this page</Button> */}
             </div>
 
             <div className="flex flex-col self-center items-center px-3 gap-4 mt-16 md:[500px]">
