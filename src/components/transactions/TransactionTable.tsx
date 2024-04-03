@@ -24,6 +24,7 @@ import { useDownloadReport } from "@/utils/apiHooks/transactions/useDownloadRepo
 import { LoadingModal } from "../states/LoadingModal";
 import { GlobalActionContext } from "@/context/GlobalActionContext";
 import { convertToDate } from "@/utils/data/getDefaultDate";
+import { TransactionStatus, TransactionStatusChip } from "./TransactionStatusChip";
 
 type TransactionTableProps = {
   name: string;
@@ -164,7 +165,9 @@ export const TransactionTable = (props: TransactionTableProps) => {
               <TableCell>{item.AgencyName}</TableCell>
               <TableCell>{item.paymentDetails.data.id}</TableCell>
               <TableCell>{item.OraAgencyRev}</TableCell>
-              <TableCell>{item.paymentDetails.status}</TableCell>
+              <TableCell>
+                <TransactionStatusChip status={item.paymentDetails.status as TransactionStatus} />
+              </TableCell>
               <TableCell>{moment(item.createdAt).fromNow()}</TableCell>
               <TableCell>{item.PayerName}</TableCell>
               <TableCell>Test 3</TableCell>
