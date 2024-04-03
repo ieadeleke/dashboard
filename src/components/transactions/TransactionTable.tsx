@@ -154,8 +154,8 @@ export const TransactionTable = (props: TransactionTableProps) => {
             <TableHead className="text-white">LGA</TableHead>
             <TableHead className="text-white">Status</TableHead>
             <TableHead className="text-white">Transaction Date</TableHead>
-            <TableHead className="text-white">Agent Name</TableHead>
-            <TableHead className="text-white">Lorem Ipsum</TableHead>
+            <TableHead className="text-white">Agency</TableHead>
+            <TableHead className="text-white">Rev. Name</TableHead>
           </TableRow>
         </TableHeader>
 
@@ -169,8 +169,8 @@ export const TransactionTable = (props: TransactionTableProps) => {
                 <TransactionStatusChip status={item.paymentDetails.status as TransactionStatus} />
               </TableCell>
               <TableCell>{moment(item.createdAt).fromNow()}</TableCell>
-              <TableCell>{item.PayerName}</TableCell>
-              <TableCell>Test 3</TableCell>
+              <TableCell>{item.AgencyName}</TableCell>
+              <TableCell>{item.RevName}</TableCell>
             </TableRow>
           </TableBody>
         ))}
