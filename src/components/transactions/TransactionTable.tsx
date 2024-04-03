@@ -25,6 +25,7 @@ import { LoadingModal } from "../states/LoadingModal";
 import { GlobalActionContext } from "@/context/GlobalActionContext";
 import { convertToDate } from "@/utils/data/getDefaultDate";
 import { TransactionStatus, TransactionStatusChip } from "./TransactionStatusChip";
+import Button from "../buttons";
 
 type TransactionTableProps = {
   name: string;
@@ -150,12 +151,13 @@ export const TransactionTable = (props: TransactionTableProps) => {
         <TableHeader className="bg-primary rounded-xl">
           <TableRow>
             <TableHead className="text-white">Name</TableHead>
-            <TableHead className="text-white">Payment ID</TableHead>
-            <TableHead className="text-white">LGA</TableHead>
+            <TableHead className="text-white">Payment Method</TableHead>
+            <TableHead className="text-white">Amount</TableHead>
             <TableHead className="text-white">Status</TableHead>
             <TableHead className="text-white">Transaction Date</TableHead>
             <TableHead className="text-white">Agency</TableHead>
             <TableHead className="text-white">Rev. Name</TableHead>
+            <TableHead className="text-white"></TableHead>
           </TableRow>
         </TableHeader>
 
@@ -163,14 +165,15 @@ export const TransactionTable = (props: TransactionTableProps) => {
           <TableBody onClick={() => showTransactionDetails(item)} key={item.AgencyName} className="bg-white cursor-pointer">
             <TableRow>
               <TableCell>{item.AgencyName}</TableCell>
-              <TableCell>{item.paymentDetails.data.id}</TableCell>
-              <TableCell>{item.OraAgencyRev}</TableCell>
+              <TableCell>{item.paymentDetails.data.auth_model}</TableCell>
+              <TableCell>{item.paymentDetails.data.amount}</TableCell>
               <TableCell>
                 <TransactionStatusChip status={item.paymentDetails.status as TransactionStatus} />
               </TableCell>
-              <TableCell>{moment(item.createdAt).fromNow()}</TableCell>
+              <TableCell>{moment(item.createdAt).format("MMMM D, YYYY")}</TableCell>
               <TableCell>{item.AgencyName}</TableCell>
               <TableCell>{item.RevName}</TableCell>
+              <TableCell><Button className="text-xs w-24 h-8 bg-gray-800">View Details</Button></TableCell>
             </TableRow>
           </TableBody>
         ))}
