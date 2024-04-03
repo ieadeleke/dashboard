@@ -87,12 +87,6 @@ export default function Login() {
 
                     <div className="flex flex-col gap-2 mt-4">
                         <Button onClick={submit} isLoading={isLoading} disabled={isLoading}>Sign In</Button>
-                        <div className="flex items-center justify-center">
-                            <p>{`Don't`} have an account?</p>
-                            <Link href="/signup">
-                                <Button variant="text">SignUp</Button>
-                            </Link>
-                        </div>
                     </div>
                 </div>
             </div>
