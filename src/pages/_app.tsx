@@ -30,7 +30,7 @@ export default function App({ Component, pageProps }: AppProps) {
     if (userData) {
       setUser(JSON.parse(userData))
     }
-  })
+  }, [])
 
   function updateUser(user: Profile | null) {
     if (user) {

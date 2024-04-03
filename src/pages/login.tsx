@@ -11,6 +11,7 @@ import { GlobalActionContext } from "@/context/GlobalActionContext";
 import { useLogin } from "@/utils/apiHooks/auth/useLogin";
 import { useRouter } from "next/router";
 import { isEmail } from "@/utils/validation";
+import UserContext from "@/context/UserContext";
 
 export default function Login() {
     const { showSnackBar } = useContext(GlobalActionContext)
@@ -18,6 +19,7 @@ export default function Login() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const router = useRouter()
+    const { updateUser } = useContext(UserContext)
     const [isPasswordRevealed, setIsPasswordRevealed] = useState(false);
 
     useEffect(() => {
@@ -29,6 +31,7 @@ export default function Login() {
     useEffect(() => {
         if (data) {
             showSnackBar({ severity: 'success', message: "Login successful" })
+            updateUser(data)
             setTimeout(() => {
                 router.push('/')
             }, 1000)
