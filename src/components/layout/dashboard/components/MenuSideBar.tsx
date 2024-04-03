@@ -1,5 +1,4 @@
 import DashboardIcon from '@/assets/icons/ic_compass.svg'
-import AgentsIcon from '@/assets/icons/ic_agents.svg'
 import AgencyIcon from '@/assets/icons/ic_agency.svg'
 import TransactionIcon from '@/assets/icons/ic_transactions.svg'
 import LogOutIcon from '@/assets/icons/ic_logout.svg'
@@ -9,7 +8,7 @@ import Link from 'next/link'
 import { Divider } from '@/components/Divider'
 import { ConfirmationAlertDialog, ConfirmationAlertDialogRef } from '@/components/dialogs/ConfirmationAlertDialog'
 import { useRef } from 'react'
-import { PhoneIcon } from 'lucide-react'
+import { PhoneIcon, SearchIcon } from 'lucide-react'
 import { logOut } from '@/utils/auth/logout'
 
 
@@ -51,7 +50,8 @@ export const MenuSideBar = () => {
                 <ListItem isActive startIcon={<DashboardIcon />} name="Dashboard" href="/" />
                 {/* <ListItem startIcon={<AgentsIcon />} name="Agents" href="/agents" /> */}
                 <ListItem startIcon={<AgencyIcon />} name="Agency" href="/agency" />
-                <ListItem startIcon={<TransactionIcon />} name="Web Transactions" href="/web-transactions" />
+                <ListItem startIcon={<SearchIcon />} name="Payment Reference" href="/web-transactions" />
+                <ListItem startIcon={<TransactionIcon />} name="Transactions" href="/transactions" />
                 <Divider />
                 <div
                     onClick={handleLogout}
