@@ -27,6 +27,7 @@ import { convertToDate } from "@/utils/data/getDefaultDate";
 import { TransactionStatus, TransactionStatusChip } from "./TransactionStatusChip";
 import Button from "../buttons";
 import { formatAmount } from "@/utils/formatters/formatAmount";
+import { formatDate } from "@/utils/formatters/formatDate";
 
 type TransactionTableProps = {
   name: string;
@@ -171,7 +172,7 @@ export const TransactionTable = (props: TransactionTableProps) => {
               <TableCell>
                 <TransactionStatusChip status={item.paymentDetails ? item.paymentDetails.data.status as TransactionStatus : "failed"} />
               </TableCell>
-              <TableCell>{moment(item.createdAt).format("MMMM D, YYYY")}</TableCell>
+              <TableCell>{formatDate(item.createdAt)}</TableCell>
               <TableCell>{item.AgencyName}</TableCell>
               <TableCell>{item.RevName}</TableCell>
               <TableCell><Button className="text-xs w-24 h-8 bg-gray-800">View Details</Button></TableCell>
