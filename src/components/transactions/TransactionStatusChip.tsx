@@ -17,7 +17,7 @@ export const TransactionStatusChip = (props: InspectionStatusChipProps) => {
           container: "bg-barley-white-100",
           label: "text-barley-white-900",
         };
-      case "Successful":
+      case "Fail":
         return {
           container: "bg-red-200",
           label: "text-red-900",
