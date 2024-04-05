@@ -91,17 +91,17 @@ export const DailyAnalytics = (props: DailyAnalyticsProps) => {
         <div>
           <div className="flex items-center gap-2">
             <div className="w-4 aspect-square bg-[#6A22B2]" />
-            <p>{props.data.success.percentage}% Successful Transactions</p>
+            <p>{props.data.success.percentage.toFixed(2)}% Successful Transactions</p>
           </div>
 
           <div className="flex items-center gap-2">
             <div className="w-4 aspect-square bg-[#ba83fd]" />
-            <p>{props.data.pending.percentage}% Pending Transactions</p>
+            <p>{props.data.pending.percentage.toFixed(2)}% Pending Transactions</p>
           </div>
 
           <div className="flex items-center gap-2">
             <div className="w-4 aspect-square bg-[#e7d5ff]" />
-            <p>{props.data.failed.percentage}% Failed Transactions</p>
+            <p>{props.data.failed.percentage.toFixed(2)}% Failed Transactions</p>
           </div>
         </div>
       </div>
