@@ -168,7 +168,7 @@ export const TransactionTable = (props: TransactionTableProps) => {
             <TableRow>
               <TableCell>{item.AgencyName}</TableCell>
               <TableCell>{item.paymentDetails? item.paymentDetails.data.auth_model : "-"}</TableCell>
-              <TableCell>{formatAmount(item.paymentDetails ? item.paymentDetails.data.amount : item.amountPaid)}</TableCell>
+              <TableCell>{formatAmount(item.amountPaid)}</TableCell>
               <TableCell>
                 <TransactionStatusChip status={item.paymentDetails ? item.paymentDetails.data.status as TransactionStatus : "failed"} />
               </TableCell>
