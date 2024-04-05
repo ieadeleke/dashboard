@@ -2,7 +2,7 @@ import { StatusChip } from "@/components/chips/StatusChip";
 import { cn } from "@/lib/utils";
 import { useMemo } from "react";
 
-export type TransactionStatus = "success" | "failed" | "pending"
+export type TransactionStatus = "Successful" | "Fail" | "Pending"
 type InspectionStatusChipProps = {
   status: TransactionStatus;
 };
@@ -12,12 +12,12 @@ export const TransactionStatusChip = (props: InspectionStatusChipProps) => {
 
   const statusStyles = useMemo(() => {
     switch (status) {
-      case "pending":
+      case "Pending":
         return {
           container: "bg-barley-white-100",
           label: "text-barley-white-900",
         };
-      case "failed":
+      case "Successful":
         return {
           container: "bg-red-200",
           label: "text-red-900",

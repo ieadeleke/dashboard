@@ -7,6 +7,7 @@ export type Transaction = {
     reference: string,
     OraAgencyRev: string,
     RevName: string,
+    Status: "Pending" | "Successful" | "Fail"
     amountPaid: 20000,
     paymentRef: string,
     NotificationDetails: {

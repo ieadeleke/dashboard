@@ -170,7 +170,7 @@ export const TransactionTable = (props: TransactionTableProps) => {
               <TableCell>{item.paymentDetails? item.paymentDetails.data.auth_model : "-"}</TableCell>
               <TableCell>{formatAmount(item.amountPaid)}</TableCell>
               <TableCell>
-                <TransactionStatusChip status={item.paymentDetails ? item.paymentDetails.data.status as TransactionStatus : "failed"} />
+                <TransactionStatusChip status={item.Status as TransactionStatus} />
               </TableCell>
               <TableCell>{formatDate(item.createdAt)}</TableCell>
               <TableCell>{item.AgencyName}</TableCell>
