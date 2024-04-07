@@ -9,9 +9,9 @@ type OverviewItemProps = {
 
 export const OverviewItem = (props: OverviewItemProps) => {
   return (
-    <div className="flex items-center rounded-lg gap-4 p-4 py-10 bg-white">
+    <div className="flex items-center rounded-lg gap-4 px-2 p-4 py-10">
       <div className="flex flex-col flex-1">
-        <p className="font-medium">{props.title}</p>
+        <p className="font-medium line-clamp-1">{props.title}</p>
         <p className="font-bold">{props.description}</p>
       </div>
 

@@ -147,7 +147,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-8 my-4 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 my-4 md:grid-cols-2">
               <WeeklyDeliveries total={dashboardData.WeeklyTransactions.reduce((total, transaction) => {
                 return total + transaction.count;
               }, 0)

@@ -24,7 +24,7 @@ type AgentsTable = {
 const AgentsTable = (props: AgentsTable) => {
   const [transactions, setTransactions] = useState(props.data ?? [])
   const { fetchTransactionsByAgency, isLoading, error, data } = useFetchTransactionsByAgency()
-  const [date, setDate] = useState(getDefaultDateAsString())
+  const [date, setDate] = useState(props.dateRange ?? getDefaultDateAsString())
 
   useEffect(() => {
     setTransactions(data)
@@ -68,7 +68,7 @@ export default function Agents() {
     error,
     fetchGroupTransactions,
   } = useFetchGroupTranscations();
-  const [selectedTab, setSelectedTab] = useState<string>("LASWA");
+  const [selectedTab, setSelectedTab] = useState<string>();
   const [date, setDate] = useState(getDefaultDateAsString())
 
   function fetchData() {
@@ -105,8 +105,8 @@ export default function Agents() {
                   key={group._id}
                   onClick={() => setSelectedTab(group._id)}
                   className={cn(
-                    " rounded-lg cursor-pointer",
-                    group._id == selectedTab ? `bg-gray-200` : `bg-white`
+                    "rounded-lg cursor-pointer",
+                    group._id == selectedTab ? `bg-gray-100` : `bg-white`
                   )}
                 >
                   <OverviewItem
@@ -118,7 +118,7 @@ export default function Agents() {
                 </div>
               ))}
             </div>
-            {isLoading || <div className="mt-4">
+            {(!isLoading && selectedTab) && <div className="mt-4">
               <AgentsTable AgencyName={selectedTab} dateRange={date} />
             </div>}
           </div>

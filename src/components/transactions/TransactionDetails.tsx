@@ -35,7 +35,7 @@ type DetailItemProps = {
 
 const DetailItem = (props: DetailItemProps) => {
     return <div className="grid grid-cols-4 items-center gap-4">
-        <Label htmlFor="name" className="text-left">
+        <Label htmlFor="name" className="text-left text-gray-600">
             {props.data.title}
         </Label>
         <Input id="name" disabled value={props.data.value} className="col-span-3" />
@@ -114,7 +114,7 @@ export const TransactionDetails = forwardRef<
                 </div>
 
                 {transaction.paymentDetails && <div className="flex flex-col">
-                    <p className="text-gray-500">Payment Info</p>
+                    <p className="font-semibold text-black">Payment Info</p>
                     <div className="grid gap-4 py-4">
                         <DetailItem data={{
                             title: "Currency",
@@ -140,7 +140,7 @@ export const TransactionDetails = forwardRef<
                 </div>}
 
                 {(transaction.paymentDetails && transaction.paymentDetails.data.card) && <div className="flex flex-col">
-                    <p className="text-gray-500">Card Info</p>
+                    <p className="font-semibold text-black">Card Info</p>
                     <div className="grid gap-4 py-4">
                         <DetailItem data={{
                             title: "First 6 Digits",
@@ -162,7 +162,7 @@ export const TransactionDetails = forwardRef<
                 </div>}
 
                 {transaction.paymentDetails && <div className="flex flex-col">
-                    <p className="text-gray-500">Customer Info</p>
+                    <p className="font-semibold text-black">Customer Info</p>
                     <div className="grid gap-4 py-4">
                         <DetailItem data={{
                             title: "Name",
