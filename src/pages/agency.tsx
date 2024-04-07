@@ -104,7 +104,7 @@ export default function Agents() {
               // style={{
               //   maxWidth: width,
               // }}
-              className="w-screen m-0 p-0 h-full"
+              className="m-0 p-0 h-full"
             >
               <CarouselContent
                 // style={{
