@@ -28,6 +28,7 @@
     "@reduxjs/toolkit": "^1.9.7",
     "@svgr/webpack": "^8.1.0",
     "@tanstack/react-table": "^8.10.7",
+    "embla-carousel-react": "^8.0.0-rc22",
     "@types/node": "20.6.2",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",

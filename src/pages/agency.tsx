@@ -3,6 +3,7 @@ import DashboardLayout from "@/components/layout/dashboard";
 import { OverviewItem } from "@/components/page_components/dashboard/Overview";
 import { NetworkRequestContainer } from "@/components/states/NetworkRequestContainer";
 import { TransactionTable } from "@/components/transactions/TransactionTable";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
 import { Transaction } from "@/models/transactions";
 import { useFetchGroupTranscations } from "@/utils/apiHooks/transactions/useFetchGroupTransactions";
@@ -99,31 +100,53 @@ export default function Agents() {
         <h1 className="font-medium text-2xl">Agency</h1>
         <NetworkRequestContainer isLoading={isLoading} error={error} onRetry={fetchData}>
           <div>
-            <div className="grid grid-cols-4 gap-4">
-              {groups.map((group) => (
-                <div
-                  key={group._id}
-                  onClick={() => setSelectedTab(group._id)}
-                  className={cn(
-                    "rounded-lg cursor-pointer",
-                    group._id == selectedTab ? `bg-gray-100` : `bg-white`
-                  )}
-                >
-                  <OverviewItem
+            <Carousel
+              // style={{
+              //   maxWidth: width,
+              // }}
+              className="w-screen m-0 p-0 h-full"
+            >
+              <CarouselContent
+                // style={{
+                //   height,
+                // }}
+                className="h-[150px] p-0 m-0 !ml-0"
+              >
+                {groups.map((group) => (
+                  <CarouselItem
                     key={group._id}
-                    title={group._id}
-                    description={`${group.totalAmountPaid.toString()} transactions`}
-                    iconClassName="text-blue-800 bg-blue-300"
-                  />
-                </div>
-              ))}
-            </div>
+                    onClick={() => setSelectedTab(group._id)}
+                    className={cn(
+                      "flex items-center rounded-lg cursor-pointer mr-8",
+                      group._id == selectedTab ? `bg-gray-100` : `bg-white`
+                    )}
+                  >
+                    <OverviewItem
+                      key={group._id}
+                      title={group._id}
+                      description={`${group.totalAmountPaid.toString()} transactions`}
+                      iconClassName="text-blue-800 bg-blue-300"
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+
+              <div className="flex items-center justify-center mt-8 gap-8">
+                <CarouselPrevious
+                  className="relative text-black"
+                />
+                <CarouselNext
+                  className="relative text-black"
+                />
+
+              </div>
+            </Carousel>
             {(!isLoading && selectedTab) && <div className="mt-4">
               <AgentsTable AgencyName={selectedTab} dateRange={date} />
             </div>}
           </div>
         </NetworkRequestContainer>
-      </div>
-    </DashboardLayout>
+      </div >
+    </DashboardLayout >
   );
 }
