@@ -23,7 +23,7 @@ import { TransactionDetails, TransactionDetailsRef } from "./TransactionDetails"
 import { useDownloadReport } from "@/utils/apiHooks/transactions/useDownloadReport";
 import { LoadingModal } from "../states/LoadingModal";
 import { GlobalActionContext } from "@/context/GlobalActionContext";
-import { convertToDate } from "@/utils/data/getDefaultDate";
+import { convertDateToFormat, convertToDate } from "@/utils/data/getDefaultDate";
 import { TransactionStatus, TransactionStatusChip } from "./TransactionStatusChip";
 import Button from "../buttons";
 import { formatAmount } from "@/utils/formatters/formatAmount";
@@ -80,18 +80,19 @@ export const TransactionTable = (props: TransactionTableProps) => {
     // props.onDateApplied?.(date)
   }, [date])
 
-  const today = new Date();
-  const to = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate() - 1
-  );
-
   function showTransactionDetails(transaction: Transaction) {
     transactionDetailsRef.current?.open?.({
       data: transaction
     })
   }
+
+  useEffect(() => {
+    if (data) {
+      if (typeof data == 'string') {
+        alert("Unprocessable entity")
+      }
+    }
+  }, [data])
 
   useEffect(() => {
     if (downloadReportError) {
@@ -104,8 +105,8 @@ export const TransactionTable = (props: TransactionTableProps) => {
 
   function handleDownloadReport() {
     const dateRange = ({
-      startDate: moment(date.from).format('yyyy-mm-dd'),
-      endDate: moment(date.to).format('yyyy-mm-dd'),
+      startDate: convertDateToFormat(date.from),
+      endDate: convertDateToFormat(date.to ?? new Date()),
     });
     downloadReport(dateRange)
   }
@@ -167,7 +168,7 @@ export const TransactionTable = (props: TransactionTableProps) => {
           <TableBody onClick={() => showTransactionDetails(item)} key={item.AgencyName} className="bg-white cursor-pointer">
             <TableRow>
               <TableCell>{item.AgencyName}</TableCell>
-              <TableCell>{item.paymentDetails? item.paymentDetails.data.auth_model : "-"}</TableCell>
+              <TableCell>{item.paymentDetails ? capitalizeFirstLetter(item.paymentDetails.data.payment_type) : "-"}</TableCell>
               <TableCell>{formatAmount(item.amountPaid)}</TableCell>
               <TableCell>
                 <TransactionStatusChip status={item.Status as TransactionStatus} />
@@ -184,3 +185,8 @@ export const TransactionTable = (props: TransactionTableProps) => {
     </div>
   );
 };
+
+
+function capitalizeFirstLetter(value: string) {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
