@@ -9,6 +9,7 @@ import { Transaction } from "@/models/transactions";
 import { useFetchGroupTranscations } from "@/utils/apiHooks/transactions/useFetchGroupTransactions";
 import { useFetchTransactionsByAgency } from "@/utils/apiHooks/transactions/useFetchTransactionsByAgency";
 import { convertDateToFormat, getDefaultDateAsString } from "@/utils/data/getDefaultDate";
+import { formatAmount } from "@/utils/formatters/formatAmount";
 import moment from "moment";
 import { useEffect, useMemo, useState } from "react";
 
@@ -124,7 +125,7 @@ export default function Agents() {
                     <OverviewItem
                       key={group._id}
                       title={group._id}
-                      description={`${group.totalAmountPaid.toString()} transactions`}
+                      description={`₦${formatAmount(group.totalAmountPaid.toString())} transactions`}
                       iconClassName="text-blue-800 bg-blue-300"
                     />
                   </CarouselItem>
