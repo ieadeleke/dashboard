@@ -165,7 +165,7 @@ export const TransactionTable = (props: TransactionTableProps) => {
         </TableHeader>
 
         {transactions.map((item) => (
-          <TableBody onClick={() => showTransactionDetails(item)} key={item.AgencyName} className="bg-white cursor-pointer">
+          <TableBody onClick={() => showTransactionDetails(item)} key={item.PayerName} className="bg-white cursor-pointer">
             <TableRow>
               <TableCell>{item.AgencyName}</TableCell>
               <TableCell>{item.paymentDetails ? capitalizeFirstLetter(item.paymentDetails.data.payment_type) : "-"}</TableCell>

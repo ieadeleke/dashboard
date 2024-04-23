@@ -12,9 +12,7 @@ export type GetGroupedTransactionsResponse = ApiResponse & {
 }
 
 export type GetTransactionByReferenceParams = {
-    reference: string,
-    startDate?: string,
-    endDate?: string
+    reference: string
 }
 
 export type GetTransactionByAgencyParams = {

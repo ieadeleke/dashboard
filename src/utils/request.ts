@@ -6,7 +6,8 @@ type RequestType = "GET" | "POST" | "PUT" | "DELETE"
 type RequestConfig = {
     path: string,
     method?: RequestType,
-    body?: any
+    body?: any,
+    headers?: any
 }
 
 
@@ -19,6 +20,7 @@ export async function request(params: RequestConfig) {
             method: params.method ?? "POST",
             data: params.body,
             headers: {
+                ...params.headers,
                 "Authorization": token ? `Bearer ${token}` : undefined
             }
         })

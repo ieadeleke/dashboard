@@ -53,6 +53,9 @@ export function TransactionService() {
         const data = await request({
             path: `v1/admin/Transaction/DownloadReport`,
             body: payload,
+            headers: {
+                Accept: 'application/csv'
+            },
             method: "PUT"
         })
         return data as GetTransactionByPaymentRefResponse
