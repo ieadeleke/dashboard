@@ -63,6 +63,13 @@ export type Transaction = {
             }
         }
     },
+    subaccounts?: ({
+        id: string,
+        transaction_charge_type: string,
+        transaction_charge: number,
+        account_number: string,
+        account_bank: string
+    })[],
     createdAt: string,
     updatedAt: string
 }

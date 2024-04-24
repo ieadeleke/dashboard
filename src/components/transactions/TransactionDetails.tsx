@@ -161,6 +161,28 @@ export const TransactionDetails = forwardRef<
                     </div>
                 </div>}
 
+                {transaction.subaccounts && <div className="flex flex-col">
+                    <p className="font-semibold text-black">Settlements</p>
+                    <div className="grid gap-4 py-4">
+                        {transaction.subaccounts.map((account) => {
+                            return <div key={account.id} className="flex flex-col gap-2 border-b pb-8">
+                                <DetailItem data={{
+                                    title: "Account Number",
+                                    value: account.account_number
+                                }} />
+                                <DetailItem data={{
+                                    title: "Sort Code",
+                                    value: account.account_bank
+                                }} />
+                                <DetailItem data={{
+                                    title: "Amount",
+                                    value: formatAmount(account.transaction_charge)
+                                }} />
+                            </div>
+                        })}
+                    </div>
+                </div>}
+
                 {transaction.paymentDetails && <div className="flex flex-col">
                     <p className="font-semibold text-black">Customer Info</p>
                     <div className="grid gap-4 py-4">
