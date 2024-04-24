@@ -28,6 +28,7 @@ import { TransactionStatus, TransactionStatusChip } from "./TransactionStatusChi
 import Button from "../buttons";
 import { formatAmount } from "@/utils/formatters/formatAmount";
 import { formatDate } from "@/utils/formatters/formatDate";
+import { TablePagination } from "../pagination/TablePagination";
 
 type TransactionTableProps = {
   name: string;
@@ -35,6 +36,11 @@ type TransactionTableProps = {
   isLoading?: boolean;
   error?: string | null;
   fetchData?: () => void,
+  onPageChange?: (value: {
+    selected: number;
+  }) => void,
+  page: number,
+  count: number,
   dateRange?: {
     startDate: string,
     endDate: string
@@ -181,6 +187,25 @@ export const TransactionTable = (props: TransactionTableProps) => {
           </TableBody>
         ))}
       </Table>
+
+      <div className="flex justify-center">
+        <TablePagination
+          breakLabel="..."
+          nextLabel=">"
+          onPageChange={props.onPageChange}
+          pageRangeDisplayed={5}
+          currentPage={props.page}
+          pageCount={Math.max(0, props.count / 20)}
+          // pageCount={1}
+          className="flex gap-4"
+          nextClassName="text-gray-500"
+          previousClassName="text-gray-500"
+          pageClassName="flex w-8 h-7 bg-white justify-center items-center text-sm text-gray-500 rounded-sm outline outline-2 outline-gray-100 text-center"
+          activeClassName="!bg-primary text-white !outline-none"
+          previousLabel="<"
+          renderOnZeroPageCount={null}
+        />
+      </div>
       {props.isLoading ? <Loading /> : props.error && <Error onRetry={props.fetchData} message={props.error} />}
     </div>
   );

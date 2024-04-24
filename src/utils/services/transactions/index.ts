@@ -6,7 +6,7 @@ export function TransactionService() {
 
     async function getTransactions(payload: GetTransactionsParams) {
         const data = await request({
-            path: `v1/admin/Transaction/GetTransactions`,
+            path: `v1/admin/Transaction/GetTransactions?page=${payload.page ?? 1}`,
             method: "PUT",
             body: payload
         })
@@ -15,7 +15,7 @@ export function TransactionService() {
 
     async function getGroupedTransactions(payload: GetTransactionsParams) {
         const data = await request({
-            path: `v1/admin/Transaction/GetTransactionsGrouped`,
+            path: `v1/admin/Transaction/GetTransactionsGrouped?page=${payload.page ?? 1}`,
             body: payload,
             method: "PUT"
         })
@@ -24,7 +24,7 @@ export function TransactionService() {
 
     async function getTransactionsByReference(payload: GetTransactionByReferenceParams) {
         const data = await request({
-            path: `v1/admin/Transaction/GetTransactionByReference`,
+            path: `v1/admin/Transaction/GetTransactionByReference?page=${payload.page ?? 1}`,
             body: payload,
             method: "PUT"
         })
@@ -33,7 +33,7 @@ export function TransactionService() {
 
     async function getTransactionsByAgency(payload: GetTransactionByAgencyParams) {
         const data = await request({
-            path: `v1/admin/Transaction/GetTransactionAgency`,
+            path: `v1/admin/Transaction/GetTransactionAgency?page=${payload.page ?? 1}`,
             body: payload,
             method: "PUT"
         })

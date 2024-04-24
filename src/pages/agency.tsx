@@ -25,8 +25,9 @@ type AgentsTable = {
 
 const AgentsTable = (props: AgentsTable) => {
   const [transactions, setTransactions] = useState(props.data ?? [])
-  const { fetchTransactionsByAgency, isLoading, error, data } = useFetchTransactionsByAgency()
+  const { fetchTransactionsByAgency, isLoading, error, data, count } = useFetchTransactionsByAgency()
   const [date, setDate] = useState(props.dateRange ?? getDefaultDateAsString())
+  const [page, setPage] = useState(1)
 
   useEffect(() => {
     setTransactions(data)
@@ -50,12 +51,19 @@ const AgentsTable = (props: AgentsTable) => {
     });
   }
 
+  function onPageChange(selectedItem: {
+    selected: number;
+  }) {
+    setPage(selectedItem.selected)
+  }
+
   return <div>
     <TransactionTable
       onDateApplied={onDateApplied}
       name={`Recent Transactions for ${props.AgencyName}`}
       transactions={transactions}
       isLoading={isLoading}
+      count={count} page={page} onPageChange={onPageChange}
       error={error}
       dateRange={props.dateRange}
       fetchData={fetchData}
@@ -125,7 +133,7 @@ export default function Agents() {
                     <OverviewItem
                       key={group._id}
                       title={group._id}
-                      description={`₦${formatAmount(group.totalAmountPaid.toString())} transactions`}
+                      description={`₦${formatAmount(group.totalAmountPaid.toLocaleString())} transactions`}
                       iconClassName="text-blue-800 bg-blue-300"
                     />
                   </CarouselItem>

@@ -7,8 +7,9 @@ import { useFetchTransactionsByReference } from "@/utils/apiHooks/transactions/u
 import { useRef, useState } from "react";
 
 export default function WebTransactions() {
-    const { isLoading, error, data, fetchTransactionsByReference } = useFetchTransactionsByReference()
+    const { isLoading, error, data, count, fetchTransactionsByReference } = useFetchTransactionsByReference()
     const [paymentRef, setPaymentRef] = useState("")
+    const [page, setPage] = useState(1)
     const transactionDetailsRef = useRef<TransactionDetailsRef>(null)
 
     function submit() {
@@ -17,6 +18,12 @@ export default function WebTransactions() {
                 reference: paymentRef.trim()
             })
         }
+    }
+
+    function onPageChange(selectedItem: {
+        selected: number;
+    }) {
+        setPage(selectedItem.selected)
     }
 
     return <DashboardLayout>
@@ -30,7 +37,7 @@ export default function WebTransactions() {
                 <Button variant="outlined" onClick={submit} isLoading={isLoading} disabled={isLoading}>Get Transactions</Button>
             </div>
 
-            <TransactionTable isLoading={isLoading} error={error} fetchData={submit} transactions={data} name="All Transactions" />
+            <TransactionTable count={count} page={page} onPageChange={onPageChange} isLoading={isLoading} error={error} fetchData={submit} transactions={data} name="All Transactions" />
         </div>
     </DashboardLayout>
 }

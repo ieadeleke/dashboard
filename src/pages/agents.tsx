@@ -6,7 +6,7 @@ export default function Agents() {
     <DashboardLayout>
       <div className="flex flex-col px-4 py-8 gap-8">
         <div>
-          <TransactionTable name="Recent Transactions" transactions={[]} />
+          {/* <TransactionTable name="Recent Transactions" transactions={[]} /> */}
         </div>
       </div>
     </DashboardLayout>

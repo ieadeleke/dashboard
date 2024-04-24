@@ -12,8 +12,10 @@ export default function Transactionss() {
         data: transactions,
         error,
         fetchTransactions,
+        count
     } = useFetchTranscations();
     const [date, setDate] = useState(getDefaultDateAsString())
+    const [page, setPage] = useState(1)
 
     useEffect(() => {
         fetchData()
@@ -32,6 +34,14 @@ export default function Transactionss() {
         })
     }
 
+
+    function onPageChange(selectedItem: {
+        selected: number;
+    }) {
+        setPage(selectedItem.selected)
+    }
+
+
     return (
         <DashboardLayout>
             <div className="flex flex-col px-4 py-8 gap-8">
@@ -44,6 +54,7 @@ export default function Transactionss() {
                         {(!isLoading && !error) && <TransactionTable
                             name=""
                             transactions={transactions}
+                            count={count} page={page} onPageChange={onPageChange}
                             isLoading={isLoading}
                             fetchData={fetchData}
                             dateRange={date}

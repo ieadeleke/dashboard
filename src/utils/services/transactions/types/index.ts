@@ -3,22 +3,26 @@ import { GroupedTransactions, Transaction } from "@/models/transactions"
 
 export type GetTransactionsParams = {
     startDate: string,
-    endDate: string
+    endDate: string,
+    page?: number
 }
 
 export type GetGroupedTransactionsResponse = ApiResponse & {
     transactions: GroupedTransactions[],
+    page?: number,
     count: number
 }
 
 export type GetTransactionByReferenceParams = {
-    reference: string
+    reference: string,
+    page?: number
 }
 
 export type GetTransactionByAgencyParams = {
     AgencyName: string,
     startDate?: string,
-    endDate?: string
+    endDate?: string,
+    page?: number
 }
 
 export type DownloadReportParams = {

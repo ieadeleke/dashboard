@@ -7,14 +7,16 @@ import { Transaction } from "@/models/transactions"
 export const useFetchTranscations = () => {
     const [data, setData] = useState<Transaction[]>([])
     const { isLoading, error, execute } = useApi()
+    const [count, setCount] = useState(0)
 
     async function fetchTransactions(params: GetTransactionsParams) {
         setData([])
         const response = await execute(async () => await TransactionService().getTransactions(params))
         if (response) {
             setData(response.Transaction)
+            setCount(response.count)
         }
     }
 
-    return { isLoading, error, data, fetchTransactions }
+    return { isLoading, error, data, fetchTransactions, count }
 }

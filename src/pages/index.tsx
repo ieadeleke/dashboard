@@ -94,8 +94,10 @@ export default function Home() {
     data: transactions,
     error,
     fetchTransactions,
+    count,
   } = useFetchTranscations();
   const [date, setDate] = useState(getDefaultDateAsString())
+  const [page, setPage] = useState(1)
 
   useEffect(() => {
     if (dashboardData) {
@@ -108,7 +110,10 @@ export default function Home() {
   }, [])
 
   function fetchData() {
-    fetchTransactions(date);
+    fetchTransactions({
+      ...date,
+      page
+    });
   }
 
   useEffect(() => {
@@ -121,6 +126,13 @@ export default function Home() {
       endDate: convertDateToFormat(date.to ?? new Date()),
     });
   }
+
+  function onPageChange(selectedItem: {
+    selected: number;
+  }) {
+    setPage(selectedItem.selected)
+  }
+
 
   return (
     <DashboardLayout>
@@ -179,6 +191,7 @@ export default function Home() {
             </div>
             <TransactionTable
               name="Recent Transactions"
+              count={count} page={page} onPageChange={onPageChange}
               transactions={transactions}
               isLoading={isLoading}
               fetchData={fetchData}
