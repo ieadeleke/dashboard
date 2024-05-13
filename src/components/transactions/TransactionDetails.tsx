@@ -201,7 +201,7 @@ export const TransactionDetails = forwardRef<
                     </div>
                 </div>}
                 <DialogFooter className="gap-4">
-                    {transaction.paymentDetails && <Button variant="outlined" onClick={handlePrintReceipt} type="submit">Print Receipt</Button>}
+                    {transaction.NotificationDetails && <Button variant="outlined" onClick={handlePrintReceipt} type="submit">Print Receipt</Button>}
 
                     {/* {transaction.paymentDetails && transaction.paymentDetails.data.status == 'successful' ? <Button variant="outlined" onClick={handlePrintReceipt} type="submit">Print Receipt</Button> : <Button variant="outlined" onClick={handleGenerateReceipt} type="submit">Generate Receipt</Button>} */}
                     <Button onClick={closeModal} type="submit">Done</Button>
