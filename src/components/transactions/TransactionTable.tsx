@@ -160,6 +160,7 @@ export const TransactionTable = (props: TransactionTableProps) => {
         <TableHeader className="bg-primary rounded-xl">
           <TableRow>
             <TableHead className="text-white">Name</TableHead>
+            <TableHead className="text-white">Bill Reference</TableHead>
             <TableHead className="text-white">Payment Method</TableHead>
             <TableHead className="text-white">Amount</TableHead>
             <TableHead className="text-white">Status</TableHead>
@@ -174,6 +175,7 @@ export const TransactionTable = (props: TransactionTableProps) => {
           <TableBody onClick={() => showTransactionDetails(item)} key={item.AgencyName} className="bg-white cursor-pointer">
             <TableRow>
               <TableCell>{item.PayerName}</TableCell>
+              <TableCell>{item.reference}</TableCell>
               <TableCell>{item.paymentDetails ? capitalizeFirstLetter(item.paymentDetails.data.payment_type) : "-"}</TableCell>
               <TableCell>{formatAmount(item.amountPaid)}</TableCell>
               <TableCell>
