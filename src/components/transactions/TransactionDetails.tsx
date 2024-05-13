@@ -84,6 +84,10 @@ export const TransactionDetails = forwardRef<
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                     <DetailItem data={{
+                        title: "Bill reference",
+                        value: transaction.reference
+                    }} />
+                    <DetailItem data={{
                         title: "Payer Name",
                         value: transaction.PayerName
                     }} />
