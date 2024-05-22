@@ -12,13 +12,13 @@ type LayoutProps = {
 export default function DashboardLayout(props: LayoutProps) {
   return (
     <div className="relative max-w-[2000px] flex mx-auto">
-      <div className="hidden h-screen mx-auto sticky top-0 bottom-0 w-auto md:flex lg:w-[20%]">
+      <div className="hidden h-screen sticky top-0 bottom-0 w-auto md:flex md:max-w-[20%]">
         <div className="w-full h-screen max-h-[1000px] overflow-y-hidden">
           <MenuSideBar />
         </div>
       </div>
 
-      <div className="w-full relative">
+      <div className="relative md:w-[80%]">
         <NavBar />
         {props.children}
       </div>
