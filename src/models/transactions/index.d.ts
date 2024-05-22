@@ -3,6 +3,8 @@ export type Transaction = {
     AgencyCode: string,
     AgencyName: string,
     PayerName: string,
+    email: string,
+    mobile: string,
     RevenueCode: string,
     reference: string,
     OraAgencyRev: string,

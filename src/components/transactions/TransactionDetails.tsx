@@ -165,6 +165,16 @@ export const TransactionDetails = forwardRef<
                     </div>
                 </div>}
 
+                {(transaction.paymentDetails && transaction.paymentDetails.data.customer) && <div className="flex flex-col">
+                    <p className="font-semibold text-black">Customer</p>
+                    <div className="grid gap-4 py-4">
+                        <DetailItem data={{
+                            title: "Name",
+                            value: `${transaction.paymentDetails.data.customer.name}`
+                        }} />
+                    </div>
+                </div>}
+
                 {transaction.subaccounts && <div className="flex flex-col">
                     <p className="font-semibold text-black">Settlements</p>
                     <div className="grid gap-4 py-4">
@@ -187,7 +197,7 @@ export const TransactionDetails = forwardRef<
                     </div>
                 </div>}
 
-                {transaction.paymentDetails && <div className="flex flex-col">
+                {transaction.paymentDetails ? <div className="flex flex-col">
                     <p className="font-semibold text-black">Customer Info</p>
                     <div className="grid gap-4 py-4">
                         <DetailItem data={{
@@ -201,6 +211,22 @@ export const TransactionDetails = forwardRef<
                         <DetailItem data={{
                             title: "Phone Number",
                             value: transaction.paymentDetails.data.customer.phone_number
+                        }} />
+                    </div>
+                </div> : <div className="flex flex-col">
+                    <p className="font-semibold text-black">Customer Info</p>
+                    <div className="grid gap-4 py-4">
+                        <DetailItem data={{
+                            title: "Name",
+                            value: transaction.PayerName
+                        }} />
+                        <DetailItem data={{
+                            title: "Email",
+                            value: transaction.email
+                        }} />
+                        <DetailItem data={{
+                            title: "Phone Number",
+                            value: transaction.mobile
                         }} />
                     </div>
                 </div>}
