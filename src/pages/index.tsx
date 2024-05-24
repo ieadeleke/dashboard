@@ -97,13 +97,13 @@ export default function Home() {
     count,
   } = useFetchTranscations();
   const [date, setDate] = useState(getDefaultDateAsString())
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(0)
 
   useEffect(() => {
     if (dashboardData) {
       fetchData()
     }
-  }, [dashboardData])
+  }, [dashboardData, page])
 
   useEffect(() => {
     getDashboardInfo()
@@ -112,7 +112,7 @@ export default function Home() {
   function fetchData() {
     fetchTransactions({
       ...date,
-      page
+      page: page + 1
     });
   }
 
