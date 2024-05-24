@@ -39,7 +39,7 @@ export const MenuSideBar = () => {
     return (
         <div className="w-full h-full flex flex-col gap-8 items-center bg-white overflow-y-scroll no-scrollbar px-0 py-6 lg:px-2 lg:items-start">
             <ConfirmationAlertDialog ref={confirmationDialogRef} />
-            <Link className="mx-auto flex items-center gap-8" href="/dashboard" passHref>
+            <Link className="mx-auto flex items-center gap-8" href="/" passHref>
 
                 <MenuIcon className="text-primary" />
                 <h1 className='font-bold'>Pay4It</h1>
