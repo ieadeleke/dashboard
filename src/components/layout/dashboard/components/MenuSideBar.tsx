@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { Divider } from '@/components/Divider'
 import { ConfirmationAlertDialog, ConfirmationAlertDialogRef } from '@/components/dialogs/ConfirmationAlertDialog'
 import { useRef } from 'react'
-import { PhoneIcon, SearchIcon } from 'lucide-react'
+import { PhoneIcon, RecycleIcon, SearchIcon } from 'lucide-react'
 import { logOut } from '@/utils/auth/logout'
 
 
@@ -51,6 +51,7 @@ export const MenuSideBar = () => {
                 {/* <ListItem startIcon={<AgentsIcon />} name="Agents" href="/agents" /> */}
                 <ListItem startIcon={<AgencyIcon />} name="Agency" href="/agency" />
                 <ListItem startIcon={<SearchIcon />} name="Payment Reference" href="/web-transactions" />
+                <ListItem startIcon={<RecycleIcon />} name="Settlement Accounts" href="/settlement-accounts" />
                 <ListItem startIcon={<TransactionIcon />} name="Transactions" href="/transactions" />
                 <Divider />
                 <div
