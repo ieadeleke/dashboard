@@ -27,7 +27,7 @@ const AgentsTable = (props: AgentsTable) => {
   const [transactions, setTransactions] = useState(props.data ?? [])
   const { fetchTransactionsByAgency, isLoading, error, data, count } = useFetchTransactionsByAgency()
   const [date, setDate] = useState(props.dateRange ?? getDefaultDateAsString())
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(0)
 
   useEffect(() => {
     setTransactions(data)

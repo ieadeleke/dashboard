@@ -15,11 +15,11 @@ export default function Transactionss() {
         count
     } = useFetchTranscations();
     const [date, setDate] = useState(getDefaultDateAsString())
-    const [page, setPage] = useState(1)
+    const [page, setPage] = useState(0)
 
     useEffect(() => {
         fetchData()
-    }, [date]);
+    }, [date, page]);
 
     function onDateApplied(date: DateRange) {
         setDate({
@@ -30,7 +30,8 @@ export default function Transactionss() {
 
     function fetchData() {
         fetchTransactions({
-            ...date
+            ...date,
+            page: page +1
         })
     }
 
