@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { Divider } from '@/components/Divider'
 import { ConfirmationAlertDialog, ConfirmationAlertDialogRef } from '@/components/dialogs/ConfirmationAlertDialog'
 import { useRef } from 'react'
-import { PhoneIcon, RecycleIcon, SearchIcon } from 'lucide-react'
+import { RecycleIcon, SearchIcon } from 'lucide-react'
 import { logOut } from '@/utils/auth/logout'
 
 
