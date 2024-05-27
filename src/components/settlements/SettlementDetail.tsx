@@ -143,7 +143,7 @@ export const SettlementDetails = forwardRef<
                         <p className="font-semibold text-black">Transactions</p>
 
                         {(settlement.transactions ?? []).map((transaction) => {
-                            return <div className="flex flex-col gap-4 mb-4">
+                            return <div key={transaction.id} className="flex flex-col gap-4 mb-4">
                                 <DetailItem data={{
                                     title: "Customer Email",
                                     value: transaction.customer_email
