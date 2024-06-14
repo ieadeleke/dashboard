@@ -1,0 +1,18 @@
+.container {
+    display: block;
+    padding: 0px 0px;
+}
+.container *{
+    transition: 'all ease 2s',
+}
+
+.imageContainer {
+    display: block;
+    position: relative;
+    padding: 0px 0px;
+}
+.loadMoreContainer{
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}

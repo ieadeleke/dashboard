@@ -1,0 +1,15 @@
+.container{
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+}
+.title{
+    text-align: center;
+}
+
+.message{
+    text-align: center;
+}
