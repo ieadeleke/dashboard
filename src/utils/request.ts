@@ -7,7 +7,8 @@ type RequestConfig = {
     path: string,
     method?: RequestType,
     body?: any,
-    headers?: any
+    headers?: any,
+    responseType?: any
 }
 
 
@@ -19,6 +20,7 @@ export async function request(params: RequestConfig) {
         const { data } = await axios(url, {
             method: params.method ?? "POST",
             data: params.body,
+            responseType: params?.responseType,
             headers: {
                 ...params.headers,
                 "Authorization": token ? `Bearer ${token}` : undefined
