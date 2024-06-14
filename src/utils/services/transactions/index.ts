@@ -56,7 +56,7 @@ export function TransactionService() {
             headers: {
                 Accept: 'application/csv'
             },
-            method: "PUT"
+            method: "GET"
         })
         return data as GetTransactionByPaymentRefResponse
     }
