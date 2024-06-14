@@ -15,7 +15,7 @@ import Button from "../buttons";
 import { formatDate } from "@/utils/formatters/formatDate";
 import { formatAmount } from "@/utils/formatters/formatAmount";
 import { capitalizeFirstLetter } from "@/utils/formatters/capitalizeFirstLetter";
-import { useFetchSettlement } from "@/utils/apiHooks/settlements/useFetchSettlement";
+import { useFetchSettlementTransactions } from "@/utils/apiHooks/settlements/useFetchSettlementTransactions";
 import { NetworkRequestContainer } from "../states/NetworkRequestContainer";
 import { Divider } from "../Divider";
 
@@ -52,7 +52,7 @@ export const SettlementDetails = forwardRef<
 >((_, ref) => {
     const [isVisible, setIsVisible] = useState(false);
     const [settlement, setSettlement] = useState<Settlement>();
-    const { fetchSettlement, isLoading: isFetchSettlementLoading, error: fetchSettlementError, data: fetchedSettlements } = useFetchSettlement()
+    const { fetchSettlementTransactions, isLoading: isFetchSettlementLoading, error: fetchSettlementError, data: fetchedSettlements } = useFetchSettlementTransactions()
 
     useImperativeHandle(ref, () => ({
         open(payload: SettlementDetailsPayload) {
@@ -66,7 +66,7 @@ export const SettlementDetails = forwardRef<
 
     function fetchData() {
         if (settlement) {
-            fetchSettlement(settlement.id)
+            fetchSettlementTransactions(settlement.id)
         }
     }
 

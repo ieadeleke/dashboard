@@ -1,53 +1,53 @@
-import { request } from "@/utils/request"
-import { GetAllSettlementsParams, GetSettlementAccountsParams } from "./types"
-import { ApiResponse } from "../types"
-import { Settlement, SettlementAccount } from "@/models/settlements"
+import { request } from "@/utils/request";
+import {
+  GetAccountSettlementParams,
+  GetSettlementAccountsParams,
+} from "./types";
+import { ApiResponse } from "../types";
+import { Settlement, SettlementAccount } from "@/models/settlements";
 
 const getSettlementAccounts = async (payload: GetSettlementAccountsParams) => {
-    const data = await request({
-        path: `v1/admin/Transaction/GetSettlementAccounts?page=${payload.page ?? 1}`,
-        method: "GET"
-    })
-    return data as ApiResponse & {
-        SettlementAccounts: SettlementAccount[],
-        count: number
-    }
-}
+  const data = await request({
+    path: `v1/settlement/GetSettlementAccount?page=${payload.page ?? 1}`,
+    method: "GET",
+  });
+  return data as ApiResponse & {
+    SettlementAccounts: SettlementAccount[];
+    count: number;
+  };
+};
 
-const getAllSettlements = async (payload: GetAllSettlementsParams) => {
-    const data = await request({
-        path: `v1/admin/Transaction/GetAllSettlement?page=${payload.page ?? 1}&subaccount_id=${payload.subaccount_id}&from=${payload.from}&to=${payload.to}`,
-        method: "GET"
-    })
-    return data as ApiResponse & {
-        Settlements: {
-            data: Settlement[],
-            meta: {
-                page_info: {
-                    total: number,
-                    current_page: number,
-                    total_pages: number,
-                    page_size: number
-                }
-            }
-        }
-    }
-}
+const getAccountSettlements = async (params: GetAccountSettlementParams) => {
+  const data = await request({
+    path: `v1/settlement/GetAccountSettlement?page=${
+      params.page ?? 1
+    }&from=${params.from}&to=${params.to}`,
+    method: "PUT",
+    body: {
+      account_number: params.account_number,
+    },
+  });
+  return data as ApiResponse & {
+    AccountSettlement: Settlement[];
+    count: number;
+  };
+};
 
-const getSettlement = async (id: string) => {
-    const data = await request({
-        path: `v1/admin/Transaction/GetSettlement?id=${id}`,
-        method: "GET"
-    })
-    return data as ApiResponse & {
-        Settlements: {
-            data: Settlement
-        }
-    }
-}
+const getSettlementTransactions = async (settlement_id: string) => {
+  const data = await request({
+    path: `v1/settlement/GetAccountTransaction`,
+    method: "PUT",
+    body: {
+      settlementId: settlement_id,
+    },
+  });
+  return data as ApiResponse & {
+    settlement: Settlement | null;
+  };
+};
 
 export const settlementService = {
-    getSettlementAccounts,
-    getAllSettlements,
-    getSettlement
-}
+  getSettlementAccounts,
+  getAccountSettlements,
+  getSettlementTransactions,
+};

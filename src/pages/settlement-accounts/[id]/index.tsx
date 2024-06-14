@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { DateRange } from "@/components/calendar/CalendarRange";
 import { convertDateToFormat, getDefaultDateAsString } from "@/utils/data/getDefaultDate";
 import { NetworkRequestContainer } from "@/components/states/NetworkRequestContainer";
-import { useFetchAllSettlements } from "@/utils/apiHooks/settlements/useFetchAllSettlements";
+import { useFetchAccountSettlements } from "@/utils/apiHooks/settlements/useFetchAllSettlements";
 import { useRouter } from "next/router";
 import { SettlementTable } from "@/components/settlements/SettlementTable";
 
@@ -12,9 +12,9 @@ export default function Settlements() {
         isLoading,
         data: settlements,
         error,
-        fetchAllSettlements,
+        fetchAccountSettlements,
         count
-    } = useFetchAllSettlements();
+    } = useFetchAccountSettlements();
     const router = useRouter()
     const [date, setDate] = useState(getDefaultDateAsString())
     const [page, setPage] = useState(0)
@@ -31,10 +31,10 @@ export default function Settlements() {
     }
 
     function fetchData() {
-        fetchAllSettlements({
+        fetchAccountSettlements({
             from: date.startDate,
             to: date.endDate,
-            subaccount_id: router.query.id as string,
+            account_number: router.query.id as string,
             page: page + 1
         })
     }
