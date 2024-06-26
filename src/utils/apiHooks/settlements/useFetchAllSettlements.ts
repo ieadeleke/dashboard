@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useApi } from "../index";
 import { settlementService } from "@/utils/services/settlements";
 import { GetAllSettlementsParams } from "@/utils/services/settlements/types";
-import { Settlement } from "@/models/settlements";
+import { GetAccountSettlementResponse, Settlement } from "@/models/settlements";
 
 export const useFetchAccountSettlements = () => {
-  const [data, setData] = useState<Settlement[]>([]);
+  const [data, setData] = useState<GetAccountSettlementResponse[]>([]);
   const { isLoading, error, execute } = useApi();
   const [count, setCount] = useState(0);
 

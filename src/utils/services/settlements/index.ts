@@ -4,7 +4,11 @@ import {
   GetSettlementAccountsParams,
 } from "./types";
 import { ApiResponse } from "../types";
-import { Settlement, SettlementAccount } from "@/models/settlements";
+import {
+  GetAccountSettlementResponse,
+  Settlement,
+  SettlementAccount,
+} from "@/models/settlements";
 
 const getSettlementAccounts = async (payload: GetSettlementAccountsParams) => {
   const data = await request({
@@ -19,30 +23,30 @@ const getSettlementAccounts = async (payload: GetSettlementAccountsParams) => {
 
 const getAccountSettlements = async (params: GetAccountSettlementParams) => {
   const data = await request({
-    path: `v1/settlement/GetAccountSettlement?page=${
-      params.page ?? 1
-    }&from=${params.from}&to=${params.to}`,
+    path: `v1/settlement/GetAccountSettlement?page=${params.page ?? 1}&from=${
+      params.from
+    }&to=${params.to}`,
     method: "PUT",
     body: {
       account_number: params.account_number,
     },
   });
   return data as ApiResponse & {
-    AccountSettlement: Settlement[];
+    AccountSettlement: GetAccountSettlementResponse[];
     count: number;
   };
 };
 
 const getSettlementTransactions = async (settlement_id: string) => {
   const data = await request({
-    path: `v1/settlement/GetAccountTransaction`,
+    path: `v1/settlement/GetSettlementTransaction`,
     method: "PUT",
     body: {
       settlementId: settlement_id,
     },
   });
   return data as ApiResponse & {
-    settlement: Settlement | null;
+    settlement: GetAccountSettlementResponse | null;
   };
 };
 
