@@ -150,11 +150,11 @@ export const SettlementTable = (props: SettlementTableProps) => {
             className="bg-white cursor-pointer"
           >
             <TableRow>
-              <TableCell>#{formatAmount(item.amountSettle)}</TableCell>
+              <TableCell>{formatAmount(item.amountSettle)}</TableCell>
               <TableCell>{item.account_number}</TableCell>
               <TableCell>{item.bank_name}</TableCell>
               <TableCell>{formatDate(item.SettleDate)}</TableCell>
-              <TableCell>#{formatAmount(item.serviceCharge)}</TableCell>
+              <TableCell>{formatAmount(item.serviceCharge)}</TableCell>
               <TableCell>
                 <SettlementStatusChip
                   status={item.settlementStatus ? "completed" : "pending"}
