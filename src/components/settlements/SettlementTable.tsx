@@ -132,7 +132,7 @@ export const SettlementTable = (props: SettlementTableProps) => {
       <Table>
         <TableHeader className="bg-primary rounded-xl">
           <TableRow>
-            <TableHead className="text-white">Account Name</TableHead>
+            <TableHead className="text-white">Amount Settled</TableHead>
             <TableHead className="text-white">Account Number</TableHead>
             <TableHead className="text-white">Bank Name</TableHead>
             <TableHead className="text-white">Settle Date</TableHead>
@@ -150,7 +150,7 @@ export const SettlementTable = (props: SettlementTableProps) => {
             className="bg-white cursor-pointer"
           >
             <TableRow>
-              <TableCell>{item.account_name}</TableCell>
+              <TableCell>#{formatAmount(item.amountSettle)}</TableCell>
               <TableCell>{item.account_number}</TableCell>
               <TableCell>{item.bank_name}</TableCell>
               <TableCell>{formatDate(item.SettleDate)}</TableCell>
