@@ -1,6 +1,7 @@
 import Button from "@/components/buttons";
 import notFoundImage from "@/assets/images/404_image.png";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function EkoMile404Page() {
   return (
@@ -19,7 +20,7 @@ export default function EkoMile404Page() {
         </div>
 
         <div className="flex flex-col">
-          <img
+          <Image alt="404" width={0} height={0} style={{width: "100%", height: "auto"}}
             className="w-[200px] self-center md:w-[400px]"
             src={notFoundImage.src}
           />

@@ -105,11 +105,30 @@ export default function Agents() {
 
   return (
     <DashboardLayout>
-      <div className="flex flex-col px-4 py-8 gap-8">
+      <div className="flex flex-col px-8 py-8 gap-8">
         <h1 className="font-medium text-2xl">Agency</h1>
         <NetworkRequestContainer isLoading={isLoading} error={error} onRetry={fetchData}>
           <div>
-            <Carousel
+            <div className="grid grid-cols-3 gap-8">
+              {groups.map((group) => (
+                <div
+                  key={group._id}
+                  onClick={() => setSelectedTab(group._id)}
+                  className={cn(
+                    "flex items-center rounded-lg cursor-pointer",
+                    group._id == selectedTab ? `bg-gray-100` : `bg-white`
+                  )}
+                >
+                  <OverviewItem
+                    key={group._id}
+                    title={group._id}
+                    description={`${formatAmount(Number(group.totalAmountPaid))} transactions`}
+                    iconClassName="text-blue-800 bg-blue-300"
+                  />
+                </div>
+              ))}
+            </div>
+            {/* <Carousel
               // style={{
               //   maxWidth: width,
               // }}
@@ -149,7 +168,7 @@ export default function Agents() {
                 />
 
               </div>
-            </Carousel>
+            </Carousel> */}
             {(!isLoading && selectedTab) && <div className="mt-4">
               <AgentsTable AgencyName={selectedTab} dateRange={date} />
             </div>}

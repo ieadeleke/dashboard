@@ -11,7 +11,7 @@ import {
   ConfirmationAlertDialogRef,
 } from "@/components/dialogs/ConfirmationAlertDialog";
 import { useRef } from "react";
-import { RecycleIcon, SearchIcon, Settings2Icon, UserIcon } from "lucide-react";
+import { RecycleIcon, SearchIcon, Settings2Icon, UserIcon, UserSquareIcon, SquareGantt } from "lucide-react";
 import { logOut } from "@/utils/auth/logout";
 
 export const MenuSideBar = () => {
@@ -72,6 +72,8 @@ export const MenuSideBar = () => {
         />
 
         <ListItem startIcon={<UserIcon />} name="Admins" href="/admins" />
+        <ListItem startIcon={<SquareGantt />} name="MDA" href="/mda" />
+        <ListItem startIcon={<UserSquareIcon />} name="Agents" href="/agents" />
         <ListItem startIcon={<Settings2Icon />} name="Roles" href="/roles" />
         <Divider />
         <div

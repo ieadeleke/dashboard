@@ -24,6 +24,7 @@ module.exports = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
+        danger: "#DB0600",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         'text-color': 'var(--text-color)',
@@ -117,6 +118,9 @@ module.exports = {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      background: {
+        danger: "#DB0600"
       },
       keyframes: {
         "accordion-down": {

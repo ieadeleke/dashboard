@@ -9,14 +9,14 @@ export type BaseSelectOption = {
 export const BaseSelect = (props: Props<any>) => {
     return <Select
         styles={{
-            option: (baseStyles, state) => ({
+            option: (baseStyles: any, state: any) => ({
                 ...baseStyles,
                 background: state.isFocused ? '#fff' : '#fff',
                 fontFamily: 'Inter',
                 color: 'black',
                 cursor: state.isFocused ? 'pointer' : 'default',
             }),
-            multiValue: (baseStyles) => ({
+            multiValue: (baseStyles: any) => ({
                 ...baseStyles,
                 background: 'white',
                 marginRight: '8px',
@@ -24,13 +24,13 @@ export const BaseSelect = (props: Props<any>) => {
                 marginTop: '4px',
                 marginBottom: '4px',
             }),
-            multiValueLabel: (baseStyles) => ({
+            multiValueLabel: (baseStyles: any) => ({
                 ...baseStyles,
                 fontSize: '14px',
                 color: 'gray',
                 paddingLeft: '10px',
             }),
-            singleValue: (baseStyles) => ({
+            singleValue: (baseStyles: any) => ({
                 ...baseStyles,
                 fontSize: '14px',
                 color: 'gray',
@@ -40,23 +40,23 @@ export const BaseSelect = (props: Props<any>) => {
                 paddingLeft: '2px',
                 paddingRight: '2px',
             }),
-            menu: (baseStyles) => ({
+            menu: (baseStyles: any) => ({
                 ...baseStyles,
                 background: '#fff',
                 marginTop: '0',
                 zIndex: '20',
             }),
-            input: (baseStyles) => ({
+            input: (baseStyles: any) => ({
                 ...baseStyles,
                 color: 'gray',
                 backgroundColor: 'transparent'
             }),
-            valueContainer: (baseStyles) => ({
+            valueContainer: (baseStyles: any) => ({
                 ...baseStyles,
                 backgroundColor: 'white',
                 borderRadius: 16
             }),
-            control: (baseStyles, state) => ({
+            control: (baseStyles: any, state: any) => ({
                 ...baseStyles,
                 borderColor: state.isFocused ? 'gray' : 'gray',
                 "&:hover": {
