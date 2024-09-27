@@ -62,3 +62,26 @@ export type FreezeAgentResponse = ApiResponse & {
         isActive: boolean
     }
 }
+
+export type FundWalletParams = {
+    accountNumber: string,
+    amount: number,
+    fee: number,
+    vat: number,
+    description: string
+}
+
+export type FundWalletResponse = ApiResponse & {
+    message: string,
+    status: string
+}
+
+export type UpdateWalletParams = {
+    accountNumber: string,
+    tier: string
+}
+
+export type UpdateWalletResponse = ApiResponse & {
+    message: string,
+    status: string
+}

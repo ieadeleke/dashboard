@@ -1,5 +1,9 @@
 import { request } from "../../request";
-import { AddAgentParams, AddAgentResponse, FreezeAgentParam, FreezeAgentResponse, GetAllAgentsParams, GetAllAgentsResponse, SuspendAgentParams, SuspendAgentResponse } from "./types";
+import {
+    AddAgentParams, AddAgentResponse, FreezeAgentParam, FreezeAgentResponse, FundWalletParams,
+    FundWalletResponse, GetAllAgentsParams, GetAllAgentsResponse, SuspendAgentParams, SuspendAgentResponse,
+    UpdateWalletParams, UpdateWalletResponse
+} from "./types";
 
 export function AgentService() {
     async function getAllAgents(payload: GetAllAgentsParams) {
@@ -56,12 +60,36 @@ export function AgentService() {
         return data as FreezeAgentResponse;
     }
 
+    async function fundWallet(payload: FundWalletParams) {
+        console.log(payload);
+        console.log("hello there");
+        const data = await request({
+            path: `v1/agent/admin/FundCustomerWallet`,
+            method: "POST",
+            body: payload,
+        });
+        return data as FundWalletResponse;
+    }
+
+    async function upgradeWallet(payload: UpdateWalletParams) {
+        console.log(payload);
+        console.log("hello there");
+        const data = await request({
+            path: `v1/agent/admin/UpgradeWallet`,
+            method: "PUT",
+            body: payload,
+        });
+        return data as UpdateWalletResponse;
+    }
+
     return {
         getAllAgents,
         addNewAgent,
         SuspendAgent,
         UnSuspendAgent,
         FreezeAgent,
-        UnFreezeAgent
+        UnFreezeAgent,
+        fundWallet,
+        upgradeWallet
     };
 }

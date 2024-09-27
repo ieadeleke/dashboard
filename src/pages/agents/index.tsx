@@ -21,6 +21,8 @@ import { useSuspendAgents } from "@/utils/apiHooks/agents/useSuspendAgent";
 import { useUnSuspendAgents } from "@/utils/apiHooks/agents/useUnSuspendAgent";
 import { useFreezeAgent } from "@/utils/apiHooks/agents/useFreezeAgent";
 import { useUnfreezeAgent } from "@/utils/apiHooks/agents/useUnfreezeAgent";
+import { useUpgradeWallet } from "@/utils/apiHooks/agents/useUpgradeWallet";
+import ViewAgentData from "@/components/agents/ViewAgent";
 
 interface WalletInterface {
     accountName: string;
@@ -78,6 +80,8 @@ export default function Agents() {
 
     const { freezeAgent, isLoading: loadingfreezeAgentData, error: freezeAgentError, data: freezeAgentData } = useFreezeAgent();
     const { UnfreezeAgent, isLoading: loadingUnFreezeAgentData, error: unFreezeAgentError, data: unFreezeAgentData } = useUnfreezeAgent();
+
+    const { upgradeWallet, isLoading: loadingUpgradeAgentData, error: upgradeAgentError, data: upgradeAgentWalletData } = useUpgradeWallet();
 
 
     const { approveConsultant, isLoading: isLoadingConsultant, error: errorConsultant, data: dataConsultant } = useApproveMDA();
@@ -220,6 +224,25 @@ export default function Agents() {
         }
     }, [unFreezeAgentError])
     // suspend user ends
+    // upgrade Wallet starts
+
+    useEffect(() => {
+        if (upgradeAgentWalletData) {
+            showSnackBar({
+                severity: "success",
+                message: "Agent wallet upgraded successfully",
+            });
+            window.location.reload();
+        }
+    }, [upgradeAgentWalletData])
+    useEffect(() => {
+        if (upgradeAgentError) {
+            showSnackBar({
+                severity: "error",
+                message: upgradeAgentError,
+            });
+        }
+    }, [upgradeAgentError])
 
     useEffect(() => {
         if (dataConsultant) {
@@ -295,7 +318,7 @@ export default function Agents() {
 
     const handleApproveConsultant = () => {
         approveConsultant({
-            MDAId: selectedAgentConsultant._id
+            MDAConsultantId: selectedAgentConsultant._id
         });
     }
 
@@ -335,6 +358,19 @@ export default function Agents() {
         });
     }
 
+    const handleFundWallet = () => {
+        disableSpliting({
+            MDAId: selectedAgent._id
+        });
+    }
+
+    const handleUpgradeWallet = (data: string) => {
+        upgradeWallet({
+            accountNumber: selectedAgent.wallet?.accountNumber ? selectedAgent.wallet.accountNumber : "",
+            tier: data
+        });
+    }
+
     return (
         <DashboardLayout>
             <>
@@ -347,33 +383,7 @@ export default function Agents() {
                     <Tabs type="card">
                         <Tabs.TabPane tab="Agent Details" key="item-1">
                             <div>
-                                <div className="grid grid-cols-2 gap-5">
-                                    <div>
-                                        <p className="text-md">First name:</p>
-                                        <RegularTextInput type="text" disabled className="text-xs"
-                                            value={selectedAgent.firstName} />
-                                    </div>
-                                    <div>
-                                        <p className="text-md">Last name:</p>
-                                        <RegularTextInput type="text" disabled className="text-xs"
-                                            value={selectedAgent.lastName} />
-                                    </div>
-                                    <div>
-                                        <p className="text-md">Email Address:</p>
-                                        <RegularTextInput type="text" disabled className="text-xs"
-                                            value={selectedAgent.email} />
-                                    </div>
-                                    <div>
-                                        <p className="text-md">Phone number:</p>
-                                        <RegularTextInput type="text" disabled className="text-xs"
-                                            value={selectedAgent.phoneNumber} />
-                                    </div>
-                                    <div>
-                                        <p className="text-md">Date Added:</p>
-                                        <RegularTextInput type="text" disabled className="text-xs"
-                                            value={formatDate(selectedAgent.createdAt)} />
-                                    </div>
-                                </div>
+                                <ViewAgentData agent={selectedAgent} />
                                 <div className="mt-10 flex gap-5">
                                     {
                                         selectedAgent.isActive ?
@@ -381,12 +391,18 @@ export default function Agents() {
                                             :
                                             <Button className="px-5 bg-primay" isLoading={loadingUnSuspendAgent} onClick={handleUnSuspendAgent}>Unsuspend Consultant</Button>
                                     }
-                                    <Button className="px-5" variant="outlined" isLoading={isLoadingConsultant} onClick={handleApproveConsultant}>Upgrade Wallet</Button>
+                                    {
+                                        selectedAgent?.wallet?.accountNumber ?
+                                            selectedAgent?.wallet?.tier === "TIER_1" ?
+                                                <Button className="px-5" variant="outlined" isLoading={loadingUpgradeAgentData} onClick={() => handleUpgradeWallet("Tier_2")}>Upgrade Wallet to Tier 2</Button>
+                                                :
+                                                <Button className="px-5" variant="outlined" isLoading={loadingUpgradeAgentData} onClick={() => handleUpgradeWallet("TIER_1")}>Downgrade Wallet to Tier 1</Button>
+                                            : ""}
                                 </div>
                                 <Divider />
                                 <div className="flex gap-5">
-                                    <Button className="px-5" variant="outlined" isLoading={isLoadingConsultant} onClick={handleApproveConsultant}>Fund Customer Wallet</Button>
-                                    <Button className="px-5" variant="outlined" isLoading={isLoadingConsultant} onClick={handleApproveConsultant}>View Wallet Transaction</Button>
+                                    {/* <Button className="px-5" variant="outlined" isLoading={isLoadingConsultant} onClick={handleApproveConsultant}>Fund Customer Wallet</Button>
+                                    <Button className="px-5" variant="outlined" isLoading={isLoadingConsultant} onClick={handleApproveConsultant}>View Wallet Transaction</Button> */}
                                     {
                                         selectedAgent?.wallet?.accountNumber ?
                                             <Button className="px-5" variant="outlined" isLoading={loadingfreezeAgentData} onClick={handleFreezeAgent}>Freeze Wallet</Button>
