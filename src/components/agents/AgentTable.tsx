@@ -68,7 +68,7 @@ export const AgentTableList = (props: AgentTableProps) => {
             <div className="flex items-center justify-between">
                 <h1 className="font-medium text-xl">{props.name}</h1>
                 <div>
-                    <Link className="bg-primary px-4 py-4 text-white rounded-lg" href="/agent/new">Add New Agent</Link>
+                    <Link className="bg-primary px-4 py-4 text-white rounded-lg" href="/agents/new">Add New Agent</Link>
                 </div>
             </div>
 

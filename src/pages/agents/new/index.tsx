@@ -96,7 +96,7 @@ export default function Agents() {
                     <div>
                         <div className="flex flex-col justify-center gap-5">
                             <div className="w-[50%] mx-auto bg-white p-10 rounded-[16px]">
-                                <div className="mb-5 text-center">
+                                <div className="mb-10 text-center">
                                     <h3 className="font-bold text-xl">Add New Agent</h3>
                                 </div>
                                 <div className="grid grid-cols-2 mb-5 gap-2">
@@ -109,17 +109,19 @@ export default function Agents() {
                                         <RegularTextInput onChange={updateAgentFormField} value={newUserData.lastName} name="lastName" className="text-xs py-7" />
                                     </div>
                                 </div>
-                                <div className="mb-5">
-                                    <h4 className="text-sm">Email</h4>
-                                    <RegularTextInput onChange={updateAgentFormField} value={newUserData.email} name="email" className="text-xs py-7" />
+                                <div className="grid grid-cols-2 mb-5 gap-2">
+                                    <div className="mb-5">
+                                        <h4 className="text-sm">Email</h4>
+                                        <RegularTextInput onChange={updateAgentFormField} value={newUserData.email} name="email" className="text-xs py-7" />
+                                    </div>
+                                    <div className="mb-5">
+                                        <h4 className="text-sm">Phone number</h4>
+                                        <RegularTextInput onChange={updateAgentFormField} value={newUserData.phoneNumber} name="phoneNumber" className="text-xs py-7" />
+                                    </div>
                                 </div>
                                 <div className="mb-5">
                                     <h4 className="text-sm">Username</h4>
                                     <RegularTextInput onChange={updateAgentFormField} value={newUserData.userName} name="userName" className="text-xs py-7" />
-                                </div>
-                                <div className="mb-5">
-                                    <h4 className="text-sm">Phone number</h4>
-                                    <RegularTextInput onChange={updateAgentFormField} value={newUserData.phoneNumber} name="phoneNumber" className="text-xs py-7" />
                                 </div>
                                 <div className="mt-10">
                                     <Button className="px-5 w-full" onClick={uploadNewAgentData}
