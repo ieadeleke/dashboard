@@ -61,8 +61,6 @@ export function AgentService() {
     }
 
     async function fundWallet(payload: FundWalletParams) {
-        console.log(payload);
-        console.log("hello there");
         const data = await request({
             path: `v1/agent/admin/FundCustomerWallet`,
             method: "POST",
@@ -72,8 +70,6 @@ export function AgentService() {
     }
 
     async function upgradeWallet(payload: UpdateWalletParams) {
-        console.log(payload);
-        console.log("hello there");
         const data = await request({
             path: `v1/agent/admin/UpgradeWallet`,
             method: "PUT",

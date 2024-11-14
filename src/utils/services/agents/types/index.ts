@@ -22,7 +22,8 @@ export type AddAgentParams = {
     userName: string,
     phoneNumber: string,
     firstName: string,
-    lastName: string
+    lastName: string,
+    profileType: string
 }
 
 export type AddAgentResponse = ApiResponse & {
