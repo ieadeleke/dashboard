@@ -123,7 +123,7 @@ export const AgentWalletTransactionList = ({ walletId }: AgentTableProps) => {
                             {transData.map((item, index) => (
                                 <TableBody key={index} className="bg-white cursor-pointer">
                                     <TableRow>
-                                        <TableCell>{formatDate(item.createdAt)}</TableCell>
+                                        <TableCell>{item.createdAt}</TableCell>
                                         <TableCell>{formatAmount(item.amount)}</TableCell>
                                         <TableCell>{formatAmount(item.balance_before)}</TableCell>
                                         <TableCell>{formatAmount(item.balance_after)}</TableCell>
