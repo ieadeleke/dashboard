@@ -25,6 +25,7 @@ import { useUpgradeWallet } from "@/utils/apiHooks/agents/useUpgradeWallet";
 import ViewAgentData from "@/components/agents/ViewAgent";
 import { AgentWalletTransactionList } from "@/components/agents/AgentWalletTransactions";
 import { FundAgentWallet } from "@/components/agents/FundAgentWallet";
+import { AgentTotalTransactionList } from "@/components/agents/AgentTransactions";
 
 interface WalletInterface {
     _id?: string;
@@ -481,7 +482,17 @@ export default function Agents() {
                                 }
                             </div>
                         </Tabs.TabPane>
-                        <Tabs.TabPane tab="Fund Agent" key="item-4">
+                        <Tabs.TabPane tab="Transaction History" key="item-4">
+                            <div>
+                                {
+                                    selectedAgent.wallet?._id ?
+                                        <AgentTotalTransactionList userId={selectedAgent?.wallet ? selectedAgent?._id : ""} />
+                                        :
+                                        <p>Account has not been verified yet</p>
+                                }
+                            </div>
+                        </Tabs.TabPane>
+                        <Tabs.TabPane tab="Fund Agent" key="item-5">
                             <div>
                                 {
                                     selectedAgent.wallet?._id ?

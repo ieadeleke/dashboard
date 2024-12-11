@@ -3,6 +3,7 @@ export type Transaction = {
     AgencyCode: string,
     AgencyName: string,
     PayerName: string,
+    PaymentChannel?: string,
     email: string,
     mobile: string,
     RevenueCode: string,
@@ -12,6 +13,7 @@ export type Transaction = {
     Status: "Pending" | "Successful" | "Fail"
     amountPaid: 20000,
     paymentRef: string,
+    Webguid?: any[]
     NotificationDetails: {
         WebGuid: string,
         ResponseCode: string,
@@ -22,7 +24,7 @@ export type Transaction = {
         TransID: string,
         TransCode: string,
         StatusMessage: string,
-        Receipt: [],
+        Receipt: any[],
         PropertyAddress: null
     },
     paymentDetails?: {

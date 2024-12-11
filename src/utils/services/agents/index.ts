@@ -1,6 +1,6 @@
 import { request } from "../../request";
 import {
-    AddAgentParams, AddAgentResponse, FetchAgentWalletParams, FetchAgentWalletResponse, FreezeAgentParam, FreezeAgentResponse, FundWalletParams,
+    AddAgentParams, AddAgentResponse, FetchAgentTransactionsParams, FetchAgentTransactionsResponse, FetchAgentWalletParams, FetchAgentWalletResponse, FreezeAgentParam, FreezeAgentResponse, FundWalletParams,
     FundWalletResponse, GetAllAgentsParams, GetAllAgentsResponse, SuspendAgentParams, SuspendAgentResponse,
     UpdateWalletParams, UpdateWalletResponse
 } from "./types";
@@ -35,11 +35,20 @@ export function AgentService() {
 
     async function FetchAgentWallet(payload: FetchAgentWalletParams) {
         const data = await request({
-            path: `v1/agent/admin/AdminViewWalletTransaction`,
+            path: `v1/agent/admin/AdminViewWalletTransaction?page=${payload.page}`,
             method: "PUT",
             body: payload,
         });
         return data as FetchAgentWalletResponse;
+    }
+
+    async function FetchAgentTransactionHistory(payload: FetchAgentTransactionsParams) {
+        const data = await request({
+            path: `v1/agent/admin/AdminGetAgentTransactions?page=${payload.page}`,
+            method: "PUT",
+            body: payload,
+        });
+        return data as FetchAgentTransactionsResponse;
     }
 
     async function UnSuspendAgent(payload: SuspendAgentParams) {
@@ -96,6 +105,7 @@ export function AgentService() {
         UnFreezeAgent,
         fundWallet,
         upgradeWallet,
-        FetchAgentWallet
+        FetchAgentWallet,
+        FetchAgentTransactionHistory
     };
 }

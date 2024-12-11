@@ -45,6 +45,20 @@ export type FetchAgentWalletResponse = {
     Transactions: any[]
 }
 
+export type FetchAgentTransactionsParams = {
+    userId: string
+    page?: number
+    startDate: string
+    endDate: string
+}
+
+export type FetchAgentTransactionsResponse = {
+    message: string
+    status: string
+    count: number
+    Transaction: any[]
+}
+
 export type SuspendAgentResponse = ApiResponse & {
     message: string,
     user: {
