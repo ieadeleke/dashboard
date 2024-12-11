@@ -24,6 +24,7 @@ import { useUnfreezeAgent } from "@/utils/apiHooks/agents/useUnfreezeAgent";
 import { useUpgradeWallet } from "@/utils/apiHooks/agents/useUpgradeWallet";
 import ViewAgentData from "@/components/agents/ViewAgent";
 import { AgentWalletTransactionList } from "@/components/agents/AgentWalletTransactions";
+import { FundAgentWallet } from "@/components/agents/FundAgentWallet";
 
 interface WalletInterface {
     _id?: string;
@@ -475,6 +476,16 @@ export default function Agents() {
                                 {
                                     selectedAgent.wallet?._id ?
                                         <AgentWalletTransactionList walletId={selectedAgent?.wallet ? selectedAgent?.wallet?._id : ""} />
+                                        :
+                                        <p>Account has not been verified yet</p>
+                                }
+                            </div>
+                        </Tabs.TabPane>
+                        <Tabs.TabPane tab="Fund Agent" key="item-4">
+                            <div>
+                                {
+                                    selectedAgent.wallet?._id ?
+                                        <FundAgentWallet accNumber={selectedAgent?.wallet ? selectedAgent?.wallet?.accountNumber : ""} />
                                         :
                                         <p>Account has not been verified yet</p>
                                 }

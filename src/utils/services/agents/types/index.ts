@@ -78,9 +78,9 @@ export type FreezeAgentResponse = ApiResponse & {
 export type FundWalletParams = {
     accountNumber: string,
     amount: number,
-    fee: number,
-    vat: number,
-    description: string
+    fee?: number,
+    vat?: number,
+    description?: string
 }
 
 export type FundWalletResponse = ApiResponse & {
