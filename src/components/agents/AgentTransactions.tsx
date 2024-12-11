@@ -128,6 +128,7 @@ export const AgentTotalTransactionList = ({ userId }: AgentTableProps) => {
                                     <TableHead className="text-white">Amount Paid</TableHead>
                                     <TableHead className="text-white">Payment Channel</TableHead>
                                     <TableHead className="text-white">Payer Name</TableHead>
+                                    {/* <TableHead className="text-white">Category</TableHead> */}
                                     <TableHead className="text-white">Status</TableHead>
                                     <TableHead className="text-white">Type</TableHead>
                                 </TableRow>
@@ -140,6 +141,7 @@ export const AgentTotalTransactionList = ({ userId }: AgentTableProps) => {
                                         <TableCell>{formatAmount(item.amountPaid)}</TableCell>
                                         <TableCell>{item.PaymentChannel}</TableCell>
                                         <TableCell>{capitalizeFirstLetter(item.PayerName)}</TableCell>
+                                        {/* <TableCell>{item.ca}</TableCell> */}
                                         <TableCell>
                                             <TransactionStatusChip status={item.Status as TransactionStatus} />
                                         </TableCell>

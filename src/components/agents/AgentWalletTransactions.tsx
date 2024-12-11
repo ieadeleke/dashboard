@@ -115,6 +115,7 @@ export const AgentWalletTransactionList = ({ walletId }: AgentTableProps) => {
                                     <TableHead className="text-white">Amount</TableHead>
                                     <TableHead className="text-white">Balance Before</TableHead>
                                     <TableHead className="text-white">Balance After</TableHead>
+                                    <TableHead className="text-white">Category</TableHead>
                                     <TableHead className="text-white">Status</TableHead>
                                     <TableHead className="text-white">Type</TableHead>
                                 </TableRow>
@@ -127,6 +128,7 @@ export const AgentWalletTransactionList = ({ walletId }: AgentTableProps) => {
                                         <TableCell>{formatAmount(item.amount)}</TableCell>
                                         <TableCell>{formatAmount(item.balance_before)}</TableCell>
                                         <TableCell>{formatAmount(item.balance_after)}</TableCell>
+                                        <TableCell>{item.category}</TableCell>
                                         <TableCell>
                                             <TransactionStatusChip status={item.status as TransactionStatus} />
                                         </TableCell>
