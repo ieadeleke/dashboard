@@ -104,7 +104,7 @@ export const AgentTableList = (props: AgentTableProps) => {
                     nextLabel=">"
                     onPageChange={props.onPageChange}
                     pageRangeDisplayed={5}
-                    currentPage={props.page}
+                    currentPage={props.page - 1}
                     pageCount={Math.max(0, props.count / 20)}
                     // pageCount={1}
                     className="flex gap-4"

@@ -138,6 +138,7 @@ export default function Agents() {
 
     useEffect(() => {
         if (data) {
+            setCount(data.count);
             setMDAList(data.Agents);
         }
     }, [data])
@@ -301,7 +302,7 @@ export default function Agents() {
     function onPageChange(selectedItem: {
         selected: number;
     }) {
-        setPage(selectedItem.selected)
+        setPage(selectedItem.selected + 1)
     }
 
     const toggleDisplayModal = () => {
@@ -380,7 +381,8 @@ export default function Agents() {
             <>
                 <div className="flex flex-col px-4 py-8 gap-8">
                     <div>
-                        <AgentTableList name="List of Agents" mdaList={mdaList} isLoading={isLoading} error={error} page={page} count={count} handleClick={handleMDASelection} firstName={""} lastName={""} phoneNumber={""} />
+                        <AgentTableList name="List of Agents" mdaList={mdaList} isLoading={isLoading} error={error} page={page} count={count}
+                            handleClick={handleMDASelection} firstName={""} lastName={""} phoneNumber={""} onPageChange={onPageChange} />
                     </div>
                 </div>
                 <Modal onCancel={toggleDisplayModal} footer={null} open={openDisplayModal}>
