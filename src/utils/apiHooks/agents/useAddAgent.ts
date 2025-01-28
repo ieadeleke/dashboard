@@ -11,7 +11,6 @@ export const useAddAgents = () => {
         setData(null)
         const response = await execute(async () => await AgentService().addNewAgent(params))
         if (response) {
-            console.log(response);
             setData(response)
         }
     }

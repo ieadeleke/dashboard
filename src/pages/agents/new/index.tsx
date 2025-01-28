@@ -19,6 +19,7 @@ import { useGetAgents } from "@/utils/apiHooks/agents/useGetAgents";
 import { AgentTableList } from "@/components/agents/AgentTable";
 import { useAddAgents } from "@/utils/apiHooks/agents/useAddAgent";
 import { BaseSelect } from "@/components/select/BaseSelect";
+import { useGetConsultants } from "@/utils/apiHooks/agents/useGetConsultants";
 
 interface SelectedMDAInterface {
     _id: string;
@@ -37,12 +38,23 @@ interface NewAgentInterface {
     userName: string;
     phoneNumber: string;
     profileType: "normalAgent" | "superAgent"
+    ConsultantCompanyId: ""
+}
+
+interface ConsultantInterface {
+    _id: string
+    name: string
 }
 
 export default function Agents() {
     const { } = useGetMDAs();
 
     const { addnewAgent, isLoading, error, data } = useAddAgents();
+    const { getConsultantList, isLoading: isLoadingConsultant, error: consultantError, data: consultantData } = useGetConsultants();
+
+    const [consultantList, setConsultantList] = useState<ConsultantInterface[]>([]);
+
+
     const { showSnackBar } = useContext(GlobalActionContext);
 
     const [newUserData, setNewUserData] = useState<NewAgentInterface>({
@@ -51,7 +63,8 @@ export default function Agents() {
         lastName: "",
         userName: "",
         phoneNumber: "",
-        profileType: "normalAgent"
+        profileType: "normalAgent",
+        ConsultantCompanyId: ""
     });
 
     useEffect(() => {
@@ -72,6 +85,30 @@ export default function Agents() {
             });
         }
     }, [error]);
+
+    function fetchData() {
+        getConsultantList();
+    }
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        if (consultantData) {
+            setConsultantList(consultantData.AgentConsultantCompany);
+            // setMDAList(data.Agents);
+        }
+    }, [consultantData])
+
+    useEffect(() => {
+        if (consultantError) {
+            showSnackBar({
+                severity: "error",
+                message: consultantError,
+            });
+        }
+    }, [consultantError])
 
     const uploadNewAgentData = () => {
         let { firstName, lastName, email, userName, phoneNumber, profileType } = newUserData;
@@ -140,14 +177,17 @@ export default function Agents() {
                                 </div>
                                 <div className="mb-5">
                                     <h4 className="text-sm">Consultant Company</h4>
-                                    <Select className="text-xs block w-full h-[3.7rem]" value={newUserData.profileType} onChange={e => {
+                                    <Select className="text-xs block w-full h-[3.7rem]" value={newUserData.ConsultantCompanyId} onChange={e => {
                                         setNewUserData({
                                             ...newUserData,
-                                            profileType: e
+                                            ConsultantCompanyId: e
                                         })
                                     }}>
-                                        <Select.Option key={"normalAgent"}>Normal Agent</Select.Option>
-                                        <Select.Option key={"superAgent"}>Super Agent</Select.Option>
+                                        {
+                                            consultantList.map((consultant, index) => (
+                                                <Select.Option key={index} value={consultant._id}>{consultant?.name}</Select.Option>
+                                            ))
+                                        }
                                     </Select>
                                 </div>
                                 <div className="mt-10">

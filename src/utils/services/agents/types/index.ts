@@ -49,6 +49,7 @@ export type AddAgentParams = {
     firstName: string,
     lastName: string,
     profileType: string
+    ConsultantCompanyId: string
 }
 
 export type AddAgentResponse = ApiResponse & {
