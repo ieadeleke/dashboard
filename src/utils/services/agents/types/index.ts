@@ -17,6 +17,31 @@ export type GetAllAgentsResponse = ApiResponse & {
     count: number,
 }
 
+export type GetAllConsultantsParams = {
+    page?: number,
+}
+
+export type GetAllConsultantsResponse = ApiResponse & {
+    AgentConsultantCompany: any,
+}
+
+export type AddNewConsultantParam = {
+    name: string,
+}
+
+export type AddNewConsultantsResponse = ApiResponse & {
+    AgentConsultantCompany: any,
+}
+
+export type UpdateConsultantParam = {
+    agentId: string,
+    agentConsultantCompanyId: string
+}
+
+export type UpdateConsultantsResponse = ApiResponse & {
+    AgentConsultantCompany: any,
+}
+
 export type AddAgentParams = {
     email: string,
     userName: string,

@@ -138,6 +138,18 @@ export default function Agents() {
                                         <Select.Option key={"superAgent"}>Super Agent</Select.Option>
                                     </Select>
                                 </div>
+                                <div className="mb-5">
+                                    <h4 className="text-sm">Consultant Company</h4>
+                                    <Select className="text-xs block w-full h-[3.7rem]" value={newUserData.profileType} onChange={e => {
+                                        setNewUserData({
+                                            ...newUserData,
+                                            profileType: e
+                                        })
+                                    }}>
+                                        <Select.Option key={"normalAgent"}>Normal Agent</Select.Option>
+                                        <Select.Option key={"superAgent"}>Super Agent</Select.Option>
+                                    </Select>
+                                </div>
                                 <div className="mt-10">
                                     <Button className="px-5 h-[4rem] w-full" onClick={uploadNewAgentData}
                                         isLoading={isLoading}>Add New Agent</Button>

@@ -1,7 +1,9 @@
 import { request } from "../../request";
 import {
-    AddAgentParams, AddAgentResponse, FetchAgentTransactionsParams, FetchAgentTransactionsResponse, FetchAgentWalletParams, FetchAgentWalletResponse, FreezeAgentParam, FreezeAgentResponse, FundWalletParams,
-    FundWalletResponse, GetAllAgentsParams, GetAllAgentsResponse, SuspendAgentParams, SuspendAgentResponse,
+    AddAgentParams, AddAgentResponse, AddNewConsultantParam, AddNewConsultantsResponse, FetchAgentTransactionsParams, FetchAgentTransactionsResponse, FetchAgentWalletParams, FetchAgentWalletResponse, FreezeAgentParam, FreezeAgentResponse, FundWalletParams,
+    FundWalletResponse, GetAllAgentsParams, GetAllAgentsResponse, GetAllConsultantsResponse, SuspendAgentParams, SuspendAgentResponse,
+    UpdateConsultantParam,
+    UpdateConsultantsResponse,
     UpdateWalletParams, UpdateWalletResponse
 } from "./types";
 
@@ -13,6 +15,33 @@ export function AgentService() {
             body: payload,
         });
         return data as GetAllAgentsResponse;
+    }
+
+    async function getAllConsultants() {
+        const data = await request({
+            path: `v1/agent/admin/GetAllAgentConsultantCompany`,
+            method: "GET",
+            body: "",
+        });
+        return data as GetAllConsultantsResponse;
+    }
+
+    async function saveNewConsultant(param: AddNewConsultantParam) {
+        const data = await request({
+            path: `v1/agent/admin/AddConsultantCompany`,
+            method: "POST",
+            body: param,
+        });
+        return data as AddNewConsultantsResponse;
+    }
+
+    async function updateAgentConsultant(param: UpdateConsultantParam) {
+        const data = await request({
+            path: `v1/agent/admin/UpdateAgentConsultantCompany`,
+            method: "POST",
+            body: param,
+        });
+        return data as UpdateConsultantsResponse;
     }
 
     async function addNewAgent(payload: AddAgentParams) {
@@ -106,6 +135,9 @@ export function AgentService() {
         fundWallet,
         upgradeWallet,
         FetchAgentWallet,
-        FetchAgentTransactionHistory
+        FetchAgentTransactionHistory,
+        getAllConsultants,
+        saveNewConsultant,
+        updateAgentConsultant
     };
 }

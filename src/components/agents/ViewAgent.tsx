@@ -23,6 +23,7 @@ interface SelectedAgentInterface {
     wallet?: WalletInterface;
     createdAt: string;
     isActive: boolean;
+    ConsultantCompany: string
 }
 
 const ViewAgentData = (props: { agent: SelectedAgentInterface }) => {
@@ -33,7 +34,8 @@ const ViewAgentData = (props: { agent: SelectedAgentInterface }) => {
         email: "",
         phoneNumber: "",
         createdAt: "",
-        isActive: true
+        isActive: true,
+        ConsultantCompany: ""
     });
     useEffect(() => {
         setSelectedAgent(props.agent);
@@ -65,6 +67,11 @@ const ViewAgentData = (props: { agent: SelectedAgentInterface }) => {
                     <p className="text-md">Date Added:</p>
                     <RegularTextInput type="text" disabled className="text-xs"
                         value={formatDate(selectedAgent.createdAt)} />
+                </div>
+                <div>
+                    <p className="text-md">Assigned Consultant:</p>
+                    <RegularTextInput type="text" disabled className="text-xs"
+                        value={formatDate(selectedAgent?.ConsultantCompany)} />
                 </div>
             </div>
         </div>

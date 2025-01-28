@@ -6,7 +6,7 @@ import { TransactionTable } from "@/components/transactions/TransactionTable";
 import { useGetMDAs } from "@/utils/apiHooks/mda/useGetMDAs";
 import { GetAllMDAsResponse } from "@/utils/services/mda/types";
 import { useContext, useEffect, useState } from "react";
-import { Modal, Tabs, Checkbox, Divider } from "antd";
+import { Modal, Tabs, Checkbox, Divider, Select } from "antd";
 import { RegularTextInput } from "@/components/input/RegularTextInput";
 import { formatDate } from "@/utils/formatters/formatDate";
 import { MDAConsultantTableList } from "@/components/mdas/ConsultantTable";
@@ -49,6 +49,7 @@ interface SelectedAgentInterface {
     wallet?: WalletInterface;
     createdAt: string;
     isActive: boolean;
+    ConsultantCompany: string
 }
 interface selectedAgentConsultantInterface {
     _id: string
@@ -104,7 +105,8 @@ export default function Agents() {
         email: "",
         phoneNumber: "",
         createdAt: "",
-        isActive: true
+        isActive: true,
+        ConsultantCompany: ""
     });
     const [selectedAgentConsultant, setSelectedAgentConsultant] = useState<selectedAgentConsultantInterface>({
         _id: "",
@@ -308,6 +310,7 @@ export default function Agents() {
     const toggleDisplayModal = () => {
         setOpenDisplayModal(!openDisplayModal);
     }
+
     const toggleConsultantDisplayModal = () => {
         setDisplayConsultantViewMode(!displayConsultantViewMode);
     }

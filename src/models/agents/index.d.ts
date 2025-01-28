@@ -11,6 +11,7 @@ type WalletType = {
 }
 
 export type AllAgentType = {
+    _id: string;
     firstName: string;
     lastName: string;
     name: string,
