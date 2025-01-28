@@ -49,7 +49,6 @@ export type AddAgentParams = {
     firstName: string,
     lastName: string,
     profileType: string
-    ConsultantCompany: string
     ConsultantCompanyId: string
 }
 
