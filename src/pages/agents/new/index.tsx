@@ -38,7 +38,8 @@ interface NewAgentInterface {
     userName: string;
     phoneNumber: string;
     profileType: "normalAgent" | "superAgent"
-    ConsultantCompanyId: ""
+    ConsultantCompany: string
+    ConsultantCompanyId: string
 }
 
 interface ConsultantInterface {
@@ -64,6 +65,7 @@ export default function Agents() {
         userName: "",
         phoneNumber: "",
         profileType: "normalAgent",
+        ConsultantCompany: "",
         ConsultantCompanyId: ""
     });
 
@@ -177,9 +179,10 @@ export default function Agents() {
                                 </div>
                                 <div className="mb-5">
                                     <h4 className="text-sm">Consultant Company</h4>
-                                    <Select className="text-xs block w-full h-[3.7rem]" value={newUserData.ConsultantCompanyId} onChange={e => {
+                                    <Select className="text-xs block w-full h-[3.7rem]" value={newUserData.ConsultantCompany} onChange={e => {
                                         setNewUserData({
                                             ...newUserData,
+                                            ConsultantCompany: e,
                                             ConsultantCompanyId: e
                                         })
                                     }}>

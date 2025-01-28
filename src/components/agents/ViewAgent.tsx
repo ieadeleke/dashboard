@@ -68,11 +68,6 @@ const ViewAgentData = (props: { agent: SelectedAgentInterface }) => {
                     <RegularTextInput type="text" disabled className="text-xs"
                         value={formatDate(selectedAgent.createdAt)} />
                 </div>
-                <div>
-                    <p className="text-md">Assigned Consultant:</p>
-                    <RegularTextInput type="text" disabled className="text-xs"
-                        value={formatDate(selectedAgent?.ConsultantCompany)} />
-                </div>
             </div>
         </div>
     )
