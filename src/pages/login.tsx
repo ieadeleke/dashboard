@@ -30,10 +30,10 @@ export default function Login() {
 
     useEffect(() => {
         if (data) {
-            showSnackBar({ severity: 'success', message: "Login successful" })
-            updateUser(data)
+            // updateUser(data);
             setTimeout(() => {
                 router.push('/')
+                showSnackBar({ severity: 'success', message: "Login successful" })
             }, 1000)
         }
     }, [data])

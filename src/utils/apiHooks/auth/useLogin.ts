@@ -8,14 +8,17 @@ import AuthToken from "@/utils/AuthToken"
 
 
 export const useLogin = () => {
-    const [data, setData] = useState<Profile | null>(null)
-    const { isLoading, error, execute } = useApi()
+
+    const { updateUser } = useContext(UserContext);
+    const [data, setData] = useState<Profile | null>(null);
+    const { isLoading, error, execute } = useApi();
 
     async function login(params: LoginParams) {
         setData(null)
         const response = await execute(async () => await AuthService().login(params))
         if (response) {
             AuthToken().saveToken(response.token)
+            updateUser(response.profile.personalInfo);
             setData(response.profile.personalInfo)
         }
     }
