@@ -208,10 +208,10 @@ export const SettlementTable = (props: SettlementTableProps) => {
               />
             </PopoverContent>
           </Popover>
-          {/* <DatePicker datePickerType="range" onChange={handleDateChange} value={defaultDate}>
+          <DatePicker datePickerType="range" onChange={handleDateChange} value={defaultDate}>
             <DatePickerInput id="date-picker-input-id-start" placeholder="mm/dd/yyyy" labelText="Start date" size="lg" />
             <DatePickerInput id="date-picker-input-id-finish" placeholder="mm/dd/yyyy" labelText="End date" size="lg" />
-          </DatePicker> */}
+          </DatePicker>
           {/* <IconButton onClick={handleDownloadReport} className="text-gray-700">
               <DownloadIcon />
             </IconButton> */}
