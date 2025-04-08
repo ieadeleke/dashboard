@@ -21,7 +21,7 @@ import { GetAccountSettlementResponse, Settlement } from "@/models/settlements";
 import Loading from "../states/Loading";
 import Error from "../states/Error";
 import { GlobalActionContext } from "@/context/GlobalActionContext";
-import { convertToDate } from "@/utils/data/getDefaultDate";
+import { convertDateToFormat, convertToDate } from "@/utils/data/getDefaultDate";
 import { SettlementStatus, SettlementStatusChip } from "./SettlementStatusChip";
 import { formatAmount } from "@/utils/formatters/formatAmount";
 import { formatDate } from "@/utils/formatters/formatDate";
@@ -96,8 +96,15 @@ export const SettlementTable = (props: SettlementTableProps) => {
           to: date.to || new Date(),
         })
       );
+      fetchAccountSettlements({
+        from: convertDateToFormat(date.from || new Date()),
+        to: convertDateToFormat(date.to || new Date()),
+        account_number: props.routerId as string,
+        page,
+      });
+      setFilterEnabled(true);
     }
-    props.onDateApplied?.(date);
+    // props.onDateApplied?.(date);
     setIsDateModalOpen(false);
   }
 
@@ -113,7 +120,6 @@ export const SettlementTable = (props: SettlementTableProps) => {
 
   useEffect(() => {
     if (settlements) {
-      console.log(settlements)
       setPage(props.page);
       setCount(props.count);
       setFilteredTransactions(settlements);
@@ -178,7 +184,7 @@ export const SettlementTable = (props: SettlementTableProps) => {
         <h1 className="font-medium text-xl">{props.name}</h1>
         <div className="flex-1" />
         <div className="flex items-center gap-2">
-          {/* <Popover
+          <Popover
             modal
             open={isDateModalOpen}
             onOpenChange={setIsDateModalOpen}
@@ -201,11 +207,11 @@ export const SettlementTable = (props: SettlementTableProps) => {
                 }}
               />
             </PopoverContent>
-          </Popover> */}
-          <DatePicker datePickerType="range" onChange={handleDateChange} value={defaultDate}>
+          </Popover>
+          {/* <DatePicker datePickerType="range" onChange={handleDateChange} value={defaultDate}>
             <DatePickerInput id="date-picker-input-id-start" placeholder="mm/dd/yyyy" labelText="Start date" size="lg" />
             <DatePickerInput id="date-picker-input-id-finish" placeholder="mm/dd/yyyy" labelText="End date" size="lg" />
-          </DatePicker>
+          </DatePicker> */}
           {/* <IconButton onClick={handleDownloadReport} className="text-gray-700">
               <DownloadIcon />
             </IconButton> */}

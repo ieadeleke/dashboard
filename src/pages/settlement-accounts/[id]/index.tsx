@@ -9,6 +9,9 @@ import { NetworkRequestContainer } from "@/components/states/NetworkRequestConta
 import { useFetchAccountSettlements } from "@/utils/apiHooks/settlements/useFetchAllSettlements";
 import { useRouter } from "next/router";
 import { SettlementTable } from "@/components/settlements/SettlementTable";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import Link from "next/link";
+
 
 export default function Settlements() {
   const {
@@ -52,6 +55,9 @@ export default function Settlements() {
     <DashboardLayout>
       <div className="flex flex-col px-4 py-8 gap-8">
         <div className="flex flex-col">
+          <div>
+            <Link className="bg-transparent" href="/settlement-accounts"> <FaArrowLeftLong /> Go Back</Link>
+          </div>
           <div className="flex flex-col gap-4">
             <h1 className="font-medium text-2xl">All Settlements</h1>
           </div>
