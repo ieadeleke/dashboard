@@ -1,3 +1,5 @@
+import '@carbon/react';
+
 import {
   Table,
   TableBody,
@@ -144,7 +146,7 @@ export const SettlementTable = (props: SettlementTableProps) => {
       page: selectedItem.selected + 1,
     });
     setFilterEnabled(true);
-    setPage(selectedItem.selected + 1);
+    setPage(selectedItem.selected);
   }
 
   const handleDateChange = (dates: any, dateStrings: any) => {
