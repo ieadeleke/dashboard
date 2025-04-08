@@ -104,9 +104,12 @@ export const SettlementTable = (props: SettlementTableProps) => {
   }
 
   useEffect(() => {
-    setPage(props.page);
-    setCount(props.count);
-    setFilteredTransactions(settlements);
+    if (settlements) {
+      console.log(settlements)
+      setPage(props.page);
+      setCount(props.count);
+      setFilteredTransactions(settlements);
+    }
   }, [settlements]);
 
   useEffect(() => {
