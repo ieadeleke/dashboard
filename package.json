@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@carbon/react": "^1.79.0",
-    "@carbon/styles": "^1.78.0",
+    "@carbon/react": "^1.71.0",
+    "@carbon/styles": "^1.70.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@hookform/resolvers": "^3.3.2",
