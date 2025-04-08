@@ -24,6 +24,7 @@ import { TablePagination } from "../pagination/TablePagination";
 import { AllMDAsType } from "@/models/mdas";
 import Link from "next/link";
 import { AllAgentType } from "@/models/agents";
+import { useGetAgents } from "@/utils/apiHooks/agents/useGetAgents";
 
 type WalletType = {
     accountName: string;
@@ -55,17 +56,50 @@ type AgentTableProps = {
 };
 
 export const AgentTableList = (props: AgentTableProps) => {
+
     const { mdaList } = props;
+    const { getAgentList, isLoading, error, data } = useGetAgents();
+
+    const [page, setPage] = useState<number>(1);
+    const [count, setCount] = useState<number>(1);
+    const [filterEnabled, setFilterEnabled] = useState(false);
     const [isDateModalOpen, setIsDateModalOpen] = useState(false);
     const { showSnackBar } = useContext(GlobalActionContext);
+    const [filteredTransactions, setFilteredTransactions] = useState<any>([]);
 
     const handleClick = (e: any) => {
         props.handleClick(e);
     }
 
     useEffect(() => {
-        console.log(props)
+        if (mdaList) {
+            setFilteredTransactions(mdaList);
+        }
     }, [])
+    useEffect(() => {
+        if (data && filterEnabled) {
+            setFilteredTransactions(data);
+        }
+    }, [data])
+
+    useEffect(() => {
+        if (error) {
+            showSnackBar({
+                severity: "error",
+                message: error,
+            });
+        }
+    }, [error])
+
+    function onPageChange(selectedItem: {
+        selected: number;
+    }) {
+        getAgentList({
+            page: selectedItem.selected + 1,
+        });
+        setFilterEnabled(true);
+        setPage(selectedItem.selected);
+    }
 
     return (
         <div className="flex flex-col gap-4">
@@ -89,7 +123,7 @@ export const AgentTableList = (props: AgentTableProps) => {
                     </TableRow>
                 </TableHeader>
 
-                {mdaList.map((item, index) => (
+                {filteredTransactions.map((item: any, index: number) => (
                     <TableBody key={index} className="bg-white cursor-pointer">
                         <TableRow>
                             <TableCell>{formatDate(item.createdAt)}</TableCell>
@@ -108,10 +142,10 @@ export const AgentTableList = (props: AgentTableProps) => {
                 <TablePagination
                     breakLabel="..."
                     nextLabel=">"
-                    onPageChange={props.onPageChange}
+                    onPageChange={onPageChange}
                     pageRangeDisplayed={5}
-                    currentPage={props.page}
-                    pageCount={Math.max(0, props.count / 20)}
+                    currentPage={page}
+                    pageCount={Math.max(0, count / 20)}
                     // pageCount={1}
                     className="flex gap-4"
                     nextClassName="text-gray-500"
@@ -122,7 +156,7 @@ export const AgentTableList = (props: AgentTableProps) => {
                     renderOnZeroPageCount={null}
                 />
             </div>
-            {props.isLoading ? <Loading /> : props.error && <Error onRetry={props.fetchData} message={props.error} />}
+            {props.isLoading || isLoading ? <Loading /> : props.error && <Error onRetry={props.fetchData} message={props.error} />}
         </div>
     );
 };
