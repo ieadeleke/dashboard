@@ -18,4 +18,7 @@ export type AllAgentType = {
     phoneNumber: string,
     createdAt: string,
     wallet?: WalletType,
+    ConsultantCompany?: {
+        name?: string
+    }
 }

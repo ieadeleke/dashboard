@@ -90,7 +90,7 @@ export const AgentTableList = (props: AgentTableProps) => {
                         <TableRow>
                             <TableCell>{formatDate(item.createdAt)}</TableCell>
                             <TableCell>{`${item.firstName} ${item.lastName}`}</TableCell>
-                            <TableCell>{item.firstName}</TableCell>
+                            <TableCell>{item?.ConsultantCompany?.name}</TableCell>
                             <TableCell>{item.email}</TableCell>
                             <TableCell>{item.phoneNumber}</TableCell>
                             <TableCell>{item?.wallet?.accountName ? <div className="w-3 h-3 rounded-full bg-[#00ff00]"></div> : <div className="w-3 h-3 rounded-full bg-[#ff0000]"></div>}</TableCell>
