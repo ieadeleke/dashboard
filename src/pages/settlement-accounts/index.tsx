@@ -40,7 +40,6 @@ export default function SettlementAccounts() {
                     <div className="flex flex-col gap-4">
                         <h1 className="font-medium text-2xl">Settlement Accounts</h1>
                     </div>
-
                     <NetworkRequestContainer isLoading={isLoading} error={error} onRetry={fetchData}>
                         {(!isLoading && !error) && <SettlementAccountTable
                             name=""

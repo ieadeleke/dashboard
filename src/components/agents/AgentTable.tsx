@@ -63,6 +63,10 @@ export const AgentTableList = (props: AgentTableProps) => {
         props.handleClick(e);
     }
 
+    useEffect(() => {
+        console.log(props)
+    }, [])
+
     return (
         <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
