@@ -26,6 +26,10 @@ import { formatDate } from "@/utils/formatters/formatDate";
 import { TablePagination } from "../pagination/TablePagination";
 import { SettlementDetails, SettlementDetailsRef } from "./SettlementDetail";
 import { useFetchAccountSettlements } from "@/utils/apiHooks/settlements/useFetchAllSettlements";
+import { DatePicker, DatePickerInput } from "@carbon/react";
+import dayjs from "dayjs";
+
+
 
 type SettlementTableProps = {
   name: string;
@@ -71,6 +75,8 @@ export const SettlementTable = (props: SettlementTableProps) => {
         to: new Date(),
       }
   );
+  const [defaultDate, setDefaultDate] = useState(dateRange ? [dateRange.startDate, dateRange.endDate] : [new Date(), new Date()]);
+
   const { showSnackBar } = useContext(GlobalActionContext);
 
   const formatDateRange = useMemo(() => {
@@ -122,7 +128,7 @@ export const SettlementTable = (props: SettlementTableProps) => {
   }, [error])
 
   useEffect(() => {
-    if (data) {
+    if (data && filterEnabled) {
       setCount(loadCount ? +loadCount : 0);
       setFilteredTransactions(data ? data : []);
     }
@@ -135,10 +141,32 @@ export const SettlementTable = (props: SettlementTableProps) => {
       from: String(date.from),
       to: String(date.to),
       account_number: props.routerId as string,
-      page: page + 1,
+      page: selectedItem.selected + 1,
     });
-    setPage(selectedItem.selected + 1)
+    setFilterEnabled(true);
+    setPage(selectedItem.selected + 1);
   }
+
+  const handleDateChange = (dates: any, dateStrings: any) => {
+    if (dates && dates.length === 2) {
+      // Convert the start and end dates to dayjs
+      const startDate = dayjs(dates[0]).format('YYYY-MM-DD');
+      const endDate = dayjs(dates[1]).format('YYYY-MM-DD');
+
+      // You can store these as a range in your state or handle them further
+      fetchAccountSettlements({
+        from: startDate,
+        to: endDate,
+        account_number: props.routerId as string,
+        page,
+      });
+      setDate({
+        from: dayjs(dates[0]).toDate(),
+        to: dayjs(dates[1]).toDate()
+      });
+      setFilterEnabled(true);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -148,7 +176,7 @@ export const SettlementTable = (props: SettlementTableProps) => {
         <h1 className="font-medium text-xl">{props.name}</h1>
         <div className="flex-1" />
         <div className="flex items-center gap-2">
-          <Popover
+          {/* <Popover
             modal
             open={isDateModalOpen}
             onOpenChange={setIsDateModalOpen}
@@ -171,8 +199,11 @@ export const SettlementTable = (props: SettlementTableProps) => {
                 }}
               />
             </PopoverContent>
-          </Popover>
-
+          </Popover> */}
+          <DatePicker datePickerType="range" onChange={handleDateChange} value={defaultDate}>
+            <DatePickerInput id="date-picker-input-id-start" placeholder="mm/dd/yyyy" labelText="Start date" size="lg" />
+            <DatePickerInput id="date-picker-input-id-finish" placeholder="mm/dd/yyyy" labelText="End date" size="lg" />
+          </DatePicker>
           {/* <IconButton onClick={handleDownloadReport} className="text-gray-700">
               <DownloadIcon />
             </IconButton> */}
