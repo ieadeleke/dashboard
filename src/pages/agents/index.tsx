@@ -130,6 +130,7 @@ export default function Agents() {
 
     useEffect(() => {
         if (data) {
+            setCount(data.count);
             setMDAList(data.Agents);
         }
     }, [data])
