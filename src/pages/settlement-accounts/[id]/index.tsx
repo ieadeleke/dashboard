@@ -65,7 +65,7 @@ export default function Settlements() {
               <SettlementTable
                 name=""
                 settlements={settlements}
-                count={count}
+                count={count} routerId={router.query.id as string}
                 page={page}
                 onPageChange={onPageChange}
                 isLoading={isLoading}

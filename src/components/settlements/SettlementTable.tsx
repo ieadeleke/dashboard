@@ -25,9 +25,11 @@ import { formatAmount } from "@/utils/formatters/formatAmount";
 import { formatDate } from "@/utils/formatters/formatDate";
 import { TablePagination } from "../pagination/TablePagination";
 import { SettlementDetails, SettlementDetailsRef } from "./SettlementDetail";
+import { useFetchAccountSettlements } from "@/utils/apiHooks/settlements/useFetchAllSettlements";
 
 type SettlementTableProps = {
   name: string;
+  routerId?: string | undefined;
   settlements: GetAccountSettlementResponse[];
   isLoading?: boolean;
   error?: string | null;
@@ -43,19 +45,31 @@ type SettlementTableProps = {
 };
 
 export const SettlementTable = (props: SettlementTableProps) => {
+
+  const {
+    isLoading,
+    data,
+    error,
+    fetchAccountSettlements,
+    count: loadCount,
+  } = useFetchAccountSettlements();
   const { settlements, dateRange } = props;
+  const [page, setPage] = useState<number>(1);
+  const [count, setCount] = useState<number>(1);
+  const [filterEnabled, setFilterEnabled] = useState(false);
+  const [filteredTransactions, setFilteredTransactions] = useState<any>([]);
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const settlementDetailsRef = useRef<SettlementDetailsRef>(null);
   const [date, setDate] = useState<DateRange>(
     dateRange
       ? {
-          from: convertToDate(dateRange.startDate),
-          to: convertToDate(dateRange.endDate),
-        }
+        from: convertToDate(dateRange.startDate),
+        to: convertToDate(dateRange.endDate),
+      }
       : {
-          from: new Date(),
-          to: new Date(),
-        }
+        from: new Date(),
+        to: new Date(),
+      }
   );
   const { showSnackBar } = useContext(GlobalActionContext);
 
@@ -89,6 +103,40 @@ export const SettlementTable = (props: SettlementTableProps) => {
     });
   }
 
+  useEffect(() => {
+    setPage(props.page);
+    setCount(props.count);
+    setFilteredTransactions(settlements);
+  }, [settlements]);
+
+  useEffect(() => {
+    if (error) {
+      showSnackBar({
+        severity: 'error',
+        message: error
+      })
+    }
+  }, [error])
+
+  useEffect(() => {
+    if (data) {
+      setCount(loadCount ? +loadCount : 0);
+      setFilteredTransactions(data ? data : []);
+    }
+  }, [data])
+
+  function onPageChange(selectedItem: {
+    selected: number;
+  }) {
+    fetchAccountSettlements({
+      from: String(date.from),
+      to: String(date.to),
+      account_number: props.routerId as string,
+      page: page + 1,
+    });
+    setPage(selectedItem.selected + 1)
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <SettlementDetails ref={settlementDetailsRef} />
@@ -107,7 +155,6 @@ export const SettlementTable = (props: SettlementTableProps) => {
                 <p className="text-black text-start text-sm line-clamp-1 flex-1">
                   {formatDateRange}
                 </p>
-
                 <CalendarIcon className="h-8 w-8 opacity-50 text-gray-600 bg-gray-300 p-2 rounded-full" />
               </div>
             </PopoverTrigger>
@@ -143,7 +190,7 @@ export const SettlementTable = (props: SettlementTableProps) => {
           </TableRow>
         </TableHeader>
 
-        {settlements.map((item) => (
+        {filteredTransactions.map((item: any) => (
           <TableBody
             onClick={() => showSettlementDetails(item)}
             key={item._id}
@@ -168,14 +215,28 @@ export const SettlementTable = (props: SettlementTableProps) => {
       </Table>
 
       <div className="flex justify-center">
+        {/* <TablePagination
+          breakLabel="..."
+          nextLabel=">"
+          onPageChange={onPageChange}
+          pageRangeDisplayed={5}
+          currentPage={page - 1}
+          pageCount={Math.max(0, count / 20)}
+          className="flex gap-4"
+          nextClassName="text-gray-500"
+          previousClassName="text-gray-500"
+          pageClassName="flex w-8 h-7 bg-white justify-center items-center text-sm text-gray-500 rounded-sm outline outline-2 outline-gray-100 text-center"
+          activeClassName="!bg-primary text-white !outline-none"
+          previousLabel="<"
+          renderOnZeroPageCount={null}
+        /> */}
         <TablePagination
           breakLabel="..."
           nextLabel=">"
-          onPageChange={props.onPageChange}
+          onPageChange={onPageChange}
           pageRangeDisplayed={5}
-          currentPage={props.page}
-          pageCount={Math.max(0, props.count / 20)}
-          // pageCount={1}
+          currentPage={page}
+          pageCount={Math.max(0, count / 20)}
           className="flex gap-4"
           nextClassName="text-gray-500"
           previousClassName="text-gray-500"
@@ -185,7 +246,7 @@ export const SettlementTable = (props: SettlementTableProps) => {
           renderOnZeroPageCount={null}
         />
       </div>
-      {props.isLoading ? (
+      {props.isLoading || isLoading ? (
         <Loading />
       ) : (
         props.error && <Error onRetry={props.fetchData} message={props.error} />
