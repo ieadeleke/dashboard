@@ -1,4 +1,4 @@
-import '@carbon/react';
+import '@carbon/react/styles.css'; // ✅ This includes all necessary styles
 
 import {
   Table,
