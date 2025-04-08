@@ -72,13 +72,15 @@ export const AgentTableList = (props: AgentTableProps) => {
     }
 
     useEffect(() => {
+        console.log(mdaList)
         if (mdaList) {
             setFilteredTransactions(mdaList);
         }
-    }, [])
+    }, [mdaList])
     useEffect(() => {
         if (data && filterEnabled) {
-            setFilteredTransactions(data);
+            setCount(data.count)
+            setFilteredTransactions(data.Agents);
         }
     }, [data])
 
