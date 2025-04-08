@@ -60,7 +60,7 @@ export const AgentTableList = (props: AgentTableProps) => {
     const { mdaList } = props;
     const { getAgentList, isLoading, error, data } = useGetAgents();
 
-    const [page, setPage] = useState<number>(1);
+    const [page, setPage] = useState<number>(0);
     const [count, setCount] = useState<number>(1);
     const [filterEnabled, setFilterEnabled] = useState(false);
     const [isDateModalOpen, setIsDateModalOpen] = useState(false);
