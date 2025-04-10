@@ -28,7 +28,10 @@ import { TransactionStatus, TransactionStatusChip } from "./TransactionStatusChi
 import Button from "../buttons";
 import { formatAmount } from "@/utils/formatters/formatAmount";
 import { formatDate } from "@/utils/formatters/formatDate";
+import { DatePicker, DatePickerInput } from "@carbon/react";
 import { TablePagination } from "../pagination/TablePagination";
+import dayjs from "dayjs";
+
 
 type TransactionTableProps = {
   name: string;
@@ -60,6 +63,8 @@ export const TransactionTable = (props: TransactionTableProps) => {
     from: new Date(),
     to: new Date(),
   });
+  const [defaultDate, setDefaultDate] = useState(dateRange ? [dateRange.startDate, dateRange.endDate] : [new Date(), new Date()]);
+
   const { showSnackBar } = useContext(GlobalActionContext)
 
   const formatDateRange = useMemo(() => {
@@ -69,17 +74,22 @@ export const TransactionTable = (props: TransactionTableProps) => {
     return `From ${start} - ${end}`;
   }, [JSON.stringify(date)]);
 
-  function onNewDateApplied(date: DateRange) {
-    if (date) {
+  function onNewDateApplied(dates: any, dateStrings: any) {
+    if (dates && dates.length === 2) {
+      // Convert the start and end dates to dayjs
+      let date = {
+        from: dayjs(dates[0]).toDate(),
+        to: dayjs(dates[1]).toDate()
+      }
       setDate((prevDate) =>
         Object.assign({}, prevDate, {
           from: date.from || new Date(),
           to: date.to || new Date(),
         })
       );
+      props.onDateApplied?.(date)
+      setIsDateModalOpen(false);
     }
-    props.onDateApplied?.(date)
-    setIsDateModalOpen(false);
   }
 
   useEffect(() => {
@@ -124,7 +134,7 @@ export const TransactionTable = (props: TransactionTableProps) => {
         <h1 className="font-medium text-xl">{props.name}</h1>
         <div className="flex-1" />
         <div className="flex items-center gap-2">
-          <Popover
+          {/* <Popover
             modal
             open={isDateModalOpen}
             onOpenChange={setIsDateModalOpen}
@@ -148,7 +158,11 @@ export const TransactionTable = (props: TransactionTableProps) => {
                 }}
               />
             </PopoverContent>
-          </Popover>
+          </Popover> */}
+          <DatePicker datePickerType="range" onChange={onNewDateApplied} value={date}>
+            <DatePickerInput id="date-picker-input-id-start" placeholder="mm/dd/yyyy" labelText="Start date" size="lg" />
+            <DatePickerInput id="date-picker-input-id-finish" placeholder="mm/dd/yyyy" labelText="End date" size="lg" />
+          </DatePicker>
 
           <IconButton onClick={handleDownloadReport} className="text-gray-700">
             <DownloadIcon />

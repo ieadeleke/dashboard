@@ -56,7 +56,7 @@ export default function Settlements() {
       <div className="flex flex-col px-4 py-8 gap-8">
         <div className="flex flex-col">
           <div>
-            <Link className="bg-transparent flex gap-2 mb-4 block" href="/settlement-accounts"> <FaArrowLeftLong /> Go Back</Link>
+            <Link className="bg-transparent flex gap-2 mb-4 block w-max" href="/settlement-accounts"> <FaArrowLeftLong /> Go Back</Link>
           </div>
           <div className="flex flex-col gap-4">
             <h1 className="font-medium text-2xl">All Settlements</h1>

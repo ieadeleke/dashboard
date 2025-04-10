@@ -166,7 +166,7 @@ export const SettlementTable = (props: SettlementTableProps) => {
         from: startDate,
         to: endDate,
         account_number: props.routerId as string,
-        page,
+        page: page > 0 ? page : 1,
       });
       setDate({
         from: dayjs(dates[0]).toDate(),
@@ -184,7 +184,7 @@ export const SettlementTable = (props: SettlementTableProps) => {
         <h1 className="font-medium text-xl">{props.name}</h1>
         <div className="flex-1" />
         <div className="flex items-center gap-2">
-          <Popover
+          {/* <Popover
             modal
             open={isDateModalOpen}
             onOpenChange={setIsDateModalOpen}
@@ -207,7 +207,7 @@ export const SettlementTable = (props: SettlementTableProps) => {
                 }}
               />
             </PopoverContent>
-          </Popover>
+          </Popover> */}
           <DatePicker datePickerType="range" onChange={handleDateChange} value={defaultDate}>
             <DatePickerInput id="date-picker-input-id-start" placeholder="mm/dd/yyyy" labelText="Start date" size="lg" />
             <DatePickerInput id="date-picker-input-id-finish" placeholder="mm/dd/yyyy" labelText="End date" size="lg" />

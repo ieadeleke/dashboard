@@ -4,6 +4,7 @@ import {
   ControllableSnackBarStateParams,
 } from "@/components/snackbar/ControllableSnackbar";
 import LinearProgress from "@mui/material/LinearProgress";
+import '@carbon/styles/css/styles.css';
 import "@/styles/globals.css";
 import { ThemeProvider } from "@mui/material";
 import type { AppProps } from "next/app";
