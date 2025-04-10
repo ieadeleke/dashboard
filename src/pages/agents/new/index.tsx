@@ -18,6 +18,8 @@ import { useAllowMDASplitting } from "@/utils/apiHooks/mda/useAllowMDASplitting"
 import { useGetAgents } from "@/utils/apiHooks/agents/useGetAgents";
 import { AgentTableList } from "@/components/agents/AgentTable";
 import { useAddAgents } from "@/utils/apiHooks/agents/useAddAgent";
+import Link from "next/link";
+import { FaArrowLeftLong } from "react-icons/fa6";
 
 interface SelectedMDAInterface {
     _id: string;
@@ -95,6 +97,9 @@ export default function Agents() {
                 <div className="flex flex-col px-4 py-8 gap-8">
                     <div>
                         <div className="flex flex-col justify-center gap-5">
+                            <div>
+                                <Link className="bg-transparent flex items-center gap-2 mb-4 w-max" href="/agents"> <FaArrowLeftLong /> Go Back</Link>
+                            </div>
                             <div className="w-[50%] mx-auto bg-white p-10 rounded-[16px]">
                                 <div className="mb-5 text-center">
                                     <h3 className="font-bold text-xl">Add New Agent</h3>
