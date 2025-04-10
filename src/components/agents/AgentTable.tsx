@@ -24,15 +24,15 @@ import { TablePagination } from "../pagination/TablePagination";
 import { AllMDAsType } from "@/models/mdas";
 import Link from "next/link";
 import { AllAgentType } from "@/models/agents";
-<<<<<<< HEAD
-import { useGetAgents } from "@/utils/apiHooks/agents/useGetAgents";
-=======
+// <<<<<<< HEAD
+// import { useGetAgents } from "@/utils/apiHooks/agents/useGetAgents";
+// =======
 import { Input, Modal, Select } from "antd";
 import { useGetAgents } from "@/utils/apiHooks/agents/useGetAgents";
 import { useGetConsultants } from "@/utils/apiHooks/agents/useGetConsultants";
 import { useAddConsultants } from "@/utils/apiHooks/agents/useAddConsultant";
 import { useUpdateAgentConsultants } from "@/utils/apiHooks/agents/useUpdateAgentConsultant";
->>>>>>> 21b36fc9be02eff22a1c002a84632c77183b4ad8
+// >>>>>>> 21b36fc9be02eff22a1c002a84632c77183b4ad8
 
 type WalletType = {
     accountName: string;
@@ -70,13 +70,11 @@ interface ConsultantInterface {
 
 export const AgentTableList = (props: AgentTableProps) => {
 
-<<<<<<< HEAD
-=======
-    const { getConsultantList, isLoading, error, data } = useGetConsultants();
+    const { getConsultantList, isLoading: isLoadingConsultant, error: consultantError, data: consultantData } = useGetConsultants();
     const { addNewConsultant, isLoading: addConsultantLoading, error: addConsultantError, data: addConsultantData } = useAddConsultants();
     const { updateAgentConsultant, isLoading: updateAgentConsultantLoading, error: updateAgentConsultantError, data: updateConsultantData } = useUpdateAgentConsultants();
 
->>>>>>> 21b36fc9be02eff22a1c002a84632c77183b4ad8
+    // >>>>>>> 21b36fc9be02eff22a1c002a84632c77183b4ad8
     const { mdaList } = props;
     const { getAgentList, isLoading, error, data } = useGetAgents();
 
@@ -106,27 +104,27 @@ export const AgentTableList = (props: AgentTableProps) => {
     }, []);
 
     useEffect(() => {
-        if (data) {
-            setConsultantList(data.AgentConsultantCompany);
+        if (consultantData) {
+            setConsultantList(consultantData.AgentConsultantCompany);
             // setMDAList(data.Agents);
         }
-    }, [data])
+    }, [consultantData])
 
 
     useEffect(() => {
-        if (error) {
+        if (consultantError) {
             showSnackBar({
                 severity: "error",
-                message: error,
+                message: consultantError,
             });
         }
-    }, [error])
+    }, [consultantError])
 
     const handleClick = (e: any) => {
         props.handleClick(e);
     }
 
-<<<<<<< HEAD
+    // <<<<<<< HEAD
     useEffect(() => {
         if (mdaList) {
             setCount(props.count);
@@ -159,7 +157,7 @@ export const AgentTableList = (props: AgentTableProps) => {
         setPage(selectedItem.selected);
     }
 
-=======
+    // =======
     const toggleDisplayConsultantModal = () => {
         setOpenConsultantModal(!openConsultantDisplayModal);
     }
@@ -233,21 +231,21 @@ export const AgentTableList = (props: AgentTableProps) => {
         }
     }, [updateAgentConsultantError])
 
->>>>>>> 21b36fc9be02eff22a1c002a84632c77183b4ad8
+    // >>>>>>> 21b36fc9be02eff22a1c002a84632c77183b4ad8
     return (
         <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
                 <h1 className="font-medium text-xl">{props.name}</h1>
-<<<<<<< HEAD
+                {/* <<<<<<< HEAD */}
                 <div>
-=======
-                <div className="flex gap-4">
-                    <button onClick={toggleNewConsultantModal} className="text-primary bg-transparent border-2 border-solid border-primary px-4 py-3 text-sm rounded-lg">Add New Consultant</button>
->>>>>>> 21b36fc9be02eff22a1c002a84632c77183b4ad8
-                    <Link className="bg-primary px-4 py-4 text-white rounded-lg" href="/agents/new">Add New Agent</Link>
+                    <div>
+                        <div className="flex gap-4">
+                            <button onClick={toggleNewConsultantModal} className="text-primary bg-transparent border-2 border-solid border-primary px-4 py-3 text-sm rounded-lg">Add New Consultant</button>
+                            <Link className="bg-primary px-4 py-4 text-white rounded-lg" href="/agents/new">Add New Agent</Link>
+                        </div>
+                    </div>
                 </div>
             </div>
-
             <Table>
                 <TableHeader className="bg-primary rounded-xl">
                     <TableRow>
@@ -261,7 +259,6 @@ export const AgentTableList = (props: AgentTableProps) => {
                         <TableHead className="text-white"></TableHead>
                     </TableRow>
                 </TableHeader>
-
                 {filteredTransactions.map((item: any, index: number) => (
                     <TableBody key={index} className="bg-white cursor-pointer">
                         <TableRow>
@@ -278,19 +275,17 @@ export const AgentTableList = (props: AgentTableProps) => {
                 ))}
             </Table>
 
+
             <div className="flex justify-center">
                 <TablePagination
                     breakLabel="..."
                     nextLabel=">"
                     onPageChange={onPageChange}
                     pageRangeDisplayed={5}
-<<<<<<< HEAD
                     currentPage={page}
                     pageCount={Math.max(0, count / 20)}
-=======
-                    currentPage={props.page - 1}
-                    pageCount={Math.max(0, props.count / 20)}
->>>>>>> 21b36fc9be02eff22a1c002a84632c77183b4ad8
+                    // currentPage={props.page - 1}
+                    // pageCount={Math.max(0, props.count / 20)}
                     // pageCount={1}
                     className="flex gap-4"
                     nextClassName="text-gray-500"
@@ -301,10 +296,8 @@ export const AgentTableList = (props: AgentTableProps) => {
                     renderOnZeroPageCount={null}
                 />
             </div>
-<<<<<<< HEAD
             {props.isLoading || isLoading ? <Loading /> : props.error && <Error onRetry={props.fetchData} message={props.error} />}
-=======
-            {props.isLoading ? <Loading /> : props.error && <Error onRetry={props.fetchData} message={props.error} />}
+
 
             <Modal onCancel={toggleDisplayConsultantModal} className="unset-width" footer={null} open={openConsultantDisplayModal}>
                 <div className="md:min-w-[25rem] mx-auto">
@@ -336,7 +329,6 @@ export const AgentTableList = (props: AgentTableProps) => {
                     </form>
                 </div>
             </Modal>
->>>>>>> 21b36fc9be02eff22a1c002a84632c77183b4ad8
         </div>
     );
 };
