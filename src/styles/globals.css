@@ -121,6 +121,10 @@ button {
   max-width: 80%;
 }
 
+.ant-modal.unset-width {
+  min-width: unset;
+}
+
 @layer utilities {
   @variants responsive {
 

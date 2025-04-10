@@ -17,12 +17,39 @@ export type GetAllAgentsResponse = ApiResponse & {
     count: number,
 }
 
+export type GetAllConsultantsParams = {
+    page?: number,
+}
+
+export type GetAllConsultantsResponse = ApiResponse & {
+    AgentConsultantCompany: any,
+}
+
+export type AddNewConsultantParam = {
+    name: string,
+}
+
+export type AddNewConsultantsResponse = ApiResponse & {
+    AgentConsultantCompany: any,
+}
+
+export type UpdateConsultantParam = {
+    agentId: string,
+    agentConsultantCompanyId: string
+}
+
+export type UpdateConsultantsResponse = ApiResponse & {
+    AgentConsultantCompany: any,
+}
+
 export type AddAgentParams = {
     email: string,
     userName: string,
     phoneNumber: string,
     firstName: string,
-    lastName: string
+    lastName: string,
+    profileType: string
+    ConsultantCompanyId: string
 }
 
 export type AddAgentResponse = ApiResponse & {
@@ -31,6 +58,31 @@ export type AddAgentResponse = ApiResponse & {
 }
 export type SuspendAgentParams = {
     userId: string
+}
+export type FetchAgentWalletParams = {
+    walletId: string
+    page?: number
+}
+
+export type FetchAgentWalletResponse = {
+    message: string
+    status: string
+    count: number
+    Transactions: any[]
+}
+
+export type FetchAgentTransactionsParams = {
+    userId: string
+    page?: number
+    startDate: string
+    endDate: string
+}
+
+export type FetchAgentTransactionsResponse = {
+    message: string
+    status: string
+    count: number
+    Transaction: any[]
 }
 
 export type SuspendAgentResponse = ApiResponse & {
@@ -61,4 +113,27 @@ export type FreezeAgentResponse = ApiResponse & {
         phoneNumber: string,
         isActive: boolean
     }
+}
+
+export type FundWalletParams = {
+    accountNumber: string,
+    amount: number,
+    fee?: number,
+    vat?: number,
+    description?: string
+}
+
+export type FundWalletResponse = ApiResponse & {
+    message: string,
+    status: string
+}
+
+export type UpdateWalletParams = {
+    accountNumber: string,
+    tier: string
+}
+
+export type UpdateWalletResponse = ApiResponse & {
+    message: string,
+    status: string
 }

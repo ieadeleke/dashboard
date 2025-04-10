@@ -1,5 +1,5 @@
 import { request } from "../../request";
-import { AllowMDAsParams, AllowMDAsResponse, ApproveMDAResponse, ApproveMDAsParams, DisableMDAsParams, DisableMDAsResponse, GetAllMDAsParams, GetAllMDAsResponse } from "./types";
+import { AllowMDAsParams, AllowMDAsResponse, ApproveMDAResponse, ApproveMDAsParams, ApproveMDASplittingParams, DisableMDAsParams, DisableMDAsResponse, GetAllMDAsParams, GetAllMDAsResponse } from "./types";
 
 export function MDAService() {
   async function getAllMDAs(payload: GetAllMDAsParams) {
@@ -11,7 +11,7 @@ export function MDAService() {
     return data as GetAllMDAsResponse;
   }
 
-  async function allowMDAConsultantSplitting(payload: AllowMDAsParams) {
+  async function allowMDAConsultantSplitting(payload: ApproveMDASplittingParams) {
     const data = await request({
       path: `v1/mdaConsultant/AllowMDASplitting`,
       method: "PUT",
@@ -21,8 +21,6 @@ export function MDAService() {
   }
 
   async function approveMDAConsultant(payload: ApproveMDAsParams) {
-    console.log(payload);
-    console.log("hello there");
     const data = await request({
       path: `v1/mdaConsultant/ApprovedMDAConsultant`,
       method: "PUT",

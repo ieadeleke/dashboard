@@ -2,13 +2,13 @@ import { useState } from "react"
 import { useApi } from "../index"
 import { MDAService } from "@/utils/services/mda"
 import { DashboardInfoResponseParams } from "@/utils/services/transactions/types"
-import { DisableMDAsResponse, ApproveMDAsParams, GetAllMDAsParams } from "@/utils/services/mda/types"
+import { DisableMDAsResponse, ApproveMDASplittingParams } from "@/utils/services/mda/types"
 
 export const useDisableMDASplitting = () => {
     const [data, setData] = useState<DisableMDAsResponse | null>(null);
     const { isLoading, error, execute } = useApi();
 
-    async function disableSpliting(params: ApproveMDAsParams) {
+    async function disableSpliting(params: ApproveMDASplittingParams) {
         setData(null)
         const response = await execute(async () => await MDAService().disableMDAConsultantSplitting(params))
         if (response) {

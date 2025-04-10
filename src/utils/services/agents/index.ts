@@ -1,5 +1,11 @@
 import { request } from "../../request";
-import { AddAgentParams, AddAgentResponse, FreezeAgentParam, FreezeAgentResponse, GetAllAgentsParams, GetAllAgentsResponse, SuspendAgentParams, SuspendAgentResponse } from "./types";
+import {
+    AddAgentParams, AddAgentResponse, AddNewConsultantParam, AddNewConsultantsResponse, FetchAgentTransactionsParams, FetchAgentTransactionsResponse, FetchAgentWalletParams, FetchAgentWalletResponse, FreezeAgentParam, FreezeAgentResponse, FundWalletParams,
+    FundWalletResponse, GetAllAgentsParams, GetAllAgentsResponse, GetAllConsultantsResponse, SuspendAgentParams, SuspendAgentResponse,
+    UpdateConsultantParam,
+    UpdateConsultantsResponse,
+    UpdateWalletParams, UpdateWalletResponse
+} from "./types";
 
 export function AgentService() {
     async function getAllAgents(payload: GetAllAgentsParams) {
@@ -9,6 +15,33 @@ export function AgentService() {
             body: payload,
         });
         return data as GetAllAgentsResponse;
+    }
+
+    async function getAllConsultants() {
+        const data = await request({
+            path: `v1/agent/admin/GetAllAgentConsultantCompany`,
+            method: "GET",
+            body: "",
+        });
+        return data as GetAllConsultantsResponse;
+    }
+
+    async function saveNewConsultant(param: AddNewConsultantParam) {
+        const data = await request({
+            path: `v1/agent/admin/AddConsultantCompany`,
+            method: "POST",
+            body: param,
+        });
+        return data as AddNewConsultantsResponse;
+    }
+
+    async function updateAgentConsultant(param: UpdateConsultantParam) {
+        const data = await request({
+            path: `v1/agent/admin/UpdateAgentConsultantCompany`,
+            method: "POST",
+            body: param,
+        });
+        return data as UpdateConsultantsResponse;
     }
 
     async function addNewAgent(payload: AddAgentParams) {
@@ -27,6 +60,24 @@ export function AgentService() {
             body: payload,
         });
         return data as SuspendAgentResponse;
+    }
+
+    async function FetchAgentWallet(payload: FetchAgentWalletParams) {
+        const data = await request({
+            path: `v1/agent/admin/AdminViewWalletTransaction?page=${payload.page}`,
+            method: "PUT",
+            body: payload,
+        });
+        return data as FetchAgentWalletResponse;
+    }
+
+    async function FetchAgentTransactionHistory(payload: FetchAgentTransactionsParams) {
+        const data = await request({
+            path: `v1/agent/admin/AdminGetAgentTransactions?page=${payload.page}`,
+            method: "PUT",
+            body: payload,
+        });
+        return data as FetchAgentTransactionsResponse;
     }
 
     async function UnSuspendAgent(payload: SuspendAgentParams) {
@@ -56,12 +107,37 @@ export function AgentService() {
         return data as FreezeAgentResponse;
     }
 
+    async function fundWallet(payload: FundWalletParams) {
+        const data = await request({
+            path: `v1/agent/admin/FundCustomerWallet`,
+            method: "POST",
+            body: payload,
+        });
+        return data as FundWalletResponse;
+    }
+
+    async function upgradeWallet(payload: UpdateWalletParams) {
+        const data = await request({
+            path: `v1/agent/admin/UpgradeWallet`,
+            method: "PUT",
+            body: payload,
+        });
+        return data as UpdateWalletResponse;
+    }
+
     return {
         getAllAgents,
         addNewAgent,
         SuspendAgent,
         UnSuspendAgent,
         FreezeAgent,
-        UnFreezeAgent
+        UnFreezeAgent,
+        fundWallet,
+        upgradeWallet,
+        FetchAgentWallet,
+        FetchAgentTransactionHistory,
+        getAllConsultants,
+        saveNewConsultant,
+        updateAgentConsultant
     };
 }

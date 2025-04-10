@@ -6,7 +6,7 @@ import { TransactionTable } from "@/components/transactions/TransactionTable";
 import { useGetMDAs } from "@/utils/apiHooks/mda/useGetMDAs";
 import { GetAllMDAsResponse } from "@/utils/services/mda/types";
 import { useContext, useEffect, useState } from "react";
-import { Modal, Tabs, Checkbox, Divider } from "antd";
+import { Modal, Tabs, Checkbox, Divider, Select } from "antd";
 import { RegularTextInput } from "@/components/input/RegularTextInput";
 import { formatDate } from "@/utils/formatters/formatDate";
 import { MDAConsultantTableList } from "@/components/mdas/ConsultantTable";
@@ -21,8 +21,14 @@ import { useSuspendAgents } from "@/utils/apiHooks/agents/useSuspendAgent";
 import { useUnSuspendAgents } from "@/utils/apiHooks/agents/useUnSuspendAgent";
 import { useFreezeAgent } from "@/utils/apiHooks/agents/useFreezeAgent";
 import { useUnfreezeAgent } from "@/utils/apiHooks/agents/useUnfreezeAgent";
+import { useUpgradeWallet } from "@/utils/apiHooks/agents/useUpgradeWallet";
+import ViewAgentData from "@/components/agents/ViewAgent";
+import { AgentWalletTransactionList } from "@/components/agents/AgentWalletTransactions";
+import { FundAgentWallet } from "@/components/agents/FundAgentWallet";
+import { AgentTotalTransactionList } from "@/components/agents/AgentTransactions";
 
 interface WalletInterface {
+    _id?: string;
     accountName: string;
     accountNumber: string;
     bankName: string;
@@ -43,6 +49,7 @@ interface SelectedAgentInterface {
     wallet?: WalletInterface;
     createdAt: string;
     isActive: boolean;
+    ConsultantCompany: string
 }
 interface selectedAgentConsultantInterface {
     _id: string
@@ -79,6 +86,8 @@ export default function Agents() {
     const { freezeAgent, isLoading: loadingfreezeAgentData, error: freezeAgentError, data: freezeAgentData } = useFreezeAgent();
     const { UnfreezeAgent, isLoading: loadingUnFreezeAgentData, error: unFreezeAgentError, data: unFreezeAgentData } = useUnfreezeAgent();
 
+    const { upgradeWallet, isLoading: loadingUpgradeAgentData, error: upgradeAgentError, data: upgradeAgentWalletData } = useUpgradeWallet();
+
 
     const { approveConsultant, isLoading: isLoadingConsultant, error: errorConsultant, data: dataConsultant } = useApproveMDA();
     const { disableSpliting, isLoading: loadingDisableSpliting, error: errorDisableSpliting, data: dataDisableSpliting } = useDisableMDASplitting();
@@ -96,7 +105,8 @@ export default function Agents() {
         email: "",
         phoneNumber: "",
         createdAt: "",
-        isActive: true
+        isActive: true,
+        ConsultantCompany: ""
     });
     const [selectedAgentConsultant, setSelectedAgentConsultant] = useState<selectedAgentConsultantInterface>({
         _id: "",
@@ -221,6 +231,25 @@ export default function Agents() {
         }
     }, [unFreezeAgentError])
     // suspend user ends
+    // upgrade Wallet starts
+
+    useEffect(() => {
+        if (upgradeAgentWalletData) {
+            showSnackBar({
+                severity: "success",
+                message: "Agent wallet upgraded successfully",
+            });
+            window.location.reload();
+        }
+    }, [upgradeAgentWalletData])
+    useEffect(() => {
+        if (upgradeAgentError) {
+            showSnackBar({
+                severity: "error",
+                message: upgradeAgentError,
+            });
+        }
+    }, [upgradeAgentError])
 
     useEffect(() => {
         if (dataConsultant) {
@@ -275,12 +304,13 @@ export default function Agents() {
     function onPageChange(selectedItem: {
         selected: number;
     }) {
-        setPage(selectedItem.selected)
+        setPage(selectedItem.selected + 1)
     }
 
     const toggleDisplayModal = () => {
         setOpenDisplayModal(!openDisplayModal);
     }
+
     const toggleConsultantDisplayModal = () => {
         setDisplayConsultantViewMode(!displayConsultantViewMode);
     }
@@ -296,7 +326,7 @@ export default function Agents() {
 
     const handleApproveConsultant = () => {
         approveConsultant({
-            MDAId: selectedAgentConsultant._id
+            MDAConsultantId: selectedAgentConsultant._id
         });
     }
 
@@ -336,45 +366,33 @@ export default function Agents() {
         });
     }
 
+    const handleFundWallet = () => {
+        disableSpliting({
+            MDAId: selectedAgent._id
+        });
+    }
+
+    const handleUpgradeWallet = (data: string) => {
+        upgradeWallet({
+            accountNumber: selectedAgent.wallet?.accountNumber ? selectedAgent.wallet.accountNumber : "",
+            tier: data
+        });
+    }
+
     return (
         <DashboardLayout>
             <>
                 <div className="flex flex-col px-4 py-8 gap-8">
                     <div>
-                        <AgentTableList name="List of Agents" mdaList={mdaList} isLoading={isLoading} error={error} page={page} count={count} handleClick={handleMDASelection} firstName={""} lastName={""} phoneNumber={""} />
+                        <AgentTableList name="List of Agents" mdaList={mdaList} isLoading={isLoading} error={error} page={page} count={count}
+                            handleClick={handleMDASelection} firstName={""} lastName={""} phoneNumber={""} onPageChange={onPageChange} />
                     </div>
                 </div>
                 <Modal onCancel={toggleDisplayModal} footer={null} open={openDisplayModal}>
                     <Tabs type="card">
                         <Tabs.TabPane tab="Agent Details" key="item-1">
                             <div>
-                                <div className="grid grid-cols-2 gap-5">
-                                    <div>
-                                        <p className="text-md">First name:</p>
-                                        <RegularTextInput type="text" disabled className="text-xs"
-                                            value={selectedAgent.firstName} />
-                                    </div>
-                                    <div>
-                                        <p className="text-md">Last name:</p>
-                                        <RegularTextInput type="text" disabled className="text-xs"
-                                            value={selectedAgent.lastName} />
-                                    </div>
-                                    <div>
-                                        <p className="text-md">Email Address:</p>
-                                        <RegularTextInput type="text" disabled className="text-xs"
-                                            value={selectedAgent.email} />
-                                    </div>
-                                    <div>
-                                        <p className="text-md">Phone number:</p>
-                                        <RegularTextInput type="text" disabled className="text-xs"
-                                            value={selectedAgent.phoneNumber} />
-                                    </div>
-                                    <div>
-                                        <p className="text-md">Date Added:</p>
-                                        <RegularTextInput type="text" disabled className="text-xs"
-                                            value={formatDate(selectedAgent.createdAt)} />
-                                    </div>
-                                </div>
+                                <ViewAgentData agent={selectedAgent} />
                                 <div className="mt-10 flex gap-5">
                                     {
                                         selectedAgent.isActive ?
@@ -382,12 +400,18 @@ export default function Agents() {
                                             :
                                             <Button className="px-5 bg-primay" isLoading={loadingUnSuspendAgent} onClick={handleUnSuspendAgent}>Unsuspend Consultant</Button>
                                     }
-                                    <Button className="px-5" variant="outlined" isLoading={isLoadingConsultant} onClick={handleApproveConsultant}>Upgrade Wallet</Button>
+                                    {
+                                        selectedAgent?.wallet?.accountNumber ?
+                                            selectedAgent?.wallet?.tier === "TIER_1" ?
+                                                <Button className="px-5" variant="outlined" isLoading={loadingUpgradeAgentData} onClick={() => handleUpgradeWallet("Tier_2")}>Upgrade Wallet to Tier 2</Button>
+                                                :
+                                                <Button className="px-5" variant="outlined" isLoading={loadingUpgradeAgentData} onClick={() => handleUpgradeWallet("TIER_1")}>Downgrade Wallet to Tier 1</Button>
+                                            : ""}
                                 </div>
                                 <Divider />
                                 <div className="flex gap-5">
-                                    <Button className="px-5" variant="outlined" isLoading={isLoadingConsultant} onClick={handleApproveConsultant}>Fund Customer Wallet</Button>
-                                    <Button className="px-5" variant="outlined" isLoading={isLoadingConsultant} onClick={handleApproveConsultant}>View Wallet Transaction</Button>
+                                    {/* <Button className="px-5" variant="outlined" isLoading={isLoadingConsultant} onClick={handleApproveConsultant}>Fund Customer Wallet</Button>
+                                    <Button className="px-5" variant="outlined" isLoading={isLoadingConsultant} onClick={handleApproveConsultant}>View Wallet Transaction</Button> */}
                                     {
                                         selectedAgent?.wallet?.accountNumber ?
                                             <Button className="px-5" variant="outlined" isLoading={loadingfreezeAgentData} onClick={handleFreezeAgent}>Freeze Wallet</Button>
@@ -452,6 +476,36 @@ export default function Agents() {
                                     :
                                     <p>Account has not been verified yet</p>
                             }
+                        </Tabs.TabPane>
+                        <Tabs.TabPane tab="Wallet History" key="item-3">
+                            <div>
+                                {
+                                    selectedAgent.wallet?._id ?
+                                        <AgentWalletTransactionList walletId={selectedAgent?.wallet ? selectedAgent?.wallet?._id : ""} />
+                                        :
+                                        <p>Account has not been verified yet</p>
+                                }
+                            </div>
+                        </Tabs.TabPane>
+                        <Tabs.TabPane tab="Transaction History" key="item-4">
+                            <div>
+                                {
+                                    selectedAgent.wallet?._id ?
+                                        <AgentTotalTransactionList userId={selectedAgent?.wallet ? selectedAgent?._id : ""} />
+                                        :
+                                        <p>Account has not been verified yet</p>
+                                }
+                            </div>
+                        </Tabs.TabPane>
+                        <Tabs.TabPane tab="Fund Agent" key="item-5">
+                            <div>
+                                {
+                                    selectedAgent.wallet?._id ?
+                                        <FundAgentWallet accNumber={selectedAgent?.wallet ? selectedAgent?.wallet?.accountNumber : ""} />
+                                        :
+                                        <p>Account has not been verified yet</p>
+                                }
+                            </div>
                         </Tabs.TabPane>
                     </Tabs>
                 </Modal>

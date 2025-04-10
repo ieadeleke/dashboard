@@ -192,7 +192,7 @@ export default function Agents() {
 
     const handleApproveConsultant = () => {
         approveConsultant({
-            MDAId: selectedMDAConsultant._id
+            MDAConsultantId: selectedMDAConsultant._id
         });
     }
 

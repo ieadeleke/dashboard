@@ -42,6 +42,10 @@ export type DisableMDAsResponse = ApiResponse & {
 }
 
 export type ApproveMDAsParams = {
+    MDAConsultantId?: string,
+}
+
+export type ApproveMDASplittingParams = {
     MDAId?: string,
 }
 
@@ -50,6 +54,6 @@ export type ApproveMDAResponse = ApiResponse & {
         _id: string,
         name: string,
         approveBy: string,
-        approve: boolean,
+        approve: boolean
     }
 }
