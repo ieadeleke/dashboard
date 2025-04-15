@@ -96,7 +96,7 @@ export default function Home() {
     fetchTransactions,
     count,
   } = useFetchTranscations();
-  const [date, setDate] = useState(getDefaultDateAsString())
+  const [date, setDate] = useState(getDefaultDateAsString(new Date()))
   const [page, setPage] = useState(0)
 
   useEffect(() => {

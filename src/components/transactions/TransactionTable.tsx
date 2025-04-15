@@ -159,7 +159,7 @@ export const TransactionTable = (props: TransactionTableProps) => {
               />
             </PopoverContent>
           </Popover> */}
-          <DatePicker datePickerType="range" onChange={onNewDateApplied} value={date}>
+          <DatePicker datePickerType="range" onChange={onNewDateApplied} value={defaultDate}>
             <DatePickerInput id="date-picker-input-id-start" placeholder="mm/dd/yyyy" labelText="Start date" size="lg" />
             <DatePickerInput id="date-picker-input-id-finish" placeholder="mm/dd/yyyy" labelText="End date" size="lg" />
           </DatePicker>

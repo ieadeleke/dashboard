@@ -48,7 +48,7 @@ type AgentTransactionTableProps = {
 export const AgentWalletTransactionList = ({ walletId }: AgentTableProps) => {
     const { fetchAgentWalletTrans, isLoading, error, data } = useFetchAgentWalletTrans();
     const [isDateModalOpen, setIsDateModalOpen] = useState(false);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(0);
     const [count, setCount] = useState<number>(0);
     const [transData, setTransData] = useState<AgentTransactionTableProps>([{
         createdAt: "",

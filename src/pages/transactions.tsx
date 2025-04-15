@@ -1,7 +1,8 @@
 import DashboardLayout from "@/components/layout/dashboard";
 import { useFetchTranscations } from "@/utils/apiHooks/transactions/useFetchTransactions";
 import { ChangeEvent, useEffect, useState } from "react";
-import { TransactionTable } from "@/components/transactions/TransactionTable";
+// import { TransactionTable } from "@/components/transactions/TransactionTable";
+import { TransactionTable } from "@/components/transactions/TransTable";
 import { DateRange } from "@/components/calendar/CalendarRange";
 import { convertDateToFormat, getDefaultDateAsString } from "@/utils/data/getDefaultDate";
 import { NetworkRequestContainer } from "@/components/states/NetworkRequestContainer";
@@ -14,7 +15,7 @@ export default function Transactionss() {
         fetchTransactions,
         count
     } = useFetchTranscations();
-    const [date, setDate] = useState(getDefaultDateAsString())
+    const [date, setDate] = useState(getDefaultDateAsString(new Date()));
     const [page, setPage] = useState(0)
 
     useEffect(() => {
