@@ -1,4 +1,4 @@
-export function getDefaultDateAsString(from: Date) {
+export function getDefaultDateAsString(from?: Date) {
     const today = new Date();
     const lastMonth = new Date(today)
     lastMonth.setMonth(lastMonth.getMonth() - 1)
