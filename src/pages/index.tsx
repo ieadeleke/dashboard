@@ -15,6 +15,7 @@ import { useDashboardInfo } from "@/utils/apiHooks/transactions/useDashboardInfo
 import { NetworkRequestContainer } from "@/components/states/NetworkRequestContainer";
 import { formatAmount } from "@/utils/formatters/formatAmount";
 import { cn } from "@/lib/utils";
+import { useDashboardInfoDownload } from "@/utils/apiHooks/transactions/useGetDashbardInfoDownload";
 
 
 type OverviewItemProps = {
@@ -88,7 +89,8 @@ function distributePieChartCounts(data: ({
 }
 
 export default function Home() {
-  const { isLoading: isDashboardLoading, data: dashboardData, error: dashboardError, getDashboardInfo } = useDashboardInfo()
+  const { isLoading: isDashboardLoading, data: dashboardData, error: dashboardError, getDashboardInfo } = useDashboardInfo();
+  const { isLoading: summaryDownloadLoading, data: summaryDownloadData, error: summaryDownloadError, getSummaryDownloadInfo } = useDashboardInfoDownload();
   const {
     isLoading,
     data: transactions,
@@ -106,7 +108,14 @@ export default function Home() {
   }, [dashboardData, page])
 
   useEffect(() => {
-    getDashboardInfo()
+    if (dashboardData) {
+      fetchData()
+    }
+  }, [dashboardData, page])
+
+  useEffect(() => {
+    getDashboardInfo();
+    getSummaryDownloadInfo();
   }, [])
 
   function fetchData() {
@@ -141,7 +150,6 @@ export default function Home() {
           {dashboardData && <div className="flex flex-col">
             <div className="flex flex-col gap-4">
               <h1 className="font-medium text-2xl">Overview</h1>
-
               <div className="grid grid-cols-1 items-center gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <OverviewItem
                   title="All Transactions"

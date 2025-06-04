@@ -1,9 +1,10 @@
 import { request } from "../../request";
 import {
     AddAgentParams, AddAgentResponse, AddNewConsultantParam, AddNewConsultantsResponse, FetchAgentTransactionsParams, FetchAgentTransactionsResponse, FetchAgentWalletParams, FetchAgentWalletResponse, FreezeAgentParam, FreezeAgentResponse, FundWalletParams,
-    FundWalletResponse, GetAllAgentsParams, GetAllAgentsResponse, GetAllConsultantsResponse, SuspendAgentParams, SuspendAgentResponse,
+    FundWalletResponse, GetAllAgentsLoanParams, GetAllAgentsParams, GetAllAgentsResponse, GetAllConsultantsResponse, SuspendAgentParams, SuspendAgentResponse,
     UpdateConsultantParam,
     UpdateConsultantsResponse,
+    UpdateLoanStatusParam,
     UpdateWalletParams, UpdateWalletResponse
 } from "./types";
 
@@ -15,6 +16,15 @@ export function AgentService() {
             body: payload,
         });
         return data as GetAllAgentsResponse;
+    }
+
+    async function getAllAgentsLoans(payload: GetAllAgentsLoanParams) {
+        const data = await request({
+            path: `v1/agent/loan/admin/viewloans?status=${payload.status}&page=${payload.page ?? 1}`,
+            method: "GET",
+            body: payload,
+        });
+        return data as any;
     }
 
     async function getAllConsultants() {
@@ -33,6 +43,24 @@ export function AgentService() {
             body: param,
         });
         return data as AddNewConsultantsResponse;
+    }
+
+    async function approveAgentLoanRequest(param: UpdateLoanStatusParam) {
+        const data = await request({
+            path: `v1/agent/loan/admin/approveloan`,
+            method: "PUT",
+            body: param,
+        });
+        return data as any;
+    }
+
+    async function rejectAgentLoanRequest(param: UpdateLoanStatusParam) {
+        const data = await request({
+            path: `v1/agent/loan/admin/rejectloan`,
+            method: "PUT",
+            body: param,
+        });
+        return data as any;
     }
 
     async function updateAgentConsultant(param: UpdateConsultantParam) {
@@ -138,6 +166,9 @@ export function AgentService() {
         FetchAgentTransactionHistory,
         getAllConsultants,
         saveNewConsultant,
-        updateAgentConsultant
+        updateAgentConsultant,
+        getAllAgentsLoans,
+        rejectAgentLoanRequest,
+        approveAgentLoanRequest
     };
 }

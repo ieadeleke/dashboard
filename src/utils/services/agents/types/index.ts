@@ -11,6 +11,11 @@ export type GetAllAgentsParams = {
     page?: number,
 }
 
+export type GetAllAgentsLoanParams = {
+    page?: number,
+    status?: string
+}
+
 export type GetAllAgentsResponse = ApiResponse & {
     Agents: any,
     page: number,
@@ -26,7 +31,11 @@ export type GetAllConsultantsResponse = ApiResponse & {
 }
 
 export type AddNewConsultantParam = {
-    name: string,
+    name: string
+}
+
+export type UpdateLoanStatusParam = {
+    loanId: string
 }
 
 export type AddNewConsultantsResponse = ApiResponse & {

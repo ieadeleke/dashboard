@@ -91,6 +91,14 @@ export function TransactionService() {
     return data as DashboardInfoResponseParams;
   }
 
+  async function dashboardInfoDownload() {
+    const data = await request({
+      path: `v1/admin/Transaction/DashboardInfoDownload`,
+      method: "GET",
+    });
+    return data;
+  }
+
   return {
     getTransactions,
     getGroupedTransactions,
@@ -99,5 +107,6 @@ export function TransactionService() {
     getTransactionByPaymentRef,
     dashboardInfo,
     downloadReport,
+    dashboardInfoDownload
   };
 }

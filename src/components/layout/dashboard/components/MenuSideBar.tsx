@@ -73,6 +73,7 @@ export const MenuSideBar = () => {
 
         <ListItem startIcon={<UserIcon />} name="Admins" href="/admins" />
         <ListItem startIcon={<SquareGantt />} name="MDA" href="/mda" />
+        <ListItem startIcon={<SquareGantt />} name="Agent Loans" href="/loan-history" />
         <ListItem startIcon={<UserSquareIcon />} name="Agents" href="/agents" />
         <ListItem startIcon={<Settings2Icon />} name="Roles" href="/roles" />
         <Divider />
