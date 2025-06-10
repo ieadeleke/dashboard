@@ -215,11 +215,11 @@ export default function Home() {
             <div className="grid grid-cols-1 gap-8 md:grid-cols-3 mt-7">
               <TransactionPill data={{
                 title: "Wallet Transaction",
-                description: formatAmount(summaryDownloadInfo?.OnlineTransaction?[0]?.totalAmount?.toString())
+                description: summaryDownloadInfo?.OnlineTransaction && formatAmount(summaryDownloadInfo?.OnlineTransaction[0]?.totalAmount?.toString())
               }} />
               <TransactionPill data={{
                 title: "Online Transaction",
-                description: formatAmount(summaryDownloadInfo?.WalletTransaction?[0]?.totalAmount?.toString())
+                description: summaryDownloadInfo?.WalletTransaction && formatAmount(summaryDownloadInfo?.WalletTransaction[0]?.totalAmount?.toString())
               }} />
               <TransactionPill data={{
                 title: "Agent With Active Wallet",
