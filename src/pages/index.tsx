@@ -16,6 +16,7 @@ import { NetworkRequestContainer } from "@/components/states/NetworkRequestConta
 import { formatAmount } from "@/utils/formatters/formatAmount";
 import { cn } from "@/lib/utils";
 import { useDashboardInfoDownload } from "@/utils/apiHooks/transactions/useGetDashbardInfoDownload";
+import { TransactionPill } from "@/components/page_components/pill";
 
 
 type OverviewItemProps = {
@@ -91,6 +92,8 @@ function distributePieChartCounts(data: ({
 export default function Home() {
   const { isLoading: isDashboardLoading, data: dashboardData, error: dashboardError, getDashboardInfo } = useDashboardInfo();
   const { isLoading: summaryDownloadLoading, data: summaryDownloadData, error: summaryDownloadError, getSummaryDownloadInfo } = useDashboardInfoDownload();
+  // const { isLoading: summaryDownloadLoading, data: summaryDownloadData, error: summaryDownloadError, getSummaryDownloadInfo } = useDashboardInfoDownload();
+
   const {
     isLoading,
     data: transactions,
@@ -100,12 +103,19 @@ export default function Home() {
   } = useFetchTranscations();
   const [date, setDate] = useState(getDefaultDateAsString(new Date()))
   const [page, setPage] = useState(0)
+  const [summaryDownloadInfo, setSummaryDownloadInfo] = useState<any>({})
 
   useEffect(() => {
     if (dashboardData) {
       fetchData()
     }
   }, [dashboardData, page])
+
+  useEffect(() => {
+    if (summaryDownloadData) {
+      setSummaryDownloadInfo(summaryDownloadData);
+    }
+  }, [summaryDownloadData])
 
   useEffect(() => {
     if (dashboardData) {
@@ -187,7 +197,34 @@ export default function Home() {
                   iconClassName="text-blue-800 bg-blue-300"
                   icon={<PersonStandingIcon />}
                 />
+                <OverviewItem
+                  title="Consulting Companies"
+                  description={summaryDownloadInfo?.TotalAgentConsultingCompany?.toString()}
+                  iconClassName="text-blue-800 bg-blue-300"
+                  icon={<PersonStandingIcon />}
+                />
+                <OverviewItem
+                  title="Total MDAs"
+                  description={summaryDownloadInfo?.TotalMDA?.toString()}
+                  iconClassName="text-blue-800 bg-blue-300"
+                  icon={<PersonStandingIcon />}
+                />
               </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-3 mt-7">
+              <TransactionPill data={{
+                title: "Wallet Transaction",
+                description: formatAmount(summaryDownloadInfo?.OnlineTransaction[0]?.totalAmount?.toString())
+              }} />
+              <TransactionPill data={{
+                title: "Online Transaction",
+                description: formatAmount(summaryDownloadInfo?.WalletTransaction[0]?.totalAmount?.toString())
+              }} />
+              <TransactionPill data={{
+                title: "Agent With Active Wallet",
+                description: summaryDownloadInfo?.AgentWithActiveWallet?.toString()
+              }} />
             </div>
 
             <div className="grid grid-cols-1 gap-4 my-4 md:grid-cols-2">
