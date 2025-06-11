@@ -1,0 +1,22 @@
+import { useState } from "react"
+import { useApi } from "../index"
+import { TransactionService } from "@/utils/services/transactions"
+import { DashboardInfoResponseParams } from "@/utils/services/transactions/types"
+
+export const useGetConsultantSummary = () => {
+    const [data, setData] = useState<any>(null)
+    const { isLoading, error, execute } = useApi()
+
+    async function getDashboardInfo() {
+        setData(null)
+        const response = await execute(async () => await TransactionService().getConsultantCompanySummary())
+        if (response) {
+            setData({
+                found: true,
+                response
+            })
+        }
+    }
+
+    return { isLoading, error, data, getDashboardInfo }
+}

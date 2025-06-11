@@ -191,42 +191,8 @@ export default function Home() {
                   iconClassName="text-[#23A321] bg-[#D9F7D8]"
                   icon={<CompletedDeliveryIcon />}
                 />
-                <OverviewItem
-                  title="Agencies"
-                  description={dashboardData.Agency.toString()}
-                  iconClassName="text-blue-800 bg-blue-300"
-                  icon={<PersonStandingIcon />}
-                />
-                <OverviewItem
-                  title="Consulting Companies"
-                  description={summaryDownloadInfo?.TotalAgentConsultingCompany?.toString()}
-                  iconClassName="text-blue-800 bg-blue-300"
-                  icon={<PersonStandingIcon />}
-                />
-                <OverviewItem
-                  title="Total MDAs"
-                  description={summaryDownloadInfo?.TotalMDA?.toString()}
-                  iconClassName="text-blue-800 bg-blue-300"
-                  icon={<PersonStandingIcon />}
-                />
               </div>
             </div>
-
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-3 mt-7">
-              <TransactionPill data={{
-                title: "Wallet Transaction",
-                description: summaryDownloadInfo?.OnlineTransaction && formatAmount(summaryDownloadInfo?.OnlineTransaction[0]?.totalAmount?.toString())
-              }} />
-              <TransactionPill data={{
-                title: "Online Transaction",
-                description: summaryDownloadInfo?.WalletTransaction && formatAmount(summaryDownloadInfo?.WalletTransaction[0]?.totalAmount?.toString())
-              }} />
-              <TransactionPill data={{
-                title: "Agent With Active Wallet",
-                description: summaryDownloadInfo?.AgentWithActiveWallet?.toString()
-              }} />
-            </div>
-
             <div className="grid grid-cols-1 gap-4 my-4 md:grid-cols-2">
               <WeeklyDeliveries total={dashboardData.WeeklyTransactions.reduce((total, transaction) => {
                 return total + transaction.count;

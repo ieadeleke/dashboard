@@ -90,6 +90,13 @@ export function TransactionService() {
     });
     return data as DashboardInfoResponseParams;
   }
+  async function getConsultantCompanySummary() {
+    const data = await request({
+      path: `v1/admin/Transaction/consultantcompanyagenttransactionsummary`,
+      method: "GET",
+    });
+    return data as DashboardInfoResponseParams;
+  }
 
   async function dashboardInfoDownload() {
     const data = await request({
@@ -107,6 +114,7 @@ export function TransactionService() {
     getTransactionByPaymentRef,
     dashboardInfo,
     downloadReport,
-    dashboardInfoDownload
+    dashboardInfoDownload,
+    getConsultantCompanySummary
   };
 }
