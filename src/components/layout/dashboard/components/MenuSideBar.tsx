@@ -55,6 +55,7 @@ export const MenuSideBar = () => {
         />
         {/* <ListItem startIcon={<AgentsIcon />} name="Agents" href="/agents" /> */}
         <ListItem startIcon={<AgencyIcon />} name="Agency" href="/agency" />
+        <ListItem startIcon={<AgencyIcon />} name="Consultant Info" href="/consultant-info" />
         <ListItem
           startIcon={<SearchIcon />}
           name="Payment Reference"

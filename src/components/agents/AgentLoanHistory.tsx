@@ -219,7 +219,7 @@ export const AgentLoanHistoryTable = (props: AgentTableProps) => {
                                 <TableCell className="text-left">{formatAmount(item?.repaymentAmount)}</TableCell>
                                 <TableCell className="text-left">{formatDateWithoutTime(item?.endDate)}</TableCell>
                                 <TableCell>
-                                    <p className={`py-3 px-4 w-max ${item.status === "active" ? "bg-blue-200" : item.status === "pending" ? "bg-yellow-100" : "bg-red-100"} rounded-lg text-left`}>{item.status}</p>
+                                    <p className={`py-3 px-4 w-max ${item.status === "completed" ? 'bg-[#C9F2F0]' : item.status === "active" ? "bg-blue-200" : item.status === "pending" ? "bg-yellow-100" : "bg-red-100"} rounded-lg text-left`}>{item.status}</p>
                                 </TableCell>
                                 <TableCell>
                                     <div className="flex items-center gap-4">
