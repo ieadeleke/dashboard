@@ -194,7 +194,7 @@ export default function Home() {
               </div>
             </div>
             <div className="grid grid-cols-1 gap-4 my-4 md:grid-cols-2">
-              <WeeklyDeliveries total={dashboardData.WeeklyTransactions.reduce((total, transaction) => {
+              <WeeklyDeliveries total={dashboardData.WeeklyTransactions.reduce((total: any, transaction: any) => {
                 return total + transaction.count;
               }, 0)
               } data={distributeCounts(dashboardData.WeeklyTransactions)} />
