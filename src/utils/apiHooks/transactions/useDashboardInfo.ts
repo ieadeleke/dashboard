@@ -4,7 +4,7 @@ import { TransactionService } from "@/utils/services/transactions"
 import { DashboardInfoResponseParams } from "@/utils/services/transactions/types"
 
 export const useDashboardInfo = () => {
-    const [data, setData] = useState<DashboardInfoResponseParams | null>(null)
+    const [data, setData] = useState<any>(null)
     const { isLoading, error, execute } = useApi()
 
     async function getDashboardInfo() {

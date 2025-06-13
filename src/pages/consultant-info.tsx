@@ -17,7 +17,8 @@ import { formatAmount } from "@/utils/formatters/formatAmount";
 import { cn } from "@/lib/utils";
 import { useDashboardInfoDownload } from "@/utils/apiHooks/transactions/useGetDashbardInfoDownload";
 import { TransactionPill } from "@/components/page_components/pill";
-import { useGetConsultantSummary } from "@/utils/apiHooks/transactions/useGetConsultantSummary";
+import { useGetConsultantCompanySummary } from "@/utils/apiHooks/transactions/useGetConsultantSummary";
+import { ConsultantTable } from "@/components/transactions/ConsultantTable";
 
 
 type OverviewItemProps = {
@@ -93,25 +94,15 @@ function distributePieChartCounts(data: ({
 export default function Home() {
     //   const { isLoading: isDashboardLoading, data: dashboardData, error: dashboardError, getDashboardInfo } = useGetConsultantSummary();
     const { isLoading: isDashboardLoading, data: dashboardData, error: dashboardError, getDashboardInfo } = useDashboardInfo();
+    const { isLoading, data: transactions, error, getConsultantCompany, count } = useGetConsultantCompanySummary();
     const { isLoading: summaryDownloadLoading, data: summaryDownloadData, error: summaryDownloadError, getSummaryDownloadInfo } = useDashboardInfoDownload();
-    // const { isLoading: summaryDownloadLoading, data: summaryDownloadData, error: summaryDownloadError, getSummaryDownloadInfo } = useDashboardInfoDownload();
 
-    const {
-        isLoading,
-        data: transactions,
-        error,
-        fetchTransactions,
-        count,
-    } = useFetchTranscations();
     const [date, setDate] = useState(getDefaultDateAsString(new Date()))
     const [page, setPage] = useState(0)
     const [summaryDownloadInfo, setSummaryDownloadInfo] = useState<any>({})
+    const [consultantSummaryData, setConsultantSummaryData] = useState<any>([]);
+    const [dashboardSummaryData, setDashboardSummaryData] = useState<any>({});
 
-    useEffect(() => {
-        if (dashboardData) {
-            fetchData()
-        }
-    }, [dashboardData, page])
 
     useEffect(() => {
         if (summaryDownloadData) {
@@ -130,8 +121,14 @@ export default function Home() {
         getSummaryDownloadInfo();
     }, [])
 
+    useEffect(() => {
+        if (dashboardData) {
+            setDashboardSummaryData(dashboardData);
+        }
+    }, [dashboardData])
+
     function fetchData() {
-        fetchTransactions({
+        getConsultantCompany({
             ...date,
             page: page + 1
         });
@@ -154,6 +151,12 @@ export default function Home() {
         setPage(selectedItem.selected)
     }
 
+    useEffect(() => {
+        if (transactions?.found) {
+            setConsultantSummaryData(transactions?.response?.ConsultantCompanyAgentTransactionSummary);
+        }
+    }, [transactions])
+
 
     return (
         <DashboardLayout>
@@ -164,34 +167,16 @@ export default function Home() {
                             <h1 className="font-medium text-2xl">Overview</h1>
                             <div className="grid grid-cols-1 items-center gap-4 md:grid-cols-2 lg:grid-cols-4">
                                 <OverviewItem
-                                    title="All Transactions"
-                                    description={dashboardData.AllTransaction.toString()}
+                                    title="All MDAs"
+                                    description={summaryDownloadInfo?.TotalMDA?.toString()}
                                     iconClassName="text-blue-800 bg-blue-300"
                                     icon={<ListIcon />}
                                 />
                                 <OverviewItem
-                                    title="Successful Transactions"
-                                    description={dashboardData.SuccessfulTransaction.toString()}
+                                    title="All Users"
+                                    description={summaryDownloadInfo?.TotalUser?.toString()}
                                     iconClassName="text-[#147D77] bg-[#c9f2f0ff]"
                                     icon={<CheckIcon />}
-                                />
-                                <OverviewItem
-                                    title="Failed Transactions"
-                                    description={dashboardData.FailTransaction.toString()}
-                                    iconClassName="text-[#147D77] bg-[#c9f2f0ff]"
-                                    icon={<ScooterIcon />}
-                                />
-                                <OverviewItem
-                                    title="Pending Transactions"
-                                    description={dashboardData.PendingTransaction.toString()}
-                                    iconClassName="text-[#FF0000] bg-[#ffededff]"
-                                    icon={<PendingDeliveryIcon />}
-                                />
-                                <OverviewItem
-                                    title="Total Amount"
-                                    description={formatAmount(dashboardData.TotalAmount)}
-                                    iconClassName="text-[#23A321] bg-[#D9F7D8]"
-                                    icon={<CompletedDeliveryIcon />}
                                 />
                                 <OverviewItem
                                     title="Agencies"
@@ -205,16 +190,10 @@ export default function Home() {
                                     iconClassName="text-blue-800 bg-blue-300"
                                     icon={<PersonStandingIcon />}
                                 />
-                                <OverviewItem
-                                    title="Total MDAs"
-                                    description={summaryDownloadInfo?.TotalMDA?.toString()}
-                                    iconClassName="text-blue-800 bg-blue-300"
-                                    icon={<PersonStandingIcon />}
-                                />
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 mt-7">
+                        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 mt-7 mb-10">
                             <TransactionPill data={{
                                 title: "Wallet Transaction",
                                 description: summaryDownloadInfo?.OnlineTransaction && formatAmount(summaryDownloadInfo?.OnlineTransaction[0]?.totalAmount?.toString())
@@ -228,10 +207,10 @@ export default function Home() {
                                 description: summaryDownloadInfo?.AgentWithActiveWallet?.toString()
                             }} />
                         </div>
-                        <TransactionTable
-                            name="Recent Transactions"
+                        <ConsultantTable
+                            name="All Consultant Transactions"
                             count={count} page={page} onPageChange={onPageChange}
-                            transactions={transactions}
+                            transactions={consultantSummaryData}
                             isLoading={isLoading}
                             fetchData={fetchData}
                             dateRange={date}

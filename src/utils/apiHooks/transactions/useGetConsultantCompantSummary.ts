@@ -9,7 +9,8 @@ export const useDashboardInfoDownload = () => {
 
     async function getSummaryDownloadInfo() {
         setData(null)
-        const response = await execute(async () => await TransactionService().dashboardInfoDownload());
+        const response = await execute(async () => await TransactionService().getConsultantCompanySummary());
+        console.log(response);
         if (response) {
             setData(response)
         }
