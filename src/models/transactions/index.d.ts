@@ -4,6 +4,7 @@ export type Transaction = {
     AgencyName: string,
     PayerName: string,
     PaymentChannel?: string,
+    PaymentGateway?: string,
     email: string,
     mobile: string,
     RevenueCode: string,
@@ -64,6 +65,9 @@ export type Transaction = {
                 phone_number: string,
                 email: string,
                 created_at: string,
+            },
+            payments?: {
+                paymentType: string
             }
         }
     },

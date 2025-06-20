@@ -176,6 +176,7 @@ export const TransactionTable = (props: TransactionTableProps) => {
             <TableHead className="text-white">Name</TableHead>
             <TableHead className="text-white">Bill Reference</TableHead>
             <TableHead className="text-white">Payment Method</TableHead>
+            <TableHead className="text-white">Payment Gateway</TableHead>
             <TableHead className="text-white">Amount</TableHead>
             <TableHead className="text-white">Status</TableHead>
             <TableHead className="text-white">Transaction Date</TableHead>
@@ -190,7 +191,8 @@ export const TransactionTable = (props: TransactionTableProps) => {
             <TableRow>
               <TableCell>{item.PayerName}</TableCell>
               <TableCell>{item.reference}</TableCell>
-              <TableCell>{item.paymentDetails ? capitalizeFirstLetter(item.paymentDetails.data.payment_type) : "-"}</TableCell>
+              <TableCell>{item?.paymentDetails?.data?.payment_type ? capitalizeFirstLetter(item?.paymentDetails?.data?.payment_type) : item?.paymentDetails?.data?.payments?.paymentType ? capitalizeFirstLetter(item.paymentDetails.data?.payments?.paymentType) : item?.PaymentChannel ? capitalizeFirstLetter(item?.PaymentChannel) : ''}</TableCell>
+              <TableCell>{item?.PaymentGateway ? capitalizeFirstLetter(item?.PaymentGateway) : ''}</TableCell>
               <TableCell>{formatAmount(item.amountPaid)}</TableCell>
               <TableCell>
                 <TransactionStatusChip status={item.Status as TransactionStatus} />
@@ -229,5 +231,5 @@ export const TransactionTable = (props: TransactionTableProps) => {
 
 
 function capitalizeFirstLetter(value: string) {
-  return value.charAt(0).toUpperCase() + value.slice(1);
+  return value?.charAt(0)?.toUpperCase() + value?.slice(1).toLowerCase();
 }
