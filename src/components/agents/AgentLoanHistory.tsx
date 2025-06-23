@@ -202,6 +202,8 @@ export const AgentLoanHistoryTable = (props: AgentTableProps) => {
                     <TableHeader className="bg-primary rounded-xl">
                         <TableRow>
                             <TableHead className="font-black text-white rounded-tl-xl">Date</TableHead>
+                            <TableHead className="font-black text-white">Agent Name</TableHead>
+                            <TableHead className="font-black text-white">Consultant</TableHead>
                             <TableHead className="font-black text-white">Float Amount</TableHead>
                             <TableHead className="font-black text-white">Interest</TableHead>
                             <TableHead className="font-black text-white">Repayment Amount</TableHead>
@@ -214,6 +216,8 @@ export const AgentLoanHistoryTable = (props: AgentTableProps) => {
                         <TableBody key={index} className="bg-white cursor-pointer">
                             <TableRow>
                                 <TableCell className="text-left">{formatDateWithoutTime(item.createdAt)}</TableCell>
+                                <TableCell className="text-left">{item?.agent?.firstName} {item?.agent?.lastName}</TableCell>
+                                <TableCell className="text-left">{item?.ConsultantCompany?.name}</TableCell>
                                 <TableCell className="text-left">{formatAmount(item?.loanAmount)}</TableCell>
                                 <TableCell className="text-left">{formatAmount(item?.interestAmount)}</TableCell>
                                 <TableCell className="text-left">{formatAmount(item?.repaymentAmount)}</TableCell>
@@ -229,7 +233,10 @@ export const AgentLoanHistoryTable = (props: AgentTableProps) => {
                                                     <button type="button" onClick={() => handleAgentLoanApproval(item._id)} className="text-xs px-5 py-5 bg-gray-800 rounded-lg">Approve Loan</button>
                                                     <button type="button" onClick={() => handleAgentLoanRejection(item._id)} className="text-xs px-5 py-6 bg-red-800 rounded-lg">Reject Loan</button>
                                                 </>
-                                                : ''
+                                                :
+                                                item?.status === 'active' ?
+                                                    <button type="button" className="text-xs px-5 py-5 bg-gray-800 rounded-lg">Liquidate Loan</button>
+                                                    : ''
                                         }
                                     </div>
                                 </TableCell>
