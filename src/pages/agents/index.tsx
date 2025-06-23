@@ -26,6 +26,7 @@ import ViewAgentData from "@/components/agents/ViewAgent";
 import { AgentWalletTransactionList } from "@/components/agents/AgentWalletTransactions";
 import { FundAgentWallet } from "@/components/agents/FundAgentWallet";
 import { AgentTotalTransactionList } from "@/components/agents/AgentTransactions";
+import { TextField } from "@/components/input/InputText";
 
 interface WalletInterface {
     _id?: string;
@@ -96,6 +97,7 @@ export default function Agents() {
     const [count, setCount] = useState<number>(0);
     const [openDisplayModal, setOpenDisplayModal] = useState<boolean>(false);
     const [displayConsultantViewMode, setDisplayConsultantViewMode] = useState<boolean>(false);
+    const [agentSearchValue, setAgentSearchValue] = useState<string>('');
     const { showSnackBar } = useContext(GlobalActionContext);
 
     const [selectedAgent, setSelectedAgent] = useState<SelectedAgentInterface>({
@@ -384,6 +386,13 @@ export default function Agents() {
             <>
                 <div className="flex flex-col px-4 py-8 gap-8">
                     <div>
+                        <div className="flex flex-col mx-auto mb-10 w-96 gap-8 self-center mt-8">
+                            <TextField.Container className="bg-gray-200">
+                                <TextField.Input value={agentSearchValue} defaultValue={agentSearchValue} onChange={(evt) => setAgentSearchValue(evt.target.value)} placeholder="Enter Agent Name" />
+                            </TextField.Container>
+
+                            <Button variant="outlined" isLoading={isLoading} disabled={isLoading}>Search Agent</Button>
+                        </div>
                         <AgentTableList name="List of Agents" mdaList={mdaList} isLoading={isLoading} error={error} page={page} count={count}
                             handleClick={handleMDASelection} firstName={""} lastName={""} phoneNumber={""} onPageChange={onPageChange} />
                     </div>
