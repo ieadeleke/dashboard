@@ -59,6 +59,13 @@ export type Transaction = {
                 __CheckoutInitAddress: string,
             },
             amount_settled: 19720,
+            customers?: {
+                customerId: string,
+                customerName: string,
+                customerMobile: string,
+                customerEmail: string,
+                fee: string,
+            },
             customer: {
                 id: string,
                 name: string,
@@ -67,7 +74,10 @@ export type Transaction = {
                 created_at: string,
             },
             payments?: {
-                paymentType: string
+                paymentType: string,
+                currency?: string,
+                gatewayref?: string,
+                paymentReference?: string
             }
         }
     },

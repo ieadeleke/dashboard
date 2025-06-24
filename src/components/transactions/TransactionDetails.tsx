@@ -122,15 +122,15 @@ export const TransactionDetails = forwardRef<
                     <div className="grid gap-4 py-4">
                         <DetailItem data={{
                             title: "Currency",
-                            value: transaction.paymentDetails.data.currency
+                            value: transaction?.paymentDetails?.data.currency ? transaction?.paymentDetails?.data.currency : transaction?.paymentDetails?.data.payments?.currency ? transaction?.paymentDetails?.data.payments?.currency : ''
                         }} />
                         <DetailItem data={{
                             title: "Payment Method",
-                            value: transaction.paymentDetails.data.auth_model
+                            value: transaction?.paymentDetails?.data.auth_model ? transaction?.paymentDetails?.data.auth_model : transaction?.paymentDetails?.data.payments?.paymentType ? transaction?.paymentDetails?.data.payments?.paymentType : ''
                         }} />
                         <DetailItem data={{
                             title: "Channel Reference",
-                            value: transaction.paymentDetails.data.flw_ref
+                            value: transaction?.paymentDetails?.data.flw_ref ? transaction?.paymentDetails?.data.flw_ref : transaction?.paymentDetails?.data.payments?.gatewayref ? transaction?.paymentDetails?.data.payments?.gatewayref : ''
                         }} />
                         <DetailItem data={{
                             title: "Revenue Code",
@@ -138,39 +138,39 @@ export const TransactionDetails = forwardRef<
                         }} />
                         <DetailItem data={{
                             title: "Transaction Refenrence",
-                            value: transaction.paymentDetails.data.tx_ref
+                            value: transaction?.paymentDetails?.data.tx_ref ? transaction?.paymentDetails?.data.tx_ref : transaction?.paymentDetails?.data.payments?.paymentReference ? transaction?.paymentDetails?.data.payments?.paymentReference : ''
                         }} />
                     </div>
                 </div>}
 
-                {(transaction.paymentDetails && transaction.paymentDetails.data.card) && <div className="flex flex-col">
+                {(transaction.paymentDetails && transaction?.paymentDetails?.data?.card) && <div className="flex flex-col">
                     <p className="font-semibold text-black">Card Info</p>
                     <div className="grid gap-4 py-4">
                         <DetailItem data={{
                             title: "First 6 Digits",
-                            value: transaction.paymentDetails.data.card.first_6digits
+                            value: transaction?.paymentDetails?.data?.card?.first_6digits
                         }} />
                         <DetailItem data={{
                             title: "Last 6 Digits",
-                            value: transaction.paymentDetails.data.card.last_4digits
+                            value: transaction?.paymentDetails?.data?.card?.last_4digits
                         }} />
                         <DetailItem data={{
                             title: "Country",
-                            value: transaction.paymentDetails.data.card.country
+                            value: transaction?.paymentDetails?.data?.card?.country
                         }} />
                         <DetailItem data={{
                             title: "Card Type",
-                            value: transaction.paymentDetails.data.card.type
+                            value: transaction?.paymentDetails?.data?.card?.type
                         }} />
                     </div>
                 </div>}
 
-                {(transaction.paymentDetails && transaction.paymentDetails.data.customer) && <div className="flex flex-col">
+                {(transaction.paymentDetails && transaction?.paymentDetails?.data?.customer) && <div className="flex flex-col">
                     <p className="font-semibold text-black">Customer</p>
                     <div className="grid gap-4 py-4">
                         <DetailItem data={{
                             title: "Name",
-                            value: `${transaction.paymentDetails.data.customer.name}`
+                            value: `${transaction?.paymentDetails?.data?.customer?.name}`
                         }} />
                     </div>
                 </div>}
@@ -202,15 +202,15 @@ export const TransactionDetails = forwardRef<
                     <div className="grid gap-4 py-4">
                         <DetailItem data={{
                             title: "Name",
-                            value: transaction.paymentDetails.data.customer.name
+                            value: transaction?.paymentDetails?.data?.customer?.name ? transaction?.paymentDetails?.data?.customer?.name : transaction?.paymentDetails?.data?.customers?.customerName ? transaction?.paymentDetails?.data?.customers?.customerName : ''
                         }} />
                         <DetailItem data={{
                             title: "Email",
-                            value: transaction.paymentDetails.data.customer.email
+                            value: transaction?.paymentDetails?.data?.customer?.email ? transaction?.paymentDetails?.data?.customer?.email : transaction?.paymentDetails?.data?.customers?.customerEmail ? transaction?.paymentDetails?.data?.customers?.customerEmail : ''
                         }} />
                         <DetailItem data={{
                             title: "Phone Number",
-                            value: transaction.paymentDetails.data.customer.phone_number
+                            value: transaction?.paymentDetails?.data?.customer?.phone_number ? transaction?.paymentDetails?.data?.customer?.phone_number : transaction?.paymentDetails?.data?.customers?.customerMobile ? transaction?.paymentDetails?.data?.customers?.customerMobile : ''
                         }} />
                     </div>
                 </div> : <div className="flex flex-col">
@@ -218,15 +218,15 @@ export const TransactionDetails = forwardRef<
                     <div className="grid gap-4 py-4">
                         <DetailItem data={{
                             title: "Name",
-                            value: transaction.PayerName
+                            value: transaction?.PayerName
                         }} />
                         <DetailItem data={{
                             title: "Email",
-                            value: transaction.email
+                            value: transaction?.email
                         }} />
                         <DetailItem data={{
                             title: "Phone Number",
-                            value: transaction.mobile
+                            value: transaction?.mobile
                         }} />
                     </div>
                 </div>}
