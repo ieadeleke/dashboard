@@ -137,13 +137,13 @@ export const AgentTotalTransactionList = ({ userId }: AgentTableProps) => {
                             {transData.map((item, index) => (
                                 <TableBody onClick={() => showTransactionDetails(item)} key={index} className="bg-white cursor-pointer">
                                     <TableRow>
-                                        <TableCell>{item.createdAt}</TableCell>
-                                        <TableCell>{formatAmount(item.amountPaid)}</TableCell>
-                                        <TableCell>{item.PaymentChannel}</TableCell>
+                                        <TableCell>{item?.createdAt}</TableCell>
+                                        <TableCell>{formatAmount(item?.amountPaid)}</TableCell>
+                                        <TableCell>{item?.PaymentChannel ? item?.PaymentChannel : item?.PaymentGateway ? item?.PaymentGateway : ''}</TableCell>
                                         <TableCell>{capitalizeFirstLetter(item.PayerName)}</TableCell>
                                         {/* <TableCell>{item.ca}</TableCell> */}
                                         <TableCell>
-                                            <TransactionStatusChip status={item.Status as TransactionStatus} />
+                                            <TransactionStatusChip status={item?.Status as TransactionStatus} />
                                         </TableCell>
                                         <TableCell><Button className="text-xs w-24 h-8 bg-gray-800">View Details</Button></TableCell>
                                     </TableRow>
@@ -177,5 +177,5 @@ export const AgentTotalTransactionList = ({ userId }: AgentTableProps) => {
 
 
 function capitalizeFirstLetter(value: string) {
-    return value.charAt(0).toUpperCase() + value.slice(1);
+    return value?.charAt(0)?.toUpperCase() + value?.slice(1);
 }
