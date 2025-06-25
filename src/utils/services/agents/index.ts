@@ -1,7 +1,7 @@
 import { request } from "../../request";
 import {
     AddAgentParams, AddAgentResponse, AddNewConsultantParam, AddNewConsultantsResponse, FetchAgentTransactionsParams, FetchAgentTransactionsResponse, FetchAgentWalletParams, FetchAgentWalletResponse, FreezeAgentParam, FreezeAgentResponse, FundWalletParams,
-    FundWalletResponse, GetAllAgentsLoanParams, GetAllAgentsParams, GetAllAgentsResponse, GetAllConsultantsResponse, SuspendAgentParams, SuspendAgentResponse,
+    FundWalletResponse, GetAllAgentsLoanParams, GetAllAgentsParams, GetAllAgentsResponse, GetAllConsultantsResponse, ReprocessPaymentParams, ReprocessPaymentResponse, ReversePaymentResponse, SuspendAgentParams, SuspendAgentResponse,
     UpdateConsultantParam,
     UpdateConsultantsResponse,
     UpdateLoanStatusParam,
@@ -25,6 +25,24 @@ export function AgentService() {
             body: payload,
         });
         return data as any;
+    }
+
+    async function ReProcessAgentPayment(param: ReprocessPaymentParams) {
+        const data = await request({
+            path: `v1/agent/payment/ReprocessPayment`,
+            method: "POST",
+            body: param,
+        });
+        return data as ReprocessPaymentResponse;
+    }
+
+    async function ReverseAgentPayment(param: ReprocessPaymentParams) {
+        const data = await request({
+            path: `v1/agent/payment/ReversePayment`,
+            method: "POST",
+            body: param,
+        });
+        return data as ReversePaymentResponse;
     }
 
     async function getAllConsultants() {
@@ -169,6 +187,8 @@ export function AgentService() {
         updateAgentConsultant,
         getAllAgentsLoans,
         rejectAgentLoanRequest,
-        approveAgentLoanRequest
+        approveAgentLoanRequest,
+        ReverseAgentPayment,
+        ReProcessAgentPayment
     };
 }

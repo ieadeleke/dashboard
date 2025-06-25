@@ -19,7 +19,11 @@ type TransactionDetailsPayload = {
     data: Transaction;
 };
 
-type TransactionDetailsProps = {};
+// type TransactionDetailsProps = {};
+type TransactionDetailsProps = {
+    reprocessPayment?: () => void
+    reversePayment?: () => void
+};
 
 export type TransactionDetailsRef = {
     open: (payload: TransactionDetailsPayload) => void;
@@ -45,7 +49,7 @@ const DetailItem = (props: DetailItemProps) => {
 export const TransactionDetails = forwardRef<
     TransactionDetailsRef,
     TransactionDetailsProps
->((_, ref) => {
+>((props, ref) => {
     const [isVisible, setIsVisible] = useState(false);
     const [transaction, setTransaction] = useState<Transaction>();
 
@@ -232,7 +236,20 @@ export const TransactionDetails = forwardRef<
                 </div>}
                 <DialogFooter className="gap-4">
                     {transaction.NotificationDetails && <Button variant="outlined" onClick={handlePrintReceipt} type="submit">Print Receipt</Button>}
-
+                    {
+                        (transaction?.Status?.toLowerCase() === "pending" || transaction?.Status?.toLowerCase() === "fail") &&
+                        <Button onClick={() => {
+                            props.reversePayment && props.reversePayment();
+                            closeModal();
+                        }} type="submit" variant="outlined">Reverse Payment</Button>
+                    }
+                    {
+                        (transaction?.Status?.toLowerCase() === "pending" || transaction?.Status?.toLowerCase() === "fail") &&
+                        <Button onClick={() => {
+                            props.reprocessPayment && props.reprocessPayment();
+                            closeModal();
+                        }} type="submit" variant="outlined">Reprocess Payment</Button>
+                    }
                     {/* {transaction.paymentDetails && transaction.paymentDetails.data.status == 'successful' ? <Button variant="outlined" onClick={handlePrintReceipt} type="submit">Print Receipt</Button> : <Button variant="outlined" onClick={handleGenerateReceipt} type="submit">Generate Receipt</Button>} */}
                     <Button onClick={closeModal} type="submit">Done</Button>
                 </DialogFooter>

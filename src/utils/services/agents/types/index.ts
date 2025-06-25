@@ -16,6 +16,20 @@ export type GetAllAgentsLoanParams = {
     status?: string
 }
 
+export type ReprocessPaymentParams = {
+    paymentRef?: string;
+}
+
+export type ReprocessPaymentResponse = {
+    payload?: any;
+    data?: any;
+}
+
+export type ReversePaymentResponse = {
+    Wallet?: any;
+    Transaction?: any;
+}
+
 export type GetAllAgentsResponse = ApiResponse & {
     Agents: any,
     page: number,

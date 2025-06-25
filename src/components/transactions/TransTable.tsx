@@ -32,6 +32,11 @@ import { DatePicker, DatePickerInput } from "@carbon/react";
 import { TablePagination } from "../pagination/TablePagination";
 import dayjs from "dayjs";
 import { useFetchTranscations } from "@/utils/apiHooks/transactions/useFetchTransactions";
+import { useReprocessPayment } from "@/utils/apiHooks/agents/useReprocessPayment";
+import { useReversePayment } from "@/utils/apiHooks/agents/useReversePayment";
+import { Spin } from "antd";
+import { LoadingOutlined } from '@ant-design/icons';
+
 
 
 type TransactionTableProps = {
@@ -61,13 +66,19 @@ export const TransactionTable = (props: TransactionTableProps) => {
         fetchTransactions,
         count: loadCount
     } = useFetchTranscations();
-    const { isLoading: isDownloadReportLoading, error: downloadReportError, downloadReport, data } = useDownloadReport()
+    const { isLoading: isDownloadReportLoading, error: downloadReportError, downloadReport, data } = useDownloadReport();
+    const { isLoading: loadingReversePaymentError, error: reversePaymentError, data: reversePaymentData, reReversePayment } = useReversePayment();
+    const { isLoading: loadingReprocess, error: reprocessPaymentError, data: reprocessPaymentData, reProcessPayment } = useReprocessPayment();
     const [isDateModalOpen, setIsDateModalOpen] = useState(false);
     const [page, setPage] = useState<number>(1);
     const [count, setCount] = useState<number>(1);
     const [filterEnabled, setFilterEnabled] = useState(false);
     const transactionDetailsRef = useRef<TransactionDetailsRef>(null);
     const [filteredTransactions, setFilteredTransactions] = useState<any>([]);
+    const [currentSelectedTransaction, setCurrentSelectedTransaction] = useState<any>({});
+    const [loadPage, setLoadPage] = useState<boolean>(false);
+
+
 
     const [date, setDate] = useState<DateRange>(dateRange ? {
         from: convertToDate(dateRange.startDate),
@@ -181,15 +192,74 @@ export const TransactionTable = (props: TransactionTableProps) => {
         setPage(selectedItem.selected);
     }
 
+    const handleReversePayment = () => {
+        reReversePayment({
+            paymentRef: currentSelectedTransaction?.paymentRef
+        });
+    }
+
+    const handleReprocessPayment = () => {
+        reProcessPayment({
+            paymentRef: currentSelectedTransaction?.paymentRef
+        });
+    }
+
+    useEffect(() => {
+        if (reversePaymentData?.Wallet) {
+            showSnackBar({
+                severity: 'success',
+                message: "Payment reversed successfully"
+            })
+            window.location.reload();
+        }
+    }, [reversePaymentData]);
+    useEffect(() => {
+        if (reprocessPaymentData?.data) {
+            showSnackBar({
+                severity: 'success',
+                message: "Payment reprocessed successfully"
+            })
+            window.location.reload();
+        }
+    }, [reprocessPaymentData]);
+
+    useEffect(() => {
+        if (reprocessPaymentError) {
+            showSnackBar({
+                severity: 'error',
+                message: reprocessPaymentError
+            })
+        }
+    }, [reprocessPaymentError])
+
+    useEffect(() => {
+        if (reversePaymentError) {
+            showSnackBar({
+                severity: 'error',
+                message: reversePaymentError
+            })
+        }
+    }, [reversePaymentError])
+
+    useEffect(() => {
+        if (loadingReversePaymentError || loadingReprocess) {
+            setLoadPage(true);
+        } else {
+            setLoadPage(false);
+        }
+    }, [loadingReversePaymentError, loadingReprocess])
+
+
     return (
-        <div className="flex flex-col gap-4">
-            <TransactionDetails ref={transactionDetailsRef} />
-            <LoadingModal isVisible={isDownloadReportLoading} />
-            <div className="flex items-center">
-                <h1 className="font-medium text-xl">{props.name}</h1>
-                <div className="flex-1" />
-                <div className="flex items-center gap-2">
-                    {/* <Popover
+        <Spin spinning={loadPage} indicator={<LoadingOutlined spin />}>
+            <div className="flex flex-col gap-4">
+                <TransactionDetails ref={transactionDetailsRef} reprocessPayment={handleReprocessPayment} reversePayment={handleReversePayment} />
+                <LoadingModal isVisible={isDownloadReportLoading} />
+                <div className="flex items-center">
+                    <h1 className="font-medium text-xl">{props.name}</h1>
+                    <div className="flex-1" />
+                    <div className="flex items-center gap-2">
+                        {/* <Popover
             modal
             open={isDateModalOpen}
             onOpenChange={setIsDateModalOpen}
@@ -214,72 +284,76 @@ export const TransactionTable = (props: TransactionTableProps) => {
               />
             </PopoverContent>
           </Popover> */}
-                    <DatePicker datePickerType="range" onChange={onNewDateApplied} value={defaultDate}>
-                        <DatePickerInput id="date-picker-input-id-start" placeholder="mm/dd/yyyy" labelText="Start date" size="lg" />
-                        <DatePickerInput id="date-picker-input-id-finish" placeholder="mm/dd/yyyy" labelText="End date" size="lg" />
-                    </DatePicker>
+                        <DatePicker datePickerType="range" onChange={onNewDateApplied} value={defaultDate}>
+                            <DatePickerInput id="date-picker-input-id-start" placeholder="mm/dd/yyyy" labelText="Start date" size="lg" />
+                            <DatePickerInput id="date-picker-input-id-finish" placeholder="mm/dd/yyyy" labelText="End date" size="lg" />
+                        </DatePicker>
 
-                    <IconButton onClick={handleDownloadReport} className="text-gray-700">
-                        <DownloadIcon />
-                    </IconButton>
+                        <IconButton onClick={handleDownloadReport} className="text-gray-700">
+                            <DownloadIcon />
+                        </IconButton>
+                    </div>
                 </div>
-            </div>
-            <Table>
-                <TableHeader className="bg-primary rounded-xl">
-                    <TableRow>
-                        <TableHead className="text-white">Name</TableHead>
-                        <TableHead className="text-white">Bill Reference</TableHead>
-                        <TableHead className="text-white">Payment Method</TableHead>
-                        <TableHead className="text-white">Payment Gateway</TableHead>
-                        <TableHead className="text-white">Amount</TableHead>
-                        <TableHead className="text-white">Status</TableHead>
-                        <TableHead className="text-white">Transaction Date</TableHead>
-                        <TableHead className="text-white">Agency</TableHead>
-                        <TableHead className="text-white">Rev. Name</TableHead>
-                        <TableHead className="text-white"></TableHead>
-                    </TableRow>
-                </TableHeader>
-
-                {filteredTransactions.map((item: any) => (
-                    <TableBody onClick={() => showTransactionDetails(item)} key={item.AgencyName} className="bg-white cursor-pointer">
+                <Table>
+                    <TableHeader className="bg-primary rounded-xl">
                         <TableRow>
-                            <TableCell>{item.PayerName}</TableCell>
-                            <TableCell>{item.reference}</TableCell>
-                            <TableCell>{item?.paymentDetails?.data?.payment_type ? capitalizeFirstLetter(item?.paymentDetails?.data?.payment_type) : item?.paymentDetails?.data?.payments?.paymentType ? capitalizeFirstLetter(item.paymentDetails.data?.payments?.paymentType) : item?.PaymentChannel ? capitalizeFirstLetter(item?.PaymentChannel) : ''}</TableCell>
-                            <TableCell>{item?.PaymentGateway ? capitalizeFirstLetter(item?.PaymentGateway) : ''}</TableCell>
-                            <TableCell>{formatAmount(item.amountPaid)}</TableCell>
-                            <TableCell>
-                                <TransactionStatusChip status={item.Status as TransactionStatus} />
-                            </TableCell>
-                            <TableCell>{formatDate(item.createdAt)}</TableCell>
-                            <TableCell>{item.AgencyName}</TableCell>
-                            <TableCell>{item.RevName}</TableCell>
-                            <TableCell><Button className="text-xs w-24 h-8 bg-gray-800">View Details</Button></TableCell>
+                            <TableHead className="text-white">Name</TableHead>
+                            <TableHead className="text-white">Bill Reference</TableHead>
+                            <TableHead className="text-white">Payment Method</TableHead>
+                            <TableHead className="text-white">Payment Gateway</TableHead>
+                            <TableHead className="text-white">Amount</TableHead>
+                            <TableHead className="text-white">Status</TableHead>
+                            <TableHead className="text-white">Transaction Date</TableHead>
+                            <TableHead className="text-white">Agency</TableHead>
+                            <TableHead className="text-white">Rev. Name</TableHead>
+                            <TableHead className="text-white"></TableHead>
                         </TableRow>
-                    </TableBody>
-                ))}
-            </Table>
+                    </TableHeader>
 
-            <div className="flex justify-center">
-                <TablePagination
-                    breakLabel="..."
-                    nextLabel=">"
-                    onPageChange={onPageChange}
-                    pageRangeDisplayed={5}
-                    currentPage={page}
-                    pageCount={Math.max(0, count / 20)}
-                    // pageCount={1}
-                    className="flex gap-4"
-                    nextClassName="text-gray-500"
-                    previousClassName="text-gray-500"
-                    pageClassName="flex w-8 h-7 bg-white justify-center items-center text-sm text-gray-500 rounded-sm outline outline-2 outline-gray-100 text-center"
-                    activeClassName="!bg-primary text-white !outline-none"
-                    previousLabel="<"
-                    renderOnZeroPageCount={null}
-                />
+                    {filteredTransactions.map((item: any) => (
+                        <TableBody onClick={() => {
+                            setCurrentSelectedTransaction(item);
+                            showTransactionDetails(item);
+                        }} key={item.AgencyName} className="bg-white cursor-pointer">
+                            <TableRow>
+                                <TableCell>{item.PayerName}</TableCell>
+                                <TableCell>{item.reference}</TableCell>
+                                <TableCell>{item?.paymentDetails?.data?.payment_type ? capitalizeFirstLetter(item?.paymentDetails?.data?.payment_type) : item?.paymentDetails?.data?.payments?.paymentType ? capitalizeFirstLetter(item.paymentDetails.data?.payments?.paymentType) : item?.PaymentChannel ? capitalizeFirstLetter(item?.PaymentChannel) : ''}</TableCell>
+                                <TableCell>{item?.PaymentGateway ? capitalizeFirstLetter(item?.PaymentGateway) : ''}</TableCell>
+                                <TableCell>{formatAmount(item.amountPaid)}</TableCell>
+                                <TableCell>
+                                    <TransactionStatusChip status={item.Status as TransactionStatus} />
+                                </TableCell>
+                                <TableCell>{formatDate(item.createdAt)}</TableCell>
+                                <TableCell>{item.AgencyName}</TableCell>
+                                <TableCell>{item.RevName}</TableCell>
+                                <TableCell><Button className="text-xs w-24 h-8 bg-gray-800">View Details</Button></TableCell>
+                            </TableRow>
+                        </TableBody>
+                    ))}
+                </Table>
+
+                <div className="flex justify-center">
+                    <TablePagination
+                        breakLabel="..."
+                        nextLabel=">"
+                        onPageChange={onPageChange}
+                        pageRangeDisplayed={5}
+                        currentPage={page}
+                        pageCount={Math.max(0, count / 20)}
+                        // pageCount={1}
+                        className="flex gap-4"
+                        nextClassName="text-gray-500"
+                        previousClassName="text-gray-500"
+                        pageClassName="flex w-8 h-7 bg-white justify-center items-center text-sm text-gray-500 rounded-sm outline outline-2 outline-gray-100 text-center"
+                        activeClassName="!bg-primary text-white !outline-none"
+                        previousLabel="<"
+                        renderOnZeroPageCount={null}
+                    />
+                </div>
+                {props.isLoading || isLoading ? <Loading /> : props.error && <Error onRetry={props.fetchData} message={props.error} />}
             </div>
-            {props.isLoading || isLoading ? <Loading /> : props.error && <Error onRetry={props.fetchData} message={props.error} />}
-        </div>
+        </Spin>
     );
 };
 
