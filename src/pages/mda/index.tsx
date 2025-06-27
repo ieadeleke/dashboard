@@ -15,8 +15,11 @@ import { GlobalActionContext } from "@/context/GlobalActionContext";
 import { useApproveMDA } from "@/utils/apiHooks/mda/useApproveConsultant";
 import { useDisableMDASplitting } from "@/utils/apiHooks/mda/useDisableMDASplitting";
 import { useAllowMDASplitting } from "@/utils/apiHooks/mda/useAllowMDASplitting";
+import { useApproveMDAInternalBill } from "@/utils/apiHooks/mda/useApproveInternalBill";
+import { useDisableMDAInternalBill } from "@/utils/apiHooks/mda/useDisableMDAInternalBill";
 
 interface SelectedMDAInterface {
+    allowInternalBilling?: boolean;
     _id: string;
     name: string;
     email: string;
@@ -56,6 +59,8 @@ export default function Agents() {
     const [mdaList, setMDAList] = useState<any>([]);
     const { getMDAList, isLoading, error, data } = useGetMDAs();
     const { approveConsultant, isLoading: isLoadingConsultant, error: errorConsultant, data: dataConsultant } = useApproveMDA();
+    const { approveMDAInternalBill, isLoading: isLoadingInternalBill, error: internalBillError, data: internalBillData } = useApproveMDAInternalBill();
+    const { disableMDAInternalBill, isLoading: isLoadingDisableInternalBill, error: disableInternalBillError, data: disableInternalBillData } = useDisableMDAInternalBill();
     const { disableSpliting, isLoading: loadingDisableSpliting, error: errorDisableSpliting, data: dataDisableSpliting } = useDisableMDASplitting();
     const { allowSplitting, isLoading: isLoadingSplitting, error: errorSplitting, data: dataSplitting } = useAllowMDASplitting();
     const [page, setPage] = useState(1);
@@ -65,6 +70,7 @@ export default function Agents() {
     const { showSnackBar } = useContext(GlobalActionContext);
 
     const [selectedMDA, setSelectedMDA] = useState<SelectedMDAInterface>({
+        allowInternalBilling: false,
         _id: "",
         name: "",
         email: "",
@@ -127,6 +133,42 @@ export default function Agents() {
             window.location.reload();
         }
     }, [dataConsultant])
+
+    useEffect(() => {
+        if (internalBillError) {
+            showSnackBar({
+                severity: "error",
+                message: internalBillError,
+            });
+        }
+    }, [internalBillError])
+    useEffect(() => {
+        if (internalBillData) {
+            showSnackBar({
+                severity: "success",
+                message: "MDA internal bill approved successfully",
+            });
+            window.location.reload();
+        }
+    }, [internalBillData])
+
+    useEffect(() => {
+        if (disableInternalBillError) {
+            showSnackBar({
+                severity: "error",
+                message: disableInternalBillError,
+            });
+        }
+    }, [disableInternalBillError])
+    useEffect(() => {
+        if (disableInternalBillData) {
+            showSnackBar({
+                severity: "success",
+                message: "MDA internal bill disabled successfully",
+            });
+            window.location.reload();
+        }
+    }, [disableInternalBillData])
 
     useEffect(() => {
         if (errorDisableSpliting) {
@@ -208,6 +250,18 @@ export default function Agents() {
         });
     }
 
+    const handleDisableInternalBill = () => {
+        disableMDAInternalBill({
+            MDAId: selectedMDA._id
+        });
+    }
+
+    const handleAllowInternalBill = () => {
+        approveMDAInternalBill({
+            MDAId: selectedMDA._id
+        });
+    }
+
     return (
         <DashboardLayout>
             <>
@@ -251,6 +305,14 @@ export default function Agents() {
                                         <RegularTextInput type="text" disabled placeholder="example@gmail.com" className="text-xs"
                                             value={selectedMDA.testKey} />
                                     </div>
+                                </div>
+                                <div className="mt-10 grid grid-cols-2">
+                                    {
+                                        !selectedMDA?.allowInternalBilling ?
+                                            <Button onClick={handleAllowInternalBill} isLoading={isLoadingInternalBill}>Allow MDA Internal Bill</Button>
+                                            :
+                                            <Button className="bg-red-600" onClick={handleDisableInternalBill} isLoading={isLoadingDisableInternalBill}>Disable MDA Internal Bill</Button>
+                                    }
                                 </div>
                             </div>
                         </Tabs.TabPane>

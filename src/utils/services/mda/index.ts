@@ -29,6 +29,24 @@ export function MDAService() {
     return data as ApproveMDAResponse;
   }
 
+  async function approveMDAInternalBill(payload: ApproveMDASplittingParams) {
+    const data = await request({
+      path: `v1/mdaConsultant/AllowMDAInternalBill`,
+      method: "PUT",
+      body: payload,
+    });
+    return data as DisableMDAsResponse;
+  }
+
+  async function disableMDAInternalBill(payload: ApproveMDASplittingParams) {
+    const data = await request({
+      path: `v1/mdaConsultant/disableMDAInternalBill`,
+      method: "PUT",
+      body: payload,
+    });
+    return data as DisableMDAsResponse;
+  }
+
   async function disableMDAConsultantSplitting(payload: DisableMDAsParams) {
     const data = await request({
       path: `v1/mdaConsultant/DisableMDASplitting`,
@@ -43,6 +61,8 @@ export function MDAService() {
     getAllMDAs,
     disableMDAConsultantSplitting,
     approveMDAConsultant,
-    allowMDAConsultantSplitting
+    allowMDAConsultantSplitting,
+    approveMDAInternalBill,
+    disableMDAInternalBill
   };
 }

@@ -37,6 +37,7 @@ export type DisableMDAsResponse = ApiResponse & {
     MDA: {
         _id: string,
         allowConsultantSplitting: boolean,
+        allowInternalBilling?: boolean,
         approveBy: string
     }
 }
