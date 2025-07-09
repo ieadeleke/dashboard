@@ -165,7 +165,7 @@ export default function Home() {
                     {dashboardData && <div className="flex flex-col">
                         <div className="flex flex-col gap-4">
                             <h1 className="font-medium text-2xl">Overview</h1>
-                            <div className="grid grid-cols-1 items-center gap-4 md:grid-cols-2 lg:grid-cols-4">
+                            {/* <div className="grid grid-cols-1 items-center gap-4 md:grid-cols-2 lg:grid-cols-4">
                                 <OverviewItem
                                     title="All MDAs"
                                     description={summaryDownloadInfo?.TotalMDA?.toString()}
@@ -190,17 +190,17 @@ export default function Home() {
                                     iconClassName="text-blue-800 bg-blue-300"
                                     icon={<PersonStandingIcon />}
                                 />
-                            </div>
+                            </div> */}
                         </div>
 
                         <div className="grid grid-cols-1 gap-8 md:grid-cols-3 mt-7 mb-10">
                             <TransactionPill data={{
-                                title: "Total Online Transaction",
-                                description: summaryDownloadInfo?.OnlineTransaction && formatAmount(summaryDownloadInfo?.OnlineTransaction[0]?.totalAmount?.toString())
+                                title: "Total Transactions",
+                                description: summaryDownloadInfo?.WalletTransaction && formatAmount(summaryDownloadInfo?.WalletTransaction[0]?.totalAmount?.toString())
                             }} />
                             <TransactionPill data={{
                                 title: "Total Service Charge",
-                                description: summaryDownloadInfo?.OnlineTransaction && formatAmount(summaryDownloadInfo?.OnlineTransaction[0]?.totalServiceCharge?.toString())
+                                description: summaryDownloadInfo?.WalletTransaction && formatAmount(summaryDownloadInfo?.WalletTransaction[0]?.totalServiceCharge?.toString())
                             }} />
                             <TransactionPill data={{
                                 title: "Agent With Active Wallet",

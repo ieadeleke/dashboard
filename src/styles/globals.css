@@ -149,3 +149,7 @@ button {
   background-size: cover;
   background-repeat: no-repeat;
 }
+
+[data-radix-popper-content-wrapper] {
+  z-index: 10000000 !important;
+}

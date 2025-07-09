@@ -179,14 +179,14 @@ export const CreateRole = forwardRef<CreateRoleRef, CreateRoleProps>((props, ref
                 </div>
 
                 <div className="flex flex-col gap-2">
-                    <p className="font-light">Choose Permission</p>
+                    <p className="font-light">Choose Permissiondd</p>
                     <Select value={""} onValueChange={updateSelectedPermissions}>
                         <SelectTrigger className="outline-none border-none text-gray-500 text-sm">
                             <p>Select Permission</p>
                         </SelectTrigger>
                         <SelectContent>
                             <NetworkStateComponent fetchMore={getPrivileges} isLoading={isFetchLoading} error={fetchError}>
-                                {permissions.map((permission, index) => <SelectItem key={index} value={permission}>{permission}</SelectItem>)}
+                                {permissions.map((permission, index) => <SelectItem className="py-3 cursor-pointer" key={index} value={permission}>{permission}</SelectItem>)}
                             </NetworkStateComponent>
                         </SelectContent>
                     </Select>
