@@ -5,7 +5,7 @@ import { TransactionDetails, TransactionDetailsRef } from "@/components/transact
 import { TransactionTable } from "@/components/transactions/TransactionTable";
 import { useFetchTransactionsByPaymentReference } from "@/utils/apiHooks/transactions/useFetchTransactionsByPaymentRef";
 import { useFetchTransactionsByReference } from "@/utils/apiHooks/transactions/useFetchTransactionsByReference";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 export default function WebTransactions() {
     const { isLoading, error, data, count, fetchTransactionsByReference } = useFetchTransactionsByReference();
@@ -20,7 +20,23 @@ export default function WebTransactions() {
     const [page, setPage] = useState(1)
     const transactionDetailsRef = useRef<TransactionDetailsRef>(null)
 
-    function submit() {
+    function submit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        let ref = paymentRef;
+        if (paymentRef.trim().length > 0) {
+            if (!isNaN(+ref.split('-')[0])) {
+                fetchTransactionsByReference({
+                    reference: paymentRef.trim()
+                })
+            } else {
+                fetchTransactionsByPaymentReference({
+                    paymentRef: paymentRef.trim()
+                })
+            }
+            setIsLoadingData(true);
+        }
+    }
+    function submitForm() {
         let ref = paymentRef;
         if (paymentRef.trim().length > 0) {
             if (!isNaN(+ref.split('-')[0])) {
@@ -39,15 +55,19 @@ export default function WebTransactions() {
     useEffect(() => {
         setIsLoadingData(false);
         setDataToShowError('');
-        if (data) {
+        if (data.found) {
             setDataToShowCount(count);
-            return setDataToShow(data);
+            return setDataToShow(data.data);
         };
-        if (paymentRefData) {
+    }, [data])
+    useEffect(() => {
+        setIsLoadingData(false);
+        setDataToShowError('');
+        if (paymentRefData.found) {
             setDataToShowCount(paymentRefCount);
-            return setDataToShow(paymentRefData)
+            return setDataToShow([paymentRefData.data]);
         };
-    }, [paymentRefData, data])
+    }, [paymentRefData])
     useEffect(() => {
         setIsLoadingData(false);
         setDataToShowCount(0);
@@ -69,15 +89,17 @@ export default function WebTransactions() {
     return <DashboardLayout>
         <div className="flex flex-col min-h-screen px-2">
             <TransactionDetails ref={transactionDetailsRef} />
-            <div className="flex flex-col w-96 gap-8 self-center mt-8">
-                <TextField.Container className="bg-gray-200">
-                    <TextField.Input value={paymentRef} defaultValue={paymentRef} onChange={(evt) => setPaymentRef(evt.target.value)} placeholder="Enter Payment Reference" />
-                </TextField.Container>
+            <div className="flex flex-col w-96 gap-8 self-center mt-8 mb-5">
+                <form action="" onSubmit={submit} className="mb-5">
+                    <TextField.Container className="bg-gray-200 mb-5">
+                        <TextField.Input value={paymentRef} defaultValue={paymentRef} onChange={(evt) => setPaymentRef(evt.target.value)} placeholder="Enter Payment Reference" />
+                    </TextField.Container>
 
-                <Button variant="outlined" onClick={submit} isLoading={isLoadingData} disabled={isLoadingData}>Get Transactions</Button>
+                    <Button variant="outlined" className="px-8 text-sm w-max mx-auto block" isLoading={isLoadingData} disabled={isLoadingData}>Get Transactions</Button>
+                </form>
             </div>
 
-            <TransactionTable count={dataToShowCount} page={page} onPageChange={onPageChange} isLoading={isLoadingData} error={dataToShowError} fetchData={submit} transactions={dataToShow} name="All Transactions" />
+            <TransactionTable count={dataToShowCount} page={page} onPageChange={onPageChange} isLoading={isLoadingData} error={dataToShowError} fetchData={submitForm} transactions={dataToShow} name="All Transactions" />
         </div>
     </DashboardLayout>
 }
