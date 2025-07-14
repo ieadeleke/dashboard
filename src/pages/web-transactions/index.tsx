@@ -94,7 +94,6 @@ export default function WebTransactions() {
                     <TextField.Container className="bg-gray-200 mb-5">
                         <TextField.Input value={paymentRef} defaultValue={paymentRef} onChange={(evt) => setPaymentRef(evt.target.value)} placeholder="Enter Payment Reference" />
                     </TextField.Container>
-
                     <Button variant="outlined" className="px-8 text-sm w-max mx-auto block" isLoading={isLoadingData} disabled={isLoadingData}>Get Transactions</Button>
                 </form>
             </div>
