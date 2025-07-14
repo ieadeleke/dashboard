@@ -27,6 +27,7 @@ import { AgentWalletTransactionList } from "@/components/agents/AgentWalletTrans
 import { FundAgentWallet } from "@/components/agents/FundAgentWallet";
 import { AgentTotalTransactionList } from "@/components/agents/AgentTransactions";
 import { TextField } from "@/components/input/InputText";
+import { useSearchAgent } from "@/utils/apiHooks/agents/useSearchAgent";
 
 interface WalletInterface {
     _id?: string;
@@ -81,6 +82,7 @@ export default function Agents() {
 
     const [mdaList, setMDAList] = useState<any>([]);
     const { getAgentList, isLoading, error, data } = useGetAgents();
+    const { searchAgent, isLoading: loadingSearchAgent, error: searchAgentError, data: searchAgentData } = useSearchAgent();
     const { suspendAgent, isLoading: loadingSuspendAgent, error: suspendAgentError, data: suspendAgentData } = useSuspendAgents();
     const { unSuspendAgent, isLoading: loadingUnSuspendAgent, error: unSuspendAgentError, data: unSuspendAgentData } = useUnSuspendAgents();
 
@@ -95,6 +97,8 @@ export default function Agents() {
     const { allowSplitting, isLoading: isLoadingSplitting, error: errorSplitting, data: dataSplitting } = useAllowMDASplitting();
     const [page, setPage] = useState(1);
     const [count, setCount] = useState<number>(0);
+
+    const [loadSearchButton, setLoadSearchButton] = useState(false);
     const [openDisplayModal, setOpenDisplayModal] = useState<boolean>(false);
     const [displayConsultantViewMode, setDisplayConsultantViewMode] = useState<boolean>(false);
     const [agentSearchValue, setAgentSearchValue] = useState<string>('');
@@ -140,12 +144,43 @@ export default function Agents() {
         });
     }
 
+    function handleUserDataSearch() {
+        setLoadSearchButton(true);
+        if (agentSearchValue.length) {
+            searchAgent({
+                keywords: agentSearchValue
+            });
+        } else {
+            fetchData();
+        }
+    }
+
+    useEffect(() => {
+        if (searchAgentData) {
+            setCount(searchAgentData?.Agents?.length);
+            setMDAList(searchAgentData.Agents);
+            setLoadSearchButton(false);
+        }
+    }, [searchAgentData])
+
     useEffect(() => {
         if (data) {
             setCount(data.count);
             setMDAList(data.Agents);
+            setLoadSearchButton(false);
         }
     }, [data])
+
+
+    useEffect(() => {
+        if (searchAgentError) {
+            showSnackBar({
+                severity: "error",
+                message: searchAgentError,
+            });
+            setLoadSearchButton(false);
+        }
+    }, [searchAgentError])
 
     useEffect(() => {
         if (errorConsultant) {
@@ -381,6 +416,10 @@ export default function Agents() {
         });
     }
 
+    useEffect(() => {
+        setLoadSearchButton(false);
+    }, [error])
+
     return (
         <DashboardLayout>
             <>
@@ -391,7 +430,7 @@ export default function Agents() {
                                 <TextField.Input value={agentSearchValue} defaultValue={agentSearchValue} onChange={(evt) => setAgentSearchValue(evt.target.value)} placeholder="Enter Agent Name" />
                             </TextField.Container>
 
-                            <Button variant="outlined" isLoading={isLoading} disabled={isLoading}>Search Agent</Button>
+                            <Button variant="outlined" onClick={handleUserDataSearch} isLoading={loadSearchButton} disabled={loadSearchButton}>Search Agent</Button>
                         </div>
                         <AgentTableList name="List of Agents" mdaList={mdaList} isLoading={isLoading} error={error} page={page} count={count}
                             handleClick={handleMDASelection} firstName={""} lastName={""} phoneNumber={""} onPageChange={onPageChange} />

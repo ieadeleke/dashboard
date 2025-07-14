@@ -1,5 +1,5 @@
 import { request } from "../../request";
-import { AllowMDAsParams, AllowMDAsResponse, ApproveMDAResponse, ApproveMDAsParams, ApproveMDASplittingParams, DisableMDAsParams, DisableMDAsResponse, GetAllMDAsParams, GetAllMDAsResponse } from "./types";
+import { AllowMDAsParams, AllowMDAsResponse, ApproveMDAResponse, ApproveMDAsParams, ApproveMDASplittingParams, DisableMDAsParams, DisableMDAsResponse, GetAllMDAsParams, GetAllMDAsResponse, SearchMDAParams, SearchMDAResponse } from "./types";
 
 export function MDAService() {
   async function getAllMDAs(payload: GetAllMDAsParams) {
@@ -9,6 +9,15 @@ export function MDAService() {
       body: payload,
     });
     return data as GetAllMDAsResponse;
+  }
+
+  async function searchMDAByKeyword(payload: SearchMDAParams) {
+    const data = await request({
+      path: `v1/search/searchMDA`,
+      method: "POST",
+      body: payload,
+    });
+    return data as SearchMDAResponse;
   }
 
   async function allowMDAConsultantSplitting(payload: ApproveMDASplittingParams) {
@@ -63,6 +72,7 @@ export function MDAService() {
     approveMDAConsultant,
     allowMDAConsultantSplitting,
     approveMDAInternalBill,
-    disableMDAInternalBill
+    disableMDAInternalBill,
+    searchMDAByKeyword
   };
 }

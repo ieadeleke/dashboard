@@ -11,6 +11,14 @@ export type GetAllMDAsParams = {
     page?: number,
 }
 
+export type SearchMDAParams = {
+    keywords?: string,
+}
+
+export type SearchMDAResponse = ApiResponse & {
+    MDAs: any
+}
+
 export type GetAllMDAsResponse = ApiResponse & {
     MDAs: any,
     page: number,

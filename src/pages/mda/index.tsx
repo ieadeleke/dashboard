@@ -17,6 +17,8 @@ import { useDisableMDASplitting } from "@/utils/apiHooks/mda/useDisableMDASplitt
 import { useAllowMDASplitting } from "@/utils/apiHooks/mda/useAllowMDASplitting";
 import { useApproveMDAInternalBill } from "@/utils/apiHooks/mda/useApproveInternalBill";
 import { useDisableMDAInternalBill } from "@/utils/apiHooks/mda/useDisableMDAInternalBill";
+import { TextField } from "@/components/input/InputText";
+import { useSearchMDA } from "@/utils/apiHooks/mda/useSearchMDA";
 
 interface SelectedMDAInterface {
     allowInternalBilling?: boolean;
@@ -58,6 +60,9 @@ export default function Agents() {
 
     const [mdaList, setMDAList] = useState<any>([]);
     const { getMDAList, isLoading, error, data } = useGetMDAs();
+    const { searchMDA, isLoading: loadingSearchMDA, error: searchMDAError, data: searchMDAData } = useSearchMDA();
+
+
     const { approveConsultant, isLoading: isLoadingConsultant, error: errorConsultant, data: dataConsultant } = useApproveMDA();
     const { approveMDAInternalBill, isLoading: isLoadingInternalBill, error: internalBillError, data: internalBillData } = useApproveMDAInternalBill();
     const { disableMDAInternalBill, isLoading: isLoadingDisableInternalBill, error: disableInternalBillError, data: disableInternalBillData } = useDisableMDAInternalBill();
@@ -68,6 +73,10 @@ export default function Agents() {
     const [openDisplayModal, setOpenDisplayModal] = useState<boolean>(false);
     const [displayConsultantViewMode, setDisplayConsultantViewMode] = useState<boolean>(false);
     const { showSnackBar } = useContext(GlobalActionContext);
+    const [agentSearchValue, setAgentSearchValue] = useState<string>('');
+    const [loadSearchButton, setLoadSearchButton] = useState(false);
+
+
 
     const [selectedMDA, setSelectedMDA] = useState<SelectedMDAInterface>({
         allowInternalBilling: false,
@@ -104,6 +113,17 @@ export default function Agents() {
         takeServiceChargeFromGovtCut: true
     });
 
+    function handleUserDataSearch() {
+        setLoadSearchButton(true);
+        if (agentSearchValue.length) {
+            searchMDA({
+                keywords: agentSearchValue
+            });
+        } else {
+            fetchData();
+        }
+    }
+
     function fetchData() {
         getMDAList({
             page
@@ -113,8 +133,32 @@ export default function Agents() {
     useEffect(() => {
         if (data) {
             setMDAList(data.MDAs);
+            setLoadSearchButton(false);
         }
     }, [data])
+
+    useEffect(() => {
+        if (error) {
+            setLoadSearchButton(false);
+        }
+    }, [error])
+
+    useEffect(() => {
+        if (searchMDAData) {
+            setMDAList(searchMDAData.MDAs);
+            setLoadSearchButton(false);
+        }
+    }, [searchMDAData])
+
+    useEffect(() => {
+        if (searchMDAError) {
+            showSnackBar({
+                severity: "error",
+                message: searchMDAError,
+            });
+            setLoadSearchButton(false);
+        }
+    }, [searchMDAError])
 
     useEffect(() => {
         if (errorConsultant) {
@@ -267,6 +311,13 @@ export default function Agents() {
             <>
                 <div className="flex flex-col px-4 py-8 gap-8">
                     <div>
+                        <div className="flex flex-col mx-auto mb-10 w-96 gap-8 self-center mt-8">
+                            <TextField.Container className="bg-gray-200">
+                                <TextField.Input value={agentSearchValue} defaultValue={agentSearchValue} onChange={(evt) => setAgentSearchValue(evt.target.value)} placeholder="Enter Agent Name" />
+                            </TextField.Container>
+
+                            <Button variant="outlined" onClick={handleUserDataSearch} isLoading={loadSearchButton} disabled={loadSearchButton}>Search MDA</Button>
+                        </div>
                         <MDATableList name="List of MDAs" mdaList={mdaList} isLoading={isLoading} error={error} page={page} count={count} handleClick={handleMDASelection} />
                     </div>
                 </div>
@@ -306,7 +357,7 @@ export default function Agents() {
                                             value={selectedMDA.testKey} />
                                     </div>
                                 </div>
-                                
+
                                 <div className="mt-10 grid grid-cols-2">
                                     {
                                         !selectedMDA?.allowInternalBilling ?

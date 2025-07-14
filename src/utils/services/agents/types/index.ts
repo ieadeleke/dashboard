@@ -11,6 +11,10 @@ export type GetAllAgentsParams = {
     page?: number,
 }
 
+export type SearchAgentParams = {
+    keywords?: string,
+}
+
 export type GetAllAgentsLoanParams = {
     page?: number,
     status?: string
@@ -34,6 +38,10 @@ export type GetAllAgentsResponse = ApiResponse & {
     Agents: any,
     page: number,
     count: number,
+}
+
+export type SearchAgentResponse = ApiResponse & {
+    Agents: any
 }
 
 export type GetAllConsultantsParams = {
