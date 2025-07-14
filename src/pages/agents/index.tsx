@@ -5,7 +5,7 @@ import { MDATableList } from "@/components/mdas/MDATable";
 import { TransactionTable } from "@/components/transactions/TransactionTable";
 import { useGetMDAs } from "@/utils/apiHooks/mda/useGetMDAs";
 import { GetAllMDAsResponse } from "@/utils/services/mda/types";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Modal, Tabs, Checkbox, Divider, Select } from "antd";
 import { RegularTextInput } from "@/components/input/RegularTextInput";
 import { formatDate } from "@/utils/formatters/formatDate";
@@ -99,6 +99,7 @@ export default function Agents() {
     const [count, setCount] = useState<number>(0);
 
     const [loadSearchButton, setLoadSearchButton] = useState(false);
+    const [searchingUser, setSearchingUser] = useState(false);
     const [openDisplayModal, setOpenDisplayModal] = useState<boolean>(false);
     const [displayConsultantViewMode, setDisplayConsultantViewMode] = useState<boolean>(false);
     const [agentSearchValue, setAgentSearchValue] = useState<string>('');
@@ -144,7 +145,8 @@ export default function Agents() {
         });
     }
 
-    function handleUserDataSearch() {
+    function handleUserDataSearch(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
         setLoadSearchButton(true);
         if (agentSearchValue.length) {
             searchAgent({
@@ -155,8 +157,14 @@ export default function Agents() {
         }
     }
 
+    const handleCancelUserSearch = () => {
+        fetchData();
+        setAgentSearchValue('');
+    }
+
     useEffect(() => {
         if (searchAgentData) {
+            setSearchingUser(true);
             setCount(searchAgentData?.Agents?.length);
             setMDAList(searchAgentData.Agents);
             setLoadSearchButton(false);
@@ -165,6 +173,7 @@ export default function Agents() {
 
     useEffect(() => {
         if (data) {
+            setSearchingUser(false);
             setCount(data.count);
             setMDAList(data.Agents);
             setLoadSearchButton(false);
@@ -426,14 +435,16 @@ export default function Agents() {
                 <div className="flex flex-col px-4 py-8 gap-8">
                     <div>
                         <div className="flex flex-col mx-auto mb-10 w-96 gap-8 self-center mt-8">
-                            <TextField.Container className="bg-gray-200">
-                                <TextField.Input value={agentSearchValue} defaultValue={agentSearchValue} onChange={(evt) => setAgentSearchValue(evt.target.value)} placeholder="Enter Agent Name" />
-                            </TextField.Container>
+                            <form action="" onSubmit={handleUserDataSearch}>
+                                <TextField.Container className="bg-gray-200 mb-5">
+                                    <TextField.Input value={agentSearchValue} defaultValue={agentSearchValue} onChange={(evt) => setAgentSearchValue(evt.target.value)} placeholder="" />
+                                </TextField.Container>
 
-                            <Button variant="outlined" onClick={handleUserDataSearch} isLoading={loadSearchButton} disabled={loadSearchButton}>Search Agent</Button>
+                                <Button variant="outlined" className="px-8 text-sm w-max mx-auto block" isLoading={loadSearchButton} disabled={loadSearchButton}>Search Agent</Button>
+                            </form>
                         </div>
                         <AgentTableList name="List of Agents" mdaList={mdaList} isLoading={isLoading} error={error} page={page} count={count}
-                            handleClick={handleMDASelection} firstName={""} lastName={""} phoneNumber={""} onPageChange={onPageChange} />
+                            handleClick={handleMDASelection} cancelUserSearch={handleCancelUserSearch} searchingUser={searchingUser} firstName={""} lastName={""} phoneNumber={""} onPageChange={onPageChange} />
                     </div>
                 </div>
                 <Modal onCancel={toggleDisplayModal} footer={null} open={openDisplayModal}>

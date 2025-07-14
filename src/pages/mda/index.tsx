@@ -20,6 +20,7 @@ import { useDisableMDAInternalBill } from "@/utils/apiHooks/mda/useDisableMDAInt
 import { TextField } from "@/components/input/InputText";
 import { useSearchMDA } from "@/utils/apiHooks/mda/useSearchMDA";
 
+
 interface SelectedMDAInterface {
     allowInternalBilling?: boolean;
     _id: string;
@@ -68,6 +69,8 @@ export default function Agents() {
     const { disableMDAInternalBill, isLoading: isLoadingDisableInternalBill, error: disableInternalBillError, data: disableInternalBillData } = useDisableMDAInternalBill();
     const { disableSpliting, isLoading: loadingDisableSpliting, error: errorDisableSpliting, data: dataDisableSpliting } = useDisableMDASplitting();
     const { allowSplitting, isLoading: isLoadingSplitting, error: errorSplitting, data: dataSplitting } = useAllowMDASplitting();
+
+    const [searchingUser, setSearchingUser] = useState(false);
     const [page, setPage] = useState(1);
     const [count, setCount] = useState<number>(0);
     const [openDisplayModal, setOpenDisplayModal] = useState<boolean>(false);
@@ -113,7 +116,8 @@ export default function Agents() {
         takeServiceChargeFromGovtCut: true
     });
 
-    function handleUserDataSearch() {
+    function handleUserDataSearch(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
         setLoadSearchButton(true);
         if (agentSearchValue.length) {
             searchMDA({
@@ -132,6 +136,7 @@ export default function Agents() {
 
     useEffect(() => {
         if (data) {
+            setSearchingUser(false);
             setMDAList(data.MDAs);
             setLoadSearchButton(false);
         }
@@ -145,6 +150,7 @@ export default function Agents() {
 
     useEffect(() => {
         if (searchMDAData) {
+            setSearchingUser(true);
             setMDAList(searchMDAData.MDAs);
             setLoadSearchButton(false);
         }
@@ -306,19 +312,26 @@ export default function Agents() {
         });
     }
 
+    const handleCancelUserSearch = () => {
+        fetchData();
+        setAgentSearchValue('');
+    }
+
     return (
         <DashboardLayout>
             <>
                 <div className="flex flex-col px-4 py-8 gap-8">
                     <div>
                         <div className="flex flex-col mx-auto mb-10 w-96 gap-8 self-center mt-8">
-                            <TextField.Container className="bg-gray-200">
-                                <TextField.Input value={agentSearchValue} defaultValue={agentSearchValue} onChange={(evt) => setAgentSearchValue(evt.target.value)} placeholder="Enter Agent Name" />
-                            </TextField.Container>
+                            <form action="" onSubmit={handleUserDataSearch}>
+                                <TextField.Container className="bg-gray-200 mb-5">
+                                    <TextField.Input value={agentSearchValue} defaultValue={agentSearchValue} onChange={(evt) => setAgentSearchValue(evt.target.value)} />
+                                </TextField.Container>
 
-                            <Button variant="outlined" onClick={handleUserDataSearch} isLoading={loadSearchButton} disabled={loadSearchButton}>Search MDA</Button>
+                                <Button variant="outlined" className="px-8 text-sm w-max mx-auto block" isLoading={loadSearchButton} disabled={loadSearchButton}>Search MDA</Button>
+                            </form>
                         </div>
-                        <MDATableList name="List of MDAs" mdaList={mdaList} isLoading={isLoading} error={error} page={page} count={count} handleClick={handleMDASelection} />
+                        <MDATableList name="List of MDAs" mdaList={mdaList} cancelUserSearch={handleCancelUserSearch} searchingUser={searchingUser} isLoading={isLoading} error={error} page={page} count={count} handleClick={handleMDASelection} />
                     </div>
                 </div>
                 <Modal onCancel={toggleDisplayModal} footer={null} open={openDisplayModal}>

@@ -22,13 +22,17 @@ import { formatAmount } from "@/utils/formatters/formatAmount";
 import { formatDate } from "@/utils/formatters/formatDate";
 import { TablePagination } from "../pagination/TablePagination";
 import { AllMDAsType } from "@/models/mdas";
+import { IoMdArrowBack } from "react-icons/io";
+
 
 type MDATableProps = {
     name: string;
     mdaList: AllMDAsType[];
     isLoading?: boolean;
     error?: string | null;
-    fetchData?: () => void,
+    fetchData?: () => void;
+    searchingUser?: boolean;
+    cancelUserSearch?: () => void;
     onPageChange?: (value: {
         selected: number;
     }) => void,
@@ -46,10 +50,20 @@ export const MDATableList = (props: MDATableProps) => {
         props.handleClick(e);
     }
 
+    const handleCancelUserSearch = () => {
+        if (props.cancelUserSearch) {
+            props.cancelUserSearch();
+        }
+    }
+
     return (
         <div className="flex flex-col gap-4">
-            <div className="flex items-center">
+            <div className="flex justify-between items-center">
                 <h1 className="font-medium text-xl">{props.name}</h1>
+                {
+                    props?.searchingUser &&
+                    <button onClick={handleCancelUserSearch} className="flex items-center gap-2 text-sm p-3 px-4 rounded-lg"><IoMdArrowBack /> Go Back</button>
+                }
             </div>
 
             <Table>

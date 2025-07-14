@@ -14,7 +14,8 @@ export type GetGroupedTransactionsResponse = ApiResponse & {
 }
 
 export type GetTransactionByReferenceParams = {
-    reference: string,
+    reference?: string,
+    paymentRef?: string
     page?: number
 }
 
@@ -43,6 +44,11 @@ export type GetTransactionsResponse = ApiResponse & {
 export type GetTransactionsByReferenceResponse = ApiResponse & {
     Transactions: Transaction[],
     count: number
+}
+
+export type GetTransactionsByPaymentReferenceResponse = ApiResponse & {
+    Transaction: Transaction[],
+    count?: number
 }
 
 export type GetTransactionsByAgencyResponse = ApiResponse & {

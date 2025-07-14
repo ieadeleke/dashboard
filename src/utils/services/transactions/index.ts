@@ -11,6 +11,7 @@ import {
   GetTransactionsResponse,
   DownloadReportParams,
   DashboardInfoResponseParams,
+  GetTransactionsByPaymentReferenceResponse,
 } from "./types";
 
 export function TransactionService() {
@@ -45,6 +46,19 @@ export function TransactionService() {
       method: "PUT",
     });
     return data as GetTransactionsByReferenceResponse;
+  }
+
+  async function getTransactionsByPaymentReference(
+    payload: GetTransactionByReferenceParams
+  ) {
+    const data = await request({
+      path: `v1/admin/Transaction/GetTransactionByPaymentRef?page=${
+        payload.page ?? 1
+      }`,
+      body: payload,
+      method: "PUT",
+    });
+    return data as GetTransactionsByPaymentReferenceResponse;
   }
 
   async function getTransactionsByAgency(
@@ -116,6 +130,7 @@ export function TransactionService() {
     dashboardInfo,
     downloadReport,
     dashboardInfoDownload,
-    getConsultantCompanySummary
+    getConsultantCompanySummary,
+    getTransactionsByPaymentReference
   };
 }

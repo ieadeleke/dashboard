@@ -33,6 +33,8 @@ import { useGetConsultants } from "@/utils/apiHooks/agents/useGetConsultants";
 import { useAddConsultants } from "@/utils/apiHooks/agents/useAddConsultant";
 import { useUpdateAgentConsultants } from "@/utils/apiHooks/agents/useUpdateAgentConsultant";
 // >>>>>>> 21b36fc9be02eff22a1c002a84632c77183b4ad8
+import { IoMdArrowBack } from "react-icons/io";
+
 
 type WalletType = {
     accountName: string;
@@ -53,6 +55,8 @@ type AgentTableProps = {
     phoneNumber: string;
     mdaList: AllAgentType[];
     isLoading?: boolean;
+    searchingUser?: boolean;
+    cancelUserSearch?: () => void;
     error?: string | null;
     fetchData?: () => void,
     onPageChange?: (value: {
@@ -231,6 +235,12 @@ export const AgentTableList = (props: AgentTableProps) => {
         }
     }, [updateAgentConsultantError])
 
+    const handleCancelUserSearch = () => {
+        if (props.cancelUserSearch) {
+            props.cancelUserSearch();
+        }
+    }
+
     // >>>>>>> 21b36fc9be02eff22a1c002a84632c77183b4ad8
     return (
         <div className="flex flex-col gap-4">
@@ -240,8 +250,15 @@ export const AgentTableList = (props: AgentTableProps) => {
                 <div>
                     <div>
                         <div className="flex gap-4">
-                            <button onClick={toggleNewConsultantModal} className="text-primary bg-transparent border-2 border-solid border-primary px-4 py-3 text-sm rounded-lg">Add New Consultant</button>
-                            <Link className="bg-primary px-4 py-4 text-white rounded-lg" href="/agents/new">Add New Agent</Link>
+                            {
+                                props?.searchingUser ?
+                                    <button onClick={handleCancelUserSearch} className="flex items-center gap-2 text-sm p-3 px-4 rounded-lg"><IoMdArrowBack /> Go Back</button>
+                                    :
+                                    <>
+                                        <button onClick={toggleNewConsultantModal} className="text-primary bg-transparent border-2 border-solid border-primary px-4 py-3 text-sm rounded-lg">Add New Consultant</button>
+                                        <Link className="bg-primary px-4 py-4 text-white rounded-lg" href="/agents/new">Add New Agent</Link>
+                                    </>
+                            }
                         </div>
                     </div>
                 </div>
