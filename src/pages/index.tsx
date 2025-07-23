@@ -108,7 +108,7 @@ export default function Home() {
 
   useEffect(() => {
     if (dashboardData) {
-      fetchData()
+      fetchData();
     }
   }, [dashboardData, page, status])
 
@@ -201,7 +201,7 @@ export default function Home() {
               <DailyAnalytics data={(distributePieChartCounts(dashboardData.WeeklyAnalytics))} />
             </div>
             <TransactionTable onStatusChange={onStatusChange}
-              name="Recent Transactions"
+              name="Recent Transactions" displayStatusFilter={true}
               count={count} page={page} onPageChange={onPageChange}
               transactions={transactions}
               isLoading={isLoading}

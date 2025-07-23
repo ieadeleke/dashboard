@@ -43,11 +43,12 @@ type TransactionTableProps = {
   onPageChange?: (value: {
     selected: number;
   }) => void,
-  onStatusChange: (
+  onStatusChange?: (
     status: string
   ) => void,
   page: number,
   count: number,
+  displayStatusFilter?: boolean
   dateRange?: {
     startDate: string,
     endDate: string
@@ -67,6 +68,7 @@ export const TransactionTable = (props: TransactionTableProps) => {
     from: new Date(),
     to: new Date(),
   });
+  const [status, setStatus] = useState('');
   const [defaultDate, setDefaultDate] = useState(dateRange ? [dateRange.startDate, dateRange.endDate] : [new Date(), new Date()]);
 
   const { showSnackBar } = useContext(GlobalActionContext)
@@ -123,21 +125,28 @@ export const TransactionTable = (props: TransactionTableProps) => {
     }
   }, [downloadReportError])
 
+  const handleStatusFilter = (status: string) => {
+    if (props.onStatusChange) {
+      setStatus(status);
+      props.onStatusChange(status);
+    }
+  }
+
   const items: MenuProps['items'] = [
     {
       key: '1',
-      label: <div onClick={() => props.onStatusChange('Successful')} className="py-3 px-6 text-sm">Successful</div>
+      label: <div onClick={() => handleStatusFilter('Successful')} className="py-3 px-6 text-sm">Successful</div>
     },
     {
       type: 'divider',
     },
     {
       key: '2',
-      label: <div onClick={() => props.onStatusChange('Pending')} className="py-3 px-6 text-sm">Pending</div>
+      label: <div onClick={() => handleStatusFilter('Pending')} className="py-3 px-6 text-sm">Pending</div>
     },
     {
       key: '3',
-      label: <div onClick={() => props.onStatusChange('Fail')} className="py-3 px-6 text-sm">Failed</div>
+      label: <div onClick={() => handleStatusFilter('Fail')} className="py-3 px-6 text-sm">Failed</div>
     }
   ];
 
@@ -156,11 +165,14 @@ export const TransactionTable = (props: TransactionTableProps) => {
         <h1 className="font-medium text-xl">{props.name}</h1>
         <div className="flex-1" />
         <div className="flex items-end gap-4">
-          <Dropdown menu={{ items }} className="py-3 px-8 block border cursor-pointer border-solid border-black rounded-lg">
-            <div>
-              Filter by Status
-            </div>
-          </Dropdown>
+          {
+            props.displayStatusFilter &&
+            <Dropdown menu={{ items }} className="py-3 px-8 block border cursor-pointer border-solid border-black rounded-lg">
+              <div>
+                Filter by Status: {status}
+              </div>
+            </Dropdown>
+          }
           <DatePicker datePickerType="range" onChange={onNewDateApplied} value={defaultDate}>
             <DatePickerInput id="date-picker-input-id-start" placeholder="mm/dd/yyyy" labelText="Start date" size="lg" />
             <DatePickerInput id="date-picker-input-id-finish" placeholder="mm/dd/yyyy" labelText="End date" size="lg" />

@@ -34,7 +34,7 @@ import dayjs from "dayjs";
 import { useFetchTranscations } from "@/utils/apiHooks/transactions/useFetchTransactions";
 import { useReprocessPayment } from "@/utils/apiHooks/agents/useReprocessPayment";
 import { useReversePayment } from "@/utils/apiHooks/agents/useReversePayment";
-import { Spin } from "antd";
+import { Dropdown, MenuProps, Spin } from "antd";
 import { LoadingOutlined } from '@ant-design/icons';
 
 
@@ -77,6 +77,7 @@ export const TransactionTable = (props: TransactionTableProps) => {
     const [filteredTransactions, setFilteredTransactions] = useState<any>([]);
     const [currentSelectedTransaction, setCurrentSelectedTransaction] = useState<any>({});
     const [loadPage, setLoadPage] = useState<boolean>(false);
+    const [status, setStatus] = useState('');
 
 
 
@@ -129,7 +130,8 @@ export const TransactionTable = (props: TransactionTableProps) => {
             fetchTransactions({
                 startDate: convertDateToFormat(date.from),
                 endDate: convertDateToFormat(date.to || new Date()),
-                page: page + 1
+                page: page + 1,
+                status
             })
             setFilterEnabled(true);
             // props.onDateApplied?.(date)
@@ -186,7 +188,8 @@ export const TransactionTable = (props: TransactionTableProps) => {
         fetchTransactions({
             startDate: convertDateToFormat(date.from),
             endDate: convertDateToFormat(date.to || new Date()),
-            page: page + 1
+            page: page + 1,
+            status
         })
         setFilterEnabled(true);
         setPage(selectedItem.selected);
@@ -249,6 +252,34 @@ export const TransactionTable = (props: TransactionTableProps) => {
         }
     }, [loadingReversePaymentError, loadingReprocess])
 
+    const handleStatusFilter = (status: string) => {
+        setStatus(status);
+        fetchTransactions({
+            startDate: convertDateToFormat(date.from),
+            endDate: convertDateToFormat(date.to || new Date()),
+            page: page + 1,
+            status
+        })
+        setFilterEnabled(true);
+    }
+
+    const items: MenuProps['items'] = [
+        {
+            key: '1',
+            label: <div onClick={() => handleStatusFilter('Successful')} className="py-3 px-6 text-sm">Successful</div>
+        },
+        {
+            type: 'divider',
+        },
+        {
+            key: '2',
+            label: <div onClick={() => handleStatusFilter('Pending')} className="py-3 px-6 text-sm">Pending</div>
+        },
+        {
+            key: '3',
+            label: <div onClick={() => handleStatusFilter('Fail')} className="py-3 px-6 text-sm">Failed</div>
+        }
+    ];
 
     return (
         <Spin spinning={loadPage} indicator={<LoadingOutlined spin />}>
@@ -258,32 +289,12 @@ export const TransactionTable = (props: TransactionTableProps) => {
                 <div className="flex items-center">
                     <h1 className="font-medium text-xl">{props.name}</h1>
                     <div className="flex-1" />
-                    <div className="flex items-center gap-2">
-                        {/* <Popover
-            modal
-            open={isDateModalOpen}
-            onOpenChange={setIsDateModalOpen}
-          >
-            <PopoverTrigger className="flex-1">
-              <div className="flex flex-1 items-center gap-4 border py-2 px-3 -mx-2">
-                <p className="text-black text-start text-sm line-clamp-1 flex-1">
-                  {formatDateRange}
-                </p>
-
-                <CalendarIcon className="h-8 w-8 opacity-50 text-gray-600 bg-gray-300 p-2 rounded-full" />
-              </div>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <CalendarRange
-                showOutsideDays={false}
-                onNewDateApplied={onNewDateApplied}
-                dateRange={{
-                  from: date.from,
-                  to: date.to
-                }}
-              />
-            </PopoverContent>
-          </Popover> */}
+                    <div className="flex items-end gap-4">
+                        <Dropdown menu={{ items }} className="py-3 px-8 block border cursor-pointer border-solid border-black rounded-lg">
+                            <div>
+                                Filter by Status: {status}
+                            </div>
+                        </Dropdown>
                         <DatePicker datePickerType="range" onChange={onNewDateApplied} value={defaultDate}>
                             <DatePickerInput id="date-picker-input-id-start" placeholder="mm/dd/yyyy" labelText="Start date" size="lg" />
                             <DatePickerInput id="date-picker-input-id-finish" placeholder="mm/dd/yyyy" labelText="End date" size="lg" />

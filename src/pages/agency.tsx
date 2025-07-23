@@ -27,7 +27,9 @@ const AgentsTable = (props: AgentsTable) => {
   const [transactions, setTransactions] = useState(props.data ?? [])
   const { fetchTransactionsByAgency, isLoading, error, data, count } = useFetchTransactionsByAgency();
   const [date, setDate] = useState(props.dateRange ?? getDefaultDateAsString())
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(0);
+  const [status, setStatus] = useState('');
+
 
   useEffect(() => {
     setTransactions(data)
@@ -36,13 +38,14 @@ const AgentsTable = (props: AgentsTable) => {
   function fetchData() {
     fetchTransactionsByAgency({
       ...date,
-      AgencyName: props.AgencyName
+      AgencyName: props.AgencyName,
+      status
     });
   }
 
   useEffect(() => {
     fetchData()
-  }, [date, props.AgencyName]);
+  }, [date, props.AgencyName, status]);
 
   function onDateApplied(date: DateRange) {
     setDate({
@@ -57,8 +60,12 @@ const AgentsTable = (props: AgentsTable) => {
     setPage(selectedItem.selected)
   }
 
+  function onStatusChange(status: string) {
+    setStatus(status);
+  }
+
   return <div>
-    <TransactionTable
+    <TransactionTable onStatusChange={onStatusChange}
       onDateApplied={onDateApplied}
       name={`Recent Transactions for ${props.AgencyName}`}
       transactions={transactions}

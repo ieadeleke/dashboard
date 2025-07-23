@@ -25,6 +25,7 @@ export type GetTransactionByAgencyParams = {
     startDate?: string,
     endDate?: string,
     page?: number
+    status?: string
 }
 
 export type InitiateSettlementParams = {
