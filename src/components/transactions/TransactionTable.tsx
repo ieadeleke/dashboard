@@ -155,7 +155,7 @@ export const TransactionTable = (props: TransactionTableProps) => {
       startDate: convertDateToFormat(date.from),
       endDate: convertDateToFormat(date.to ?? new Date()),
     });
-    downloadReport(dateRange)
+    downloadReport({...dateRange, status})
   }
   return (
     <div className="flex flex-col gap-4">

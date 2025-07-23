@@ -36,6 +36,7 @@ export type InitiateSettlementParams = {
 export type DownloadReportParams = {
     startDate?: string,
     endDate?: string
+    status?: string
 }
 
 export type GetTransactionByPaymentRefParams = {
