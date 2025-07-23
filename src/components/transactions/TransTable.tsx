@@ -277,7 +277,7 @@ export const TransactionTable = (props: TransactionTableProps) => {
         },
         {
             key: '3',
-            label: <div onClick={() => handleStatusFilter('Fail')} className="py-3 px-6 text-sm">Failed</div>
+            label: <div onClick={() => handleStatusFilter('Fail')} className="py-3 px-6 text-sm">Fail</div>
         }
     ];
 
