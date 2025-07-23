@@ -1,4 +1,7 @@
 export type SettlementAccount = {
+  amountPaid(amountPaid: any): import("react").ReactNode;
+  amountSettle: ReactNode;
+  numberOfTransaction: ReactNode;
   subAccount: string[];
   meta: string[];
   _id: string;
@@ -71,12 +74,13 @@ export type SettlementTransaction = {
 
 export type GetAccountSettlementResponse = {
   _id: string;
-  amountSettle: string;
+  amountSettle?: string;
+  amountPaid?: number;
   serviceCharge: string;
   account_name: string;
   account_number: string;
   bank_name: string;
-  numberOfTransaction: number;
+  numberOfTransaction?: number;
   SettleDate: string;
   transactionIds?: {
     NotificationDetails?: {

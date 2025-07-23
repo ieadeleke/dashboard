@@ -25,7 +25,7 @@ type AgentsTable = {
 
 const AgentsTable = (props: AgentsTable) => {
   const [transactions, setTransactions] = useState(props.data ?? [])
-  const { fetchTransactionsByAgency, isLoading, error, data, count } = useFetchTransactionsByAgency()
+  const { fetchTransactionsByAgency, isLoading, error, data, count } = useFetchTransactionsByAgency();
   const [date, setDate] = useState(props.dateRange ?? getDefaultDateAsString())
   const [page, setPage] = useState(0)
 

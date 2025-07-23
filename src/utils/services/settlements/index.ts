@@ -1,7 +1,10 @@
 import { request } from "@/utils/request";
 import {
+  FinalizeSettlementParams,
   GetAccountSettlementParams,
+  GetCalculatedSettlementAccountsParams,
   GetSettlementAccountsParams,
+  InitiateSettlementParams
 } from "./types";
 import { ApiResponse } from "../types";
 import {
@@ -17,6 +20,18 @@ const getSettlementAccounts = async (payload: GetSettlementAccountsParams) => {
   });
   return data as ApiResponse & {
     SettlementAccounts: SettlementAccount[];
+    count: number;
+  };
+};
+
+const getCalculatedSettlementAccounts = async (payload: GetCalculatedSettlementAccountsParams) => {
+  const data = await request({
+    path: `v1/settlement/CalculateSettlement?page=`,
+    method: "POST",
+    body: payload
+  });
+  return data as ApiResponse & {
+    Transaction: GetAccountSettlementResponse[];
     count: number;
   };
 };
@@ -50,8 +65,29 @@ const getSettlementTransactions = async (settlement_id: string) => {
   };
 };
 
+const initiateSettlement = async (params: InitiateSettlementParams) => {
+  const data = await request({
+    path: `v1/settlement/InitialSettlement`,
+    method: "POST",
+    body: params
+  });
+  return data as any;
+};
+
+const finalizeSettlement = async (params: FinalizeSettlementParams) => {
+  const data = await request({
+    path: `v1/settlement/FinalizeSettlement`,
+    method: "PUT",
+    body: params
+  });
+  return data as ApiResponse & any;
+};
+
 export const settlementService = {
   getSettlementAccounts,
   getAccountSettlements,
   getSettlementTransactions,
+  getCalculatedSettlementAccounts,
+  initiateSettlement,
+  finalizeSettlement
 };
