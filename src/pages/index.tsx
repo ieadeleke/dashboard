@@ -102,26 +102,21 @@ export default function Home() {
     count,
   } = useFetchTranscations();
   const [date, setDate] = useState(getDefaultDateAsString(new Date()))
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(0);
+  const [status, setStatus] = useState('');
   const [summaryDownloadInfo, setSummaryDownloadInfo] = useState<any>({})
 
   useEffect(() => {
     if (dashboardData) {
       fetchData()
     }
-  }, [dashboardData, page])
+  }, [dashboardData, page, status])
 
   useEffect(() => {
     if (summaryDownloadData) {
       setSummaryDownloadInfo(summaryDownloadData);
     }
   }, [summaryDownloadData])
-
-  useEffect(() => {
-    if (dashboardData) {
-      fetchData()
-    }
-  }, [dashboardData, page])
 
   useEffect(() => {
     getDashboardInfo();
@@ -131,7 +126,8 @@ export default function Home() {
   function fetchData() {
     fetchTransactions({
       ...date,
-      page: page + 1
+      page: page + 1,
+      status
     });
   }
 
@@ -150,6 +146,10 @@ export default function Home() {
     selected: number;
   }) {
     setPage(selectedItem.selected)
+  }
+
+  function onStatusChange(status: string) {
+    setStatus(status)
   }
 
 
@@ -200,7 +200,7 @@ export default function Home() {
               } data={distributeCounts(dashboardData.WeeklyTransactions)} />
               <DailyAnalytics data={(distributePieChartCounts(dashboardData.WeeklyAnalytics))} />
             </div>
-            <TransactionTable
+            <TransactionTable onStatusChange={onStatusChange}
               name="Recent Transactions"
               count={count} page={page} onPageChange={onPageChange}
               transactions={transactions}

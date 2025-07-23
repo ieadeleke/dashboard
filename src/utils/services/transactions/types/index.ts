@@ -5,6 +5,7 @@ export type GetTransactionsParams = {
     startDate: string,
     endDate: string,
     page?: number
+    status?: string
 }
 
 export type GetGroupedTransactionsResponse = ApiResponse & {

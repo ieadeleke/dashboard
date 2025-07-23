@@ -31,6 +31,7 @@ import { formatDate } from "@/utils/formatters/formatDate";
 import { DatePicker, DatePickerInput } from "@carbon/react";
 import { TablePagination } from "../pagination/TablePagination";
 import dayjs from "dayjs";
+import { Dropdown, MenuProps } from "antd";
 
 
 type TransactionTableProps = {
@@ -42,6 +43,9 @@ type TransactionTableProps = {
   onPageChange?: (value: {
     selected: number;
   }) => void,
+  onStatusChange: (
+    status: string
+  ) => void,
   page: number,
   count: number,
   dateRange?: {
@@ -53,7 +57,7 @@ type TransactionTableProps = {
 
 export const TransactionTable = (props: TransactionTableProps) => {
   const { transactions, dateRange } = props;
-  const { isLoading: isDownloadReportLoading, error: downloadReportError, downloadReport, data } = useDownloadReport()
+  const { isLoading: isDownloadReportLoading, error: downloadReportError, downloadReport, data } = useDownloadReport();
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const transactionDetailsRef = useRef<TransactionDetailsRef>(null)
   const [date, setDate] = useState<DateRange>(dateRange ? {
@@ -119,6 +123,24 @@ export const TransactionTable = (props: TransactionTableProps) => {
     }
   }, [downloadReportError])
 
+  const items: MenuProps['items'] = [
+    {
+      key: '1',
+      label: <div onClick={() => props.onStatusChange('Successful')} className="py-3 px-6 text-sm">Successful</div>
+    },
+    {
+      type: 'divider',
+    },
+    {
+      key: '2',
+      label: <div onClick={() => props.onStatusChange('Pending')} className="py-3 px-6 text-sm">Pending</div>
+    },
+    {
+      key: '3',
+      label: <div onClick={() => props.onStatusChange('Fail')} className="py-3 px-6 text-sm">Failed</div>
+    }
+  ];
+
   function handleDownloadReport() {
     const dateRange = ({
       startDate: convertDateToFormat(date.from),
@@ -133,32 +155,12 @@ export const TransactionTable = (props: TransactionTableProps) => {
       <div className="flex items-center">
         <h1 className="font-medium text-xl">{props.name}</h1>
         <div className="flex-1" />
-        <div className="flex items-center gap-2">
-          {/* <Popover
-            modal
-            open={isDateModalOpen}
-            onOpenChange={setIsDateModalOpen}
-          >
-            <PopoverTrigger className="flex-1">
-              <div className="flex flex-1 items-center gap-4 border py-2 px-3 -mx-2">
-                <p className="text-black text-start text-sm line-clamp-1 flex-1">
-                  {formatDateRange}
-                </p>
-
-                <CalendarIcon className="h-8 w-8 opacity-50 text-gray-600 bg-gray-300 p-2 rounded-full" />
-              </div>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <CalendarRange
-                showOutsideDays={false}
-                onNewDateApplied={onNewDateApplied}
-                dateRange={{
-                  from: date.from,
-                  to: date.to
-                }}
-              />
-            </PopoverContent>
-          </Popover> */}
+        <div className="flex items-end gap-4">
+          <Dropdown menu={{ items }} className="py-3 px-8 block border cursor-pointer border-solid border-black rounded-lg">
+            <div>
+              Filter by Status
+            </div>
+          </Dropdown>
           <DatePicker datePickerType="range" onChange={onNewDateApplied} value={defaultDate}>
             <DatePickerInput id="date-picker-input-id-start" placeholder="mm/dd/yyyy" labelText="Start date" size="lg" />
             <DatePickerInput id="date-picker-input-id-finish" placeholder="mm/dd/yyyy" labelText="End date" size="lg" />
