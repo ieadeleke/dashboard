@@ -87,7 +87,7 @@ export function TransactionService() {
 
   async function downloadReport(payload: DownloadReportParams) {
     const data = await request({
-      path: `v1/admin/Transaction/DownloadReport?startDate=${payload.startDate}&endDate=${payload.endDate}`,
+      path: `v1/admin/Transaction/DownloadReport?startDate=${payload.startDate}&endDate=${payload.endDate}&status=${payload.status}`,
       responseType: "blob",
       headers: {
         Accept: "application/csv",

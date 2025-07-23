@@ -175,10 +175,10 @@ export const TransactionTable = (props: TransactionTableProps) => {
     }, [error])
 
     function handleDownloadReport() {
-        const dateRange = ({
+        const dateRange = {
             startDate: convertDateToFormat(date.from),
             endDate: convertDateToFormat(date.to ?? new Date()),
-        });
+        };
         downloadReport({...dateRange, status})
     }
 
