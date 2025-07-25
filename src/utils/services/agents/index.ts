@@ -38,7 +38,8 @@ export function AgentService() {
 
     async function ReProcessAgentPayment(param: ReprocessPaymentParams) {
         const data = await request({
-            path: `v1/agent/payment/ReprocessPayment`,
+            // path: `v1/agent/payment/ReprocessPayment`,
+            path: `v1/admin/Transaction/ReprocessPayment`,
             method: "POST",
             body: param,
         });
@@ -47,7 +48,8 @@ export function AgentService() {
 
     async function ReverseAgentPayment(param: ReprocessPaymentParams) {
         const data = await request({
-            path: `v1/agent/payment/ReversePayment`,
+            // path: `v1/agent/payment/ReversePayment`,
+            path: `v1/admin/Transaction/ReversePayment`,
             method: "POST",
             body: param,
         });
