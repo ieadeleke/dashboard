@@ -9,13 +9,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { GetAccountSettlementResponse, Settlement } from "@/models/settlements";
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { forwardRef, useContext, useEffect, useImperativeHandle, useState } from "react";
 import Button from "../buttons";
 import { formatDate } from "@/utils/formatters/formatDate";
 import { formatAmount } from "@/utils/formatters/formatAmount";
 import { useFetchSettlementTransactions } from "@/utils/apiHooks/settlements/useFetchSettlementTransactions";
 import { NetworkRequestContainer } from "../states/NetworkRequestContainer";
 import { Divider } from "../Divider";
+import { useFinalizeSettlement } from "@/utils/apiHooks/settlements/useFinalizeSettlement";
+import { GlobalActionContext } from "@/context/GlobalActionContext";
 
 type SettlementDetailsPayload = {
   data: GetAccountSettlementResponse;
@@ -55,6 +57,10 @@ export const SettlementDetails = forwardRef<
   SettlementDetailsRef,
   SettlementDetailsProps
 >((_, ref) => {
+
+  const { showSnackBar } = useContext(GlobalActionContext);
+
+  const [pageSpinner, setPageSpinner] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState(false);
   const [settlement, setSettlement] = useState<GetAccountSettlementResponse>();
   const {
@@ -63,6 +69,12 @@ export const SettlementDetails = forwardRef<
     error: fetchSettlementError,
     data: fetchedSettlements,
   } = useFetchSettlementTransactions();
+  const {
+    isLoading: finalizeSettlementLoader,
+    data: finalizeSettlementData,
+    error: finalizeSettlementError,
+    finalizeSettlement
+  } = useFinalizeSettlement();
 
   useImperativeHandle(ref, () => ({
     open(payload: SettlementDetailsPayload) {
@@ -94,9 +106,34 @@ export const SettlementDetails = forwardRef<
     setIsVisible(false);
   }
 
-  function handlePrintReceipt() {}
+  function handlePrintReceipt() { }
 
-  function handleGenerateReceipt() {}
+  function handleGenerateReceipt() { }
+
+  // finalize wallet
+  useEffect(() => {
+    if (finalizeSettlementError) {
+      showSnackBar({
+        severity: 'error',
+        message: finalizeSettlementError
+      })
+      setPageSpinner(false)
+    }
+  }, [finalizeSettlementError])
+  useEffect(() => {
+    if (finalizeSettlementData) {
+      showSnackBar({
+        severity: 'success',
+        message: 'Settlement successful'
+      })
+      window.location.reload();
+    }
+  }, [finalizeSettlementData])
+
+  const handleSettlementFinalization = (data: string) => {
+    finalizeSettlement({ settlementId: data });
+    setPageSpinner(true);
+  }
 
   return (
     <Dialog open={isVisible} onOpenChange={setIsVisible}>
@@ -116,7 +153,7 @@ export const SettlementDetails = forwardRef<
             <DetailItem
               data={{
                 title: "Account Number",
-                value: settlement.account_name,
+                value: settlement.account_number,
               }}
             />
             <DetailItem
@@ -201,20 +238,20 @@ export const SettlementDetails = forwardRef<
                             <DetailItem
                               data={{
                                 title: "Currency",
-                                value: transaction.paymentDetails.data.currency,
+                                value: transaction?.paymentDetails?.data?.currency,
                               }}
                             />
                             <DetailItem
                               data={{
                                 title: "Payment Method",
                                 value:
-                                  transaction.paymentDetails.data.auth_model,
+                                  transaction?.paymentDetails?.data?.auth_model,
                               }}
                             />
                             <DetailItem
                               data={{
                                 title: "Channel Reference",
-                                value: transaction.paymentDetails.data.flw_ref,
+                                value: transaction?.paymentDetails?.data?.flw_ref,
                               }}
                             />
                             <DetailItem
@@ -226,7 +263,7 @@ export const SettlementDetails = forwardRef<
                             <DetailItem
                               data={{
                                 title: "Transaction Refenrence",
-                                value: transaction.paymentDetails.data.tx_ref,
+                                value: transaction?.paymentDetails?.data?.tx_ref,
                               }}
                             />
                           </div>
@@ -234,7 +271,7 @@ export const SettlementDetails = forwardRef<
                       )}
 
                       {transaction.paymentDetails &&
-                        transaction.paymentDetails.data.card && (
+                        transaction?.paymentDetails?.data?.card && (
                           <div className="flex flex-col">
                             <p className="font-semibold text-black">
                               Card Info
@@ -244,31 +281,31 @@ export const SettlementDetails = forwardRef<
                                 data={{
                                   title: "First 6 Digits",
                                   value:
-                                    transaction.paymentDetails.data.card
-                                      .first_6digits,
+                                    transaction?.paymentDetails?.data?.card
+                                      ?.first_6digits,
                                 }}
                               />
                               <DetailItem
                                 data={{
                                   title: "Last 6 Digits",
                                   value:
-                                    transaction.paymentDetails.data.card
-                                      .last_4digits,
+                                    transaction?.paymentDetails?.data?.card
+                                      ?.last_4digits,
                                 }}
                               />
                               <DetailItem
                                 data={{
                                   title: "Country",
                                   value:
-                                    transaction.paymentDetails.data.card
-                                      .country,
+                                    transaction?.paymentDetails?.data?.card
+                                      ?.country,
                                 }}
                               />
                               <DetailItem
                                 data={{
                                   title: "Card Type",
                                   value:
-                                    transaction.paymentDetails.data.card.type,
+                                    transaction?.paymentDetails?.data?.card?.type,
                                 }}
                               />
                             </div>
@@ -276,14 +313,14 @@ export const SettlementDetails = forwardRef<
                         )}
 
                       {transaction.paymentDetails &&
-                        transaction.paymentDetails.data.customer && (
+                        transaction?.paymentDetails?.data?.customer && (
                           <div className="flex flex-col">
                             <p className="font-semibold text-black">Customer</p>
                             <div className="grid gap-4 py-4">
                               <DetailItem
                                 data={{
                                   title: "Name",
-                                  value: `${transaction.paymentDetails.data.customer.name}`,
+                                  value: `${transaction?.paymentDetails?.data?.customer?.name}`,
                                 }}
                               />
                             </div>
@@ -339,23 +376,23 @@ export const SettlementDetails = forwardRef<
                               data={{
                                 title: "Name",
                                 value:
-                                  transaction.paymentDetails.data.customer.name,
+                                  transaction?.paymentDetails?.data?.customer?.name,
                               }}
                             />
                             <DetailItem
                               data={{
                                 title: "Email",
                                 value:
-                                  transaction.paymentDetails.data.customer
-                                    .email,
+                                  transaction?.paymentDetails?.data?.customer
+                                    ?.email,
                               }}
                             />
                             <DetailItem
                               data={{
                                 title: "Phone Number",
                                 value:
-                                  transaction.paymentDetails.data.customer
-                                    .phone_number,
+                                  transaction?.paymentDetails?.data?.customer
+                                    ?.phone_number,
                               }}
                             />
                           </div>
@@ -394,6 +431,12 @@ export const SettlementDetails = forwardRef<
           </NetworkRequestContainer>
 
           <DialogFooter className="gap-4">
+            {
+              !settlement?.settlementStatus &&
+              <Button onClick={() => handleSettlementFinalization(settlement?._id)} isLoading={pageSpinner} disabled={pageSpinner}>
+                Finalize Transaction
+              </Button>
+            }
             <Button onClick={closeModal} type="submit">
               Done
             </Button>

@@ -32,7 +32,6 @@ export default function SettlementAccounts() {
     useEffect(() => {
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
-
         const dateToUse = yesterday.toISOString().split('T')[0];
         setCalculatedDataDate(dateToUse);
         fetchCalculatedData(dateToUse);

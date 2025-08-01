@@ -1,5 +1,7 @@
 import { request } from "@/utils/request";
 import {
+  DownloadSettlementParams,
+  DownloadSingleSettlementParams,
   FinalizeSettlementParams,
   GetAccountSettlementParams,
   GetCalculatedSettlementAccountsParams,
@@ -83,11 +85,39 @@ const finalizeSettlement = async (params: FinalizeSettlementParams) => {
   return data as ApiResponse & any;
 };
 
+const downloadSettlement = async (params: DownloadSettlementParams) => {
+  const data = await request({
+    path: `v1/settlement/DownloadAccountSettlement`,
+    responseType: "blob",
+    body: params,
+    headers: {
+      Accept: "application/csv",
+    },
+    method: "PUT",
+  });
+  return data as any;
+};
+
+const downloadSingleSettlement = async (params: DownloadSingleSettlementParams) => {
+  const data = await request({
+    path: `v1/settlement/DownloadSettlementTransaction`,
+    responseType: "blob",
+    body: params,
+    headers: {
+      Accept: "application/csv",
+    },
+    method: "PUT",
+  });
+  return data as any;
+};
+
 export const settlementService = {
   getSettlementAccounts,
   getAccountSettlements,
   getSettlementTransactions,
   getCalculatedSettlementAccounts,
   initiateSettlement,
-  finalizeSettlement
+  finalizeSettlement,
+  downloadSettlement,
+  downloadSingleSettlement
 };

@@ -8,21 +8,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { CalendarRange, DateRange } from "../calendar/CalendarRange";
+import { DateRange } from "../calendar/CalendarRange";
 import moment from "moment";
 import { GetAccountSettlementResponse, Settlement } from "@/models/settlements";
 import Loading from "../states/Loading";
 import Error from "../states/Error";
 import { GlobalActionContext } from "@/context/GlobalActionContext";
 import { convertDateToFormat, convertToDate } from "@/utils/data/getDefaultDate";
-import { SettlementStatus, SettlementStatusChip } from "./SettlementStatusChip";
+import { SettlementStatusChip } from "./SettlementStatusChip";
 import { formatAmount } from "@/utils/formatters/formatAmount";
 import { formatDate } from "@/utils/formatters/formatDate";
 import { TablePagination } from "../pagination/TablePagination";
@@ -30,6 +24,12 @@ import { SettlementDetails, SettlementDetailsRef } from "./SettlementDetail";
 import { useFetchAccountSettlements } from "@/utils/apiHooks/settlements/useFetchAllSettlements";
 import { DatePicker, DatePickerInput } from "@carbon/react";
 import dayjs from "dayjs";
+import { IconButton } from "../buttons/IconButton";
+import { DownloadIcon } from "lucide-react";
+import { useDownloadSettlement } from "@/utils/apiHooks/settlements/useDownloadSettlement";
+import { LoadingModal } from "../states/LoadingModal";
+import { useDownloadSingleSettlement } from "@/utils/apiHooks/settlements/useDownloadSingleSettlement";
+import Button from "../buttons";
 
 
 
@@ -59,12 +59,25 @@ export const SettlementTable = (props: SettlementTableProps) => {
     fetchAccountSettlements,
     count: loadCount,
   } = useFetchAccountSettlements();
+
+  const {
+    data: downloadSettlementData,
+    error: downloadSettlementError,
+    downloadSettlement
+  } = useDownloadSettlement();
+  const {
+    data: downloadSingleSettlementData,
+    error: downloadSingleSettlementError,
+    downloadSingleSettlement
+  } = useDownloadSingleSettlement();
+
   const { settlements, dateRange } = props;
   const [page, setPage] = useState<number>(1);
   const [count, setCount] = useState<number>(1);
   const [filterEnabled, setFilterEnabled] = useState(false);
   const [filteredTransactions, setFilteredTransactions] = useState<any>([]);
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
+  const [downloadSpinner, setDownloadSpinner] = useState(false);
   const settlementDetailsRef = useRef<SettlementDetailsRef>(null);
   const [date, setDate] = useState<DateRange>(
     dateRange
@@ -162,24 +175,78 @@ export const SettlementTable = (props: SettlementTableProps) => {
       const endDate = dayjs(dates[1]).format('YYYY-MM-DD');
 
       // You can store these as a range in your state or handle them further
-      fetchAccountSettlements({
-        from: startDate,
-        to: endDate,
-        account_number: props.routerId as string,
-        page: page > 0 ? page : 1,
-      });
+      // fetchAccountSettlements({
+      //   from: startDate,
+      //   to: endDate,
+      //   account_number: props.routerId as string,
+      //   page: page > 0 ? page : 1,
+      // });
       setDate({
         from: dayjs(dates[0]).toDate(),
         to: dayjs(dates[1]).toDate()
       });
-      setFilterEnabled(true);
+      // setFilterEnabled(true);
     }
   };
+
+  // DOWNLOAD REPORT
+  useEffect(() => {
+    if (downloadSettlementData) {
+      if (typeof downloadSettlementData == 'string') {
+        alert("Unprocessable entity")
+      }
+      setDownloadSpinner(false);
+    }
+  }, [downloadSettlementData])
+
+  useEffect(() => {
+    if (downloadSettlementError) {
+      showSnackBar({
+        severity: 'error',
+        message: downloadSettlementError
+      })
+      setDownloadSpinner(false);
+    }
+  }, [downloadSettlementError])
+  function handleDownloadReport() {
+    const startDate = dayjs(date.from).format('YYYY-MM-DD');
+    const endDate = dayjs(date.to).format('YYYY-MM-DD');
+    const dateRange = {
+      startDate,
+      endDate,
+    };
+    downloadSettlement({ ...dateRange, account_number: props.routerId });
+    setDownloadSpinner(true);
+  }
+
+  // DOWNLOAD SINGLE SETTLEMENT
+  useEffect(() => {
+    if (downloadSingleSettlementData) {
+      if (typeof downloadSingleSettlementData == 'string') {
+        alert("Unprocessable entity")
+      }
+      setDownloadSpinner(false);
+    }
+  }, [downloadSingleSettlementData])
+
+  useEffect(() => {
+    if (downloadSingleSettlementError) {
+      showSnackBar({
+        severity: 'error',
+        message: downloadSingleSettlementError
+      })
+      setDownloadSpinner(false);
+    }
+  }, [downloadSingleSettlementError])
+  function handleDownloadSingleSettlement(settlementId: string) {
+    downloadSingleSettlement({ settlementId });
+    setDownloadSpinner(true);
+  }
 
   return (
     <div className="flex flex-col gap-4">
       <SettlementDetails ref={settlementDetailsRef} />
-      {/* <LoadingModal isVisible={isDownloadReportLoading} /> */}
+      <LoadingModal isVisible={downloadSpinner} />
       <div className="flex items-center">
         <h1 className="font-medium text-xl">{props.name}</h1>
         <div className="flex-1" />
@@ -208,14 +275,13 @@ export const SettlementTable = (props: SettlementTableProps) => {
               />
             </PopoverContent>
           </Popover> */}
-          
-          {/* <DatePicker datePickerType="range" onChange={handleDateChange} value={defaultDate}>
+          <DatePicker datePickerType="range" onChange={handleDateChange} value={defaultDate}>
             <DatePickerInput id="date-picker-input-id-start" placeholder="mm/dd/yyyy" labelText="Start date" size="lg" />
             <DatePickerInput id="date-picker-input-id-finish" placeholder="mm/dd/yyyy" labelText="End date" size="lg" />
-          </DatePicker> */}
-          {/* <IconButton onClick={handleDownloadReport} className="text-gray-700">
-              <DownloadIcon />
-            </IconButton> */}
+          </DatePicker>
+          <IconButton onClick={handleDownloadReport} className="text-gray-700">
+            <DownloadIcon />
+          </IconButton>
         </div>
       </div>
 
@@ -230,12 +296,14 @@ export const SettlementTable = (props: SettlementTableProps) => {
             <TableHead className="text-white">Status</TableHead>
             <TableHead className="text-white">Number of Transactions</TableHead>
             <TableHead className="text-white">Transaction Date</TableHead>
+            <TableHead className="text-white"></TableHead>
+            <TableHead className="text-white"></TableHead>
           </TableRow>
         </TableHeader>
 
         {filteredTransactions.map((item: any) => (
           <TableBody
-            onClick={() => showSettlementDetails(item)}
+            // onClick={() => showSettlementDetails(item)}
             key={item._id}
             className="bg-white cursor-pointer"
           >
@@ -252,6 +320,14 @@ export const SettlementTable = (props: SettlementTableProps) => {
               </TableCell>
               <TableCell>{item.numberOfTransaction}</TableCell>
               <TableCell>{formatDate(item.createdAt)}</TableCell>
+              <TableCell>
+                <Button onClick={() => showSettlementDetails(item)} className="bg-black py-3 px-4 text-sm">View</Button>
+              </TableCell>
+              <TableCell>
+                <IconButton onClick={() => handleDownloadSingleSettlement(item._id)} className="text-gray-700">
+                  <DownloadIcon />
+                </IconButton>
+              </TableCell>
             </TableRow>
           </TableBody>
         ))}

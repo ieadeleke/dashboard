@@ -24,7 +24,17 @@ export type FinalizeSettlementParams = {
   settlementId: string
 }
 
+export type DownloadSettlementParams = {
+  startDate?: any,
+  endDate?: any,
+  account_number?: string
+}
+
+export type DownloadSingleSettlementParams = {
+  settlementId: string
+}
+
 export type InitiateSettlementParams = {
-    Date: Date,
-    account_number?: string,
+  Date: Date,
+  account_number?: string,
 }

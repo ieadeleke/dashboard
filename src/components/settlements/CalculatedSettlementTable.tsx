@@ -20,6 +20,12 @@ import Button from "../buttons";
 import { useFinalizeSettlement } from "@/utils/apiHooks/settlements/useFinalizeSettlement";
 import { Spin } from "antd";
 import { LoadingOutlined } from '@ant-design/icons';
+import { IconButton } from "../buttons/IconButton";
+import { DownloadIcon } from "lucide-react";
+import { useDownloadSettlement } from "@/utils/apiHooks/settlements/useDownloadSettlement";
+import { LoadingModal } from "../states/LoadingModal";
+import { convertDateToFormat } from "@/utils/data/getDefaultDate";
+
 
 
 type SettlementAccountTableProps = {
@@ -53,9 +59,17 @@ export const CalculatedSettlementAccountTable = (props: SettlementAccountTablePr
         finalizeSettlement
     } = useFinalizeSettlement();
 
+    const {
+        isLoading: downloadSettlementLoader,
+        data: downloadSettlementData,
+        error: downloadSettlementError,
+        downloadSettlement
+    } = useDownloadSettlement();
+
     const [pageSpinner, setPageSpinner] = useState<boolean>(false);
     const [defaultDate, setDefaultDate] = useState(props.dateToUse && new Date(props.dateToUse));
     const [formattedDate, setFormattedDate] = useState<any>(props.dateToUse);
+    const [totalSettlementAccounts, setTotalSettlementAccounts] = useState<any>([]);
 
     function showSettlementAccountDetails(settlementAccount: SettlementAccount) { };
 
@@ -74,6 +88,13 @@ export const CalculatedSettlementAccountTable = (props: SettlementAccountTablePr
     }
 
     useEffect(() => {
+        if (settlementAccounts.length) {
+            console.log(settlementAccounts)
+            setTotalSettlementAccounts(settlementAccounts);
+        }
+    }, [settlementAccounts])
+
+    useEffect(() => {
         if (error) {
             showSnackBar({
                 severity: 'error',
@@ -84,10 +105,15 @@ export const CalculatedSettlementAccountTable = (props: SettlementAccountTablePr
     }, [error])
     useEffect(() => {
         if (data) {
-            let settlementId = data?.Settlement?._id;
-            finalizeSettlement({ settlementId });
+            showSnackBar({
+                severity: 'success',
+                message: 'All transaction successfully initiated'
+            })
+            window.location.reload();
         }
     }, [data])
+
+
 
     useEffect(() => {
         if (finalizeSettlementError) {
@@ -101,32 +127,76 @@ export const CalculatedSettlementAccountTable = (props: SettlementAccountTablePr
     useEffect(() => {
         if (finalizeSettlementData) {
             showSnackBar({
-                severity: 'error',
+                severity: 'success',
                 message: 'Settlement successful'
             })
             window.location.reload();
         }
     }, [finalizeSettlementData])
 
-    const handleSettlementInitiation = (item: any) => {
-        if (formattedDate) {
-            initiateSettlement({
-                Date: formattedDate,
-                account_number: item.account_number
-            })
-            setPageSpinner(true);
+    const handleSettlementFinalization = (data: any) => {
+        let settlementId = data?.Settlement?._id;
+        finalizeSettlement({ settlementId });
+        setPageSpinner(true);
+    }
+
+    const handleSettlementInitiation = () => {
+        if (totalSettlementAccounts) {
+            for (let transaction of totalSettlementAccounts) {
+                initiateSettlement({
+                    Date: formattedDate,
+                    account_number: transaction.account_number
+                })
+                setPageSpinner(true);
+            }
         }
+    }
+
+
+    // DOWNLOAD FEATURE
+    useEffect(() => {
+        if (downloadSettlementData) {
+            if (typeof downloadSettlementData == 'string') {
+                alert("Unprocessable entity")
+            }
+        }
+    }, [downloadSettlementData])
+
+    useEffect(() => {
+        if (downloadSettlementError) {
+            showSnackBar({
+                severity: 'error',
+                message: downloadSettlementError
+            })
+        }
+    }, [downloadSettlementError])
+    function handleDownloadReport() {
+        const dateRange = {
+            startDate: defaultDate as Date,
+            endDate: convertDateToFormat(new Date()),
+        };
+        downloadSettlement({ ...dateRange })
     }
 
     return (
         <Spin spinning={pageSpinner} indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}>
+            <LoadingModal isVisible={downloadSettlementLoader} />
             <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between">
-                    <div></div>
                     <div>
+
+                    </div>
+                    <div className="flex items-end gap-4">
+                        {/* <Button onClick={() => handleSettlementInitiation()}
+                            className="bg-black text-white rounded-sm px-6 py-2 text-sm">
+                            Initialize Settlement
+                        </Button> */}
                         <DatePicker datePickerType="single" onChange={onNewDateApplied} value={defaultDate}>
                             <DatePickerInput id="date-picker-input-id-start" placeholder="mm/dd/yyyy" labelText="Date" size="lg" />
                         </DatePicker>
+                        {/* <IconButton onClick={handleDownloadReport} className="text-gray-700">
+                            <DownloadIcon />
+                        </IconButton> */}
                     </div>
                 </div>
 
@@ -139,7 +209,6 @@ export const CalculatedSettlementAccountTable = (props: SettlementAccountTablePr
                             <TableHead className="text-white">Number of transactions</TableHead>
                             <TableHead className="text-white">Amount To Settle</TableHead>
                             <TableHead className="text-white">Amount Paid</TableHead>
-                            <TableHead></TableHead>
                         </TableRow>
                     </TableHeader>
 
@@ -156,12 +225,6 @@ export const CalculatedSettlementAccountTable = (props: SettlementAccountTablePr
                                 <TableCell>{item.numberOfTransaction}</TableCell>
                                 <TableCell>{formatAmount(item.amountSettle)}</TableCell>
                                 <TableCell>{item?.amountPaid && formatAmount(+item.amountPaid)}</TableCell>
-                                <TableCell>
-                                    <Button onClick={() => handleSettlementInitiation(item)}
-                                        className="bg-black text-white rounded-sm px-2 py-2 text-xs">
-                                        Finalize Settlement
-                                    </Button>
-                                </TableCell>
                             </TableRow>
                         </TableBody>
                     ))}
