@@ -31,7 +31,12 @@ import { formatDate } from "@/utils/formatters/formatDate";
 import { DatePicker, DatePickerInput } from "@carbon/react";
 import { TablePagination } from "../pagination/TablePagination";
 import dayjs from "dayjs";
-import { Dropdown, MenuProps } from "antd";
+import { Dropdown, MenuProps, Spin } from "antd";
+import { useReversePayment } from "@/utils/apiHooks/agents/useReversePayment";
+import { useReprocessPayment } from "@/utils/apiHooks/agents/useReprocessPayment";
+
+import { LoadingOutlined } from '@ant-design/icons';
+
 
 
 type TransactionTableProps = {
@@ -59,6 +64,9 @@ type TransactionTableProps = {
 export const TransactionTable = (props: TransactionTableProps) => {
   const { transactions, dateRange } = props;
   const { isLoading: isDownloadReportLoading, error: downloadReportError, downloadReport, data } = useDownloadReport();
+  const { isLoading: loadingReversePaymentError, error: reversePaymentError, data: reversePaymentData, reReversePayment } = useReversePayment();
+  const { isLoading: loadingReprocess, error: reprocessPaymentError, data: reprocessPaymentData, reProcessPayment } = useReprocessPayment();
+
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const transactionDetailsRef = useRef<TransactionDetailsRef>(null)
   const [date, setDate] = useState<DateRange>(dateRange ? {
@@ -69,6 +77,9 @@ export const TransactionTable = (props: TransactionTableProps) => {
     to: new Date(),
   });
   const [status, setStatus] = useState('');
+  const [loadPage, setLoadPage] = useState<boolean>(false);
+  const [currentSelectedTransaction, setCurrentSelectedTransaction] = useState<any>({});
+
   const [defaultDate, setDefaultDate] = useState(dateRange ? [dateRange.startDate, dateRange.endDate] : [new Date(), new Date()]);
 
   const { showSnackBar } = useContext(GlobalActionContext)
@@ -155,91 +166,154 @@ export const TransactionTable = (props: TransactionTableProps) => {
       startDate: convertDateToFormat(date.from),
       endDate: convertDateToFormat(date.to ?? new Date()),
     };
-    downloadReport({...dateRange, status})
+    downloadReport({ ...dateRange, status })
   }
+
+  useEffect(() => {
+    if (loadingReversePaymentError || loadingReprocess) {
+      setLoadPage(true);
+    } else {
+      setLoadPage(false);
+    }
+  }, [loadingReversePaymentError, loadingReprocess])
+
+  useEffect(() => {
+    if (reversePaymentData?.Wallet) {
+      showSnackBar({
+        severity: 'success',
+        message: "Payment reversed successfully"
+      })
+      window.location.reload();
+    }
+  }, [reversePaymentData]);
+  useEffect(() => {
+    if (reprocessPaymentData?.data) {
+      showSnackBar({
+        severity: 'success',
+        message: "Payment reprocessed successfully"
+      })
+      window.location.reload();
+    }
+  }, [reprocessPaymentData]);
+
+  useEffect(() => {
+    if (reprocessPaymentError) {
+      showSnackBar({
+        severity: 'error',
+        message: reprocessPaymentError
+      })
+    }
+  }, [reprocessPaymentError])
+
+  useEffect(() => {
+    if (reversePaymentError) {
+      showSnackBar({
+        severity: 'error',
+        message: reversePaymentError
+      })
+    }
+  }, [reversePaymentError])
+
+  const handleReversePayment = () => {
+    reReversePayment({
+      paymentRef: currentSelectedTransaction?.paymentRef
+    });
+  }
+
+  const handleReprocessPayment = () => {
+    reProcessPayment({
+      paymentRef: currentSelectedTransaction?.paymentRef
+    });
+  }
+
   return (
-    <div className="flex flex-col gap-4">
-      <TransactionDetails ref={transactionDetailsRef} />
-      <LoadingModal isVisible={isDownloadReportLoading} />
-      <div className="flex items-center">
-        <h1 className="font-medium text-xl">{props.name}</h1>
-        <div className="flex-1" />
-        <div className="flex items-end gap-4">
-          {
-            props.displayStatusFilter &&
-            <Dropdown menu={{ items }} className="py-3 px-8 block border cursor-pointer border-solid border-black rounded-lg">
-              <div>
-                Filter by Status: {status}
-              </div>
-            </Dropdown>
-          }
-          <DatePicker datePickerType="range" onChange={onNewDateApplied} value={defaultDate}>
-            <DatePickerInput id="date-picker-input-id-start" placeholder="mm/dd/yyyy" labelText="Start date" size="lg" />
-            <DatePickerInput id="date-picker-input-id-finish" placeholder="mm/dd/yyyy" labelText="End date" size="lg" />
-          </DatePicker>
+    <Spin spinning={loadPage} indicator={<LoadingOutlined spin />}>
+      <div className="flex flex-col gap-4">
+        <TransactionDetails ref={transactionDetailsRef} reprocessPayment={handleReprocessPayment} reversePayment={handleReversePayment} />
+        <LoadingModal isVisible={isDownloadReportLoading} />
+        <div className="flex items-center">
+          <h1 className="font-medium text-xl">{props.name}</h1>
+          <div className="flex-1" />
+          <div className="flex items-end gap-4">
+            {
+              props.displayStatusFilter &&
+              <Dropdown menu={{ items }} className="py-3 px-8 block border cursor-pointer border-solid border-black rounded-lg">
+                <div>
+                  Filter by Status: {status}
+                </div>
+              </Dropdown>
+            }
+            <DatePicker datePickerType="range" onChange={onNewDateApplied} value={defaultDate}>
+              <DatePickerInput id="date-picker-input-id-start" placeholder="mm/dd/yyyy" labelText="Start date" size="lg" />
+              <DatePickerInput id="date-picker-input-id-finish" placeholder="mm/dd/yyyy" labelText="End date" size="lg" />
+            </DatePicker>
 
-          <IconButton onClick={handleDownloadReport} className="text-gray-700">
-            <DownloadIcon />
-          </IconButton>
+            <IconButton onClick={handleDownloadReport} className="text-gray-700">
+              <DownloadIcon />
+            </IconButton>
+          </div>
         </div>
-      </div>
 
-      <Table>
-        <TableHeader className="bg-primary rounded-xl">
-          <TableRow>
-            <TableHead className="text-white">Name</TableHead>
-            <TableHead className="text-white">Bill Reference</TableHead>
-            <TableHead className="text-white">Payment Method</TableHead>
-            <TableHead className="text-white">Payment Gateway</TableHead>
-            <TableHead className="text-white">Amount</TableHead>
-            <TableHead className="text-white">Status</TableHead>
-            <TableHead className="text-white">Transaction Date</TableHead>
-            <TableHead className="text-white">Agency</TableHead>
-            <TableHead className="text-white">Rev. Name</TableHead>
-            <TableHead className="text-white"></TableHead>
-          </TableRow>
-        </TableHeader>
-
-        {transactions.map((item) => (
-          <TableBody onClick={() => showTransactionDetails(item)} key={item.AgencyName} className="bg-white cursor-pointer">
+        <Table>
+          <TableHeader className="bg-primary rounded-xl">
             <TableRow>
-              <TableCell>{item.PayerName}</TableCell>
-              <TableCell>{item.reference}</TableCell>
-              <TableCell>{item?.paymentDetails?.data?.payment_type ? capitalizeFirstLetter(item?.paymentDetails?.data?.payment_type) : item?.paymentDetails?.data?.payments?.paymentType ? capitalizeFirstLetter(item.paymentDetails.data?.payments?.paymentType) : item?.PaymentChannel ? capitalizeFirstLetter(item?.PaymentChannel) : ''}</TableCell>
-              <TableCell>{item?.PaymentGateway ? capitalizeFirstLetter(item?.PaymentGateway) : ''}</TableCell>
-              <TableCell>{formatAmount(item.amountPaid)}</TableCell>
-              <TableCell>
-                <TransactionStatusChip status={item.Status as TransactionStatus} />
-              </TableCell>
-              <TableCell>{formatDate(item.createdAt)}</TableCell>
-              <TableCell>{item.AgencyName}</TableCell>
-              <TableCell>{item.RevName}</TableCell>
-              <TableCell><Button className="text-xs w-24 h-8 bg-gray-800">View Details</Button></TableCell>
+              <TableHead className="text-white">Name</TableHead>
+              <TableHead className="text-white">Bill Reference</TableHead>
+              <TableHead className="text-white">Payment Method</TableHead>
+              <TableHead className="text-white">Payment Gateway</TableHead>
+              <TableHead className="text-white">Amount</TableHead>
+              <TableHead className="text-white">Status</TableHead>
+              <TableHead className="text-white">Transaction Date</TableHead>
+              <TableHead className="text-white">Agency</TableHead>
+              <TableHead className="text-white">Rev. Name</TableHead>
+              <TableHead className="text-white"></TableHead>
             </TableRow>
-          </TableBody>
-        ))}
-      </Table>
+          </TableHeader>
 
-      <div className="flex justify-center">
-        <TablePagination
-          breakLabel="..."
-          nextLabel=">"
-          onPageChange={props.onPageChange}
-          pageRangeDisplayed={5}
-          currentPage={props.page}
-          pageCount={Math.max(0, props.count / 20)}
-          // pageCount={1}
-          className="flex gap-4"
-          nextClassName="text-gray-500"
-          previousClassName="text-gray-500"
-          pageClassName="flex w-8 h-7 bg-white justify-center items-center text-sm text-gray-500 rounded-sm outline outline-2 outline-gray-100 text-center"
-          activeClassName="!bg-primary text-white !outline-none"
-          previousLabel="<"
-          renderOnZeroPageCount={null}
-        />
+          {transactions.map((item) => (
+            <TableBody onClick={() => {
+              setCurrentSelectedTransaction(item);
+              showTransactionDetails(item)
+            }} key={item.AgencyName} className="bg-white cursor-pointer">
+              <TableRow>
+                <TableCell>{item.PayerName}</TableCell>
+                <TableCell>{item.reference}</TableCell>
+                <TableCell>{item?.paymentDetails?.data?.payment_type ? capitalizeFirstLetter(item?.paymentDetails?.data?.payment_type) : item?.paymentDetails?.data?.payments?.paymentType ? capitalizeFirstLetter(item.paymentDetails.data?.payments?.paymentType) : item?.PaymentChannel ? capitalizeFirstLetter(item?.PaymentChannel) : ''}</TableCell>
+                <TableCell>{item?.PaymentGateway ? capitalizeFirstLetter(item?.PaymentGateway) : ''}</TableCell>
+                <TableCell>{formatAmount(item.amountPaid)}</TableCell>
+                <TableCell>
+                  <TransactionStatusChip status={item.Status as TransactionStatus} />
+                </TableCell>
+                <TableCell>{formatDate(item.createdAt)}</TableCell>
+                <TableCell>{item.AgencyName}</TableCell>
+                <TableCell>{item.RevName}</TableCell>
+                <TableCell><Button className="text-xs w-24 h-8 bg-gray-800">View Details</Button></TableCell>
+              </TableRow>
+            </TableBody>
+          ))}
+        </Table>
+
+        <div className="flex justify-center">
+          <TablePagination
+            breakLabel="..."
+            nextLabel=">"
+            onPageChange={props.onPageChange}
+            pageRangeDisplayed={5}
+            currentPage={props.page}
+            pageCount={Math.max(0, props.count / 20)}
+            // pageCount={1}
+            className="flex gap-4"
+            nextClassName="text-gray-500"
+            previousClassName="text-gray-500"
+            pageClassName="flex w-8 h-7 bg-white justify-center items-center text-sm text-gray-500 rounded-sm outline outline-2 outline-gray-100 text-center"
+            activeClassName="!bg-primary text-white !outline-none"
+            previousLabel="<"
+            renderOnZeroPageCount={null}
+          />
+        </div>
+        {props.isLoading ? <Loading /> : props.error && <Error onRetry={props.fetchData} message={props.error} />}
       </div>
-      {props.isLoading ? <Loading /> : props.error && <Error onRetry={props.fetchData} message={props.error} />}
-    </div>
+    </Spin>
   );
 };
 

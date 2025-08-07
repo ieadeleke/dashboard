@@ -3,13 +3,19 @@ import { TextField } from "@/components/input/InputText";
 import DashboardLayout from "@/components/layout/dashboard";
 import { TransactionDetails, TransactionDetailsRef } from "@/components/transactions/TransactionDetails";
 import { TransactionTable } from "@/components/transactions/TransactionTable";
+import { GlobalActionContext } from "@/context/GlobalActionContext";
+import { useReprocessPayment } from "@/utils/apiHooks/agents/useReprocessPayment";
+import { useReversePayment } from "@/utils/apiHooks/agents/useReversePayment";
 import { useFetchTransactionsByPaymentReference } from "@/utils/apiHooks/transactions/useFetchTransactionsByPaymentRef";
 import { useFetchTransactionsByReference } from "@/utils/apiHooks/transactions/useFetchTransactionsByReference";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 export default function WebTransactions() {
     const { isLoading, error, data, count, fetchTransactionsByReference } = useFetchTransactionsByReference();
     const { isLoading: loadingRefData, error: paymentRefError, data: paymentRefData, count: paymentRefCount, fetchTransactionsByPaymentReference } = useFetchTransactionsByPaymentReference();
+
+    const { isLoading: loadingReversePaymentError, error: reversePaymentError, data: reversePaymentData, reReversePayment } = useReversePayment();
+    const { isLoading: loadingReprocess, error: reprocessPaymentError, data: reprocessPaymentData, reProcessPayment } = useReprocessPayment();
 
     const [paymentRef, setPaymentRef] = useState("");
     const [dataToShow, setDataToShow] = useState<any>([]);
@@ -18,7 +24,9 @@ export default function WebTransactions() {
     const [isLoadingData, setIsLoadingData] = useState<any>(false);
 
     const [page, setPage] = useState(1)
-    const transactionDetailsRef = useRef<TransactionDetailsRef>(null)
+    const transactionDetailsRef = useRef<TransactionDetailsRef>(null);
+    const [currentSelectedTransaction, setCurrentSelectedTransaction] = useState<any>({});
+
 
     function submit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -36,6 +44,10 @@ export default function WebTransactions() {
             setIsLoadingData(true);
         }
     }
+
+    const { showSnackBar } = useContext(GlobalActionContext)
+
+
     function submitForm() {
         let ref = paymentRef;
         if (paymentRef.trim().length > 0) {
@@ -86,9 +98,58 @@ export default function WebTransactions() {
         setPage(selectedItem.selected)
     }
 
+    useEffect(() => {
+        if (reversePaymentData?.Wallet) {
+            showSnackBar({
+                severity: 'success',
+                message: "Payment reversed successfully"
+            })
+            window.location.reload();
+        }
+    }, [reversePaymentData]);
+    useEffect(() => {
+        if (reprocessPaymentData?.data) {
+            showSnackBar({
+                severity: 'success',
+                message: "Payment reprocessed successfully"
+            })
+            window.location.reload();
+        }
+    }, [reprocessPaymentData]);
+
+    useEffect(() => {
+        if (reprocessPaymentError) {
+            showSnackBar({
+                severity: 'error',
+                message: reprocessPaymentError
+            })
+        }
+    }, [reprocessPaymentError])
+
+    useEffect(() => {
+        if (reversePaymentError) {
+            showSnackBar({
+                severity: 'error',
+                message: reversePaymentError
+            })
+        }
+    }, [reversePaymentError])
+
+    const handleReversePayment = () => {
+        reReversePayment({
+            paymentRef: currentSelectedTransaction?.paymentRef
+        });
+    }
+
+    const handleReprocessPayment = () => {
+        reProcessPayment({
+            paymentRef: currentSelectedTransaction?.paymentRef
+        });
+    }
+
     return <DashboardLayout>
         <div className="flex flex-col min-h-screen px-2">
-            <TransactionDetails ref={transactionDetailsRef} />
+            <TransactionDetails ref={transactionDetailsRef} reprocessPayment={handleReprocessPayment} reversePayment={handleReversePayment} />
             <div className="flex flex-col w-96 gap-8 self-center mt-8 mb-5">
                 <form action="" onSubmit={submit} className="mb-5">
                     <TextField.Container className="bg-gray-200 mb-5">
