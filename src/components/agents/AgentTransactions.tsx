@@ -64,6 +64,7 @@ export const AgentTotalTransactionList = ({ userId }: AgentTableProps) => {
     const [count, setCount] = useState<number>(0);
     const [transData, setTransData] = useState<Transaction[]>([]);
     const transactionDetailsRef = useRef<TransactionDetailsRef>(null)
+    const tableRef = useRef<HTMLTableElement>(null)
 
 
     const { showSnackBar } = useContext(GlobalActionContext);
@@ -122,9 +123,107 @@ export const AgentTotalTransactionList = ({ userId }: AgentTableProps) => {
         })
     }
 
+    function generatePrintableHTML() {
+        const start = (date as any)?.startDate || "";
+        const end = (date as any)?.endDate || "";
+        const header = `
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                <h1 style="font-size:18px;margin:0;">Agent Transaction History</h1>
+                <div style="text-align:right;font-size:12px;color:#555;">
+                    <div>Date range: ${start} — ${end}</div>
+                    <div>Generated: ${new Date().toLocaleString()}</div>
+                </div>
+            </div>
+        `;
+
+        const tableHead = `
+            <thead>
+                <tr>
+                    <th>Date Added</th>
+                    <th>Amount Paid</th>
+                    <th>Payment Channel</th>
+                    <th>Payer Name</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+        `;
+
+        const tableRows = transData.map((item) => `
+            <tr>
+                <td>${item.createdAt ?? ""}</td>
+                <td>${formatAmount(item.amountPaid)}</td>
+                <td>${item.PaymentChannel ?? ""}</td>
+                <td>${capitalizeFirstLetter(item.PayerName ?? "")}</td>
+                <td>${item.Status ?? ""}</td>
+            </tr>
+        `).join("");
+
+        const emptyRow = transData.length === 0 ? `
+            <tr>
+                <td colspan="5" style="text-align:center;color:#666;padding:12px;">No transactions found for the selected range.</td>
+            </tr>
+        ` : "";
+
+        const table = `
+            <table>
+                ${tableHead}
+                <tbody>
+                    ${tableRows}
+                    ${emptyRow}
+                </tbody>
+            </table>
+        `;
+
+        const styles = `
+            * { box-sizing: border-box; }
+            body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Noto Sans, "Apple Color Emoji", "Segoe UI Emoji"; padding: 24px; }
+            h1 { font-weight: 600; }
+            table { width: 100%; border-collapse: collapse; }
+            thead th { background: #0d60d8; color: #fff; text-align: left; padding: 10px; font-size: 12px; }
+            tbody td { border-bottom: 1px solid #e5e7eb; padding: 10px; font-size: 12px; }
+            tr:nth-child(even) td { background: #fafafa; }
+            @media print {
+                body { padding: 0; }
+            }
+        `;
+
+        return `<!doctype html>
+            <html>
+                <head>
+                    <meta charset="utf-8" />
+                    <title>Agent Transaction History</title>
+                    <style>${styles}</style>
+                </head>
+                <body>
+                    ${header}
+                    ${table}
+                </body>
+            </html>`;
+    }
+
+    function handleDownloadPDF() {
+        try {
+            const html = generatePrintableHTML();
+            const printWin = window.open("", "_blank", "width=1200,height=800");
+            if (!printWin) return;
+            printWin.document.open();
+            printWin.document.write(html);
+            printWin.document.close();
+            printWin.focus();
+            printWin.onload = () => {
+                printWin.print();
+                printWin.close();
+            };
+        } catch (e) {
+            console.error(e);
+            showSnackBar({ severity: "error", message: "Failed to generate PDF" });
+        }
+    }
+
     return (
         <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-end">
+            <div className="flex items-center justify-between">
+                <Button variant="outlined" className="h-10 px-4" onClick={handleDownloadPDF}>Download PDF</Button>
                 <DatePicker datePickerType="range" onChange={onNewDateApplied} value={defaultDate}>
                     <DatePickerInput id="agent-transactions-date-start" placeholder="mm/dd/yyyy" labelText="Start date" size="lg" />
                     <DatePickerInput id="agent-transactions-date-end" placeholder="mm/dd/yyyy" labelText="End date" size="lg" />
@@ -136,7 +235,7 @@ export const AgentTotalTransactionList = ({ userId }: AgentTableProps) => {
                     <Spin spinning={isLoading} />
                     :
                     <>
-                        <Table>
+                        <Table ref={tableRef}>
                             <TableHeader className="bg-primary rounded-xl">
                                 <TableRow>
                                     <TableHead className="text-white">Date Added</TableHead>
