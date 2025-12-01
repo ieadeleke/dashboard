@@ -30,9 +30,11 @@ import { TransactionStatus, TransactionStatusChip } from "../transactions/Transa
 import { Spin } from "antd";
 import { useFetchAgentTrans } from "@/utils/apiHooks/agents/useFetchAgentTrans";
 import { DateRange } from "../calendar/CalendarRange";
-import { convertDateToFormat, getDefaultDateAsString } from "@/utils/data/getDefaultDate";
+import { convertDateToFormat, convertToDate, getDefaultDateAsString } from "@/utils/data/getDefaultDate";
 import { Transaction } from "@/models/transactions";
 import { TransactionDetails, TransactionDetailsRef } from "../agents/AgentTransactionDetails";
+import { DatePicker, DatePickerInput } from "@carbon/react";
+import dayjs from "dayjs";
 
 
 type AgentTableProps = {
@@ -55,6 +57,10 @@ export const AgentTotalTransactionList = ({ userId }: AgentTableProps) => {
     const [isDateModalOpen, setIsDateModalOpen] = useState(false);
     const [page, setPage] = useState(0);
     const [date, setDate] = useState(getDefaultDateAsString())
+    const [defaultDate, setDefaultDate] = useState<any>([
+        convertToDate(getDefaultDateAsString().startDate),
+        convertToDate(getDefaultDateAsString().endDate),
+    ]);
     const [count, setCount] = useState<number>(0);
     const [transData, setTransData] = useState<Transaction[]>([]);
     const transactionDetailsRef = useRef<TransactionDetailsRef>(null)
@@ -66,11 +72,17 @@ export const AgentTotalTransactionList = ({ userId }: AgentTableProps) => {
         // props.handleClick(e);
     }
 
-    function onDateApplied(date: DateRange) {
-        setDate({
-            startDate: convertDateToFormat(date.from),
-            endDate: convertDateToFormat(date.to ?? new Date()),
-        });
+    function onNewDateApplied(dates: any, dateStrings: any) {
+        if (dates && dates.length === 2) {
+            const from = dayjs(dates[0]).toDate();
+            const to = dayjs(dates[1]).toDate();
+            setDefaultDate([from, to]);
+            setDate({
+                startDate: convertDateToFormat(from),
+                endDate: convertDateToFormat(to || new Date()),
+            });
+            setPage(0);
+        }
     }
 
     useEffect(() => {
@@ -97,7 +109,7 @@ export const AgentTotalTransactionList = ({ userId }: AgentTableProps) => {
                 ...date
             });
         }
-    }, [userId, page])
+    }, [userId, page, date])
 
     function onPageChange(selectedItem: {
         selected: number;
@@ -112,8 +124,11 @@ export const AgentTotalTransactionList = ({ userId }: AgentTableProps) => {
 
     return (
         <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-                {/* <h1 className="font-medium text-xl">{props.name}</h1> */}
+            <div className="flex items-center justify-end">
+                <DatePicker datePickerType="range" onChange={onNewDateApplied} value={defaultDate}>
+                    <DatePickerInput id="agent-transactions-date-start" placeholder="mm/dd/yyyy" labelText="Start date" size="lg" />
+                    <DatePickerInput id="agent-transactions-date-end" placeholder="mm/dd/yyyy" labelText="End date" size="lg" />
+                </DatePicker>
             </div>
             <TransactionDetails ref={transactionDetailsRef} />
             {
